@@ -27,6 +27,7 @@ object KtConfig {
     var converter: IConverter = GsonConverter.create()
     var needDecodeResult = false
     var mOkHttpClient = getOkHttpClient()
+    var isDebug = false
 
     @JvmOverloads
     fun getOkHttpClient(timeout: Long = HttpConstant.DEFAULT_TIMEOUT): OkHttpClient {
@@ -42,7 +43,7 @@ object KtConfig {
 
     fun getLoggingInterceptor2(): Interceptor {
         val interceptor = HttpLoggingInterceptor(OkHttpLogger())
-        if (KtLib.isDebug) {
+        if (isDebug) {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         } else {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC)
@@ -51,7 +52,7 @@ object KtConfig {
     }
 
     fun getLoggingInterceptor(): Interceptor {
-        val level: Level = if (KtLib.isDebug) Level.BODY else Level.BASIC
+        val level: Level = if (isDebug) Level.BODY else Level.BASIC
         return LoggingInterceptor.Builder()
             .setLevel(level).build()
     }

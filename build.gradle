@@ -25,6 +25,20 @@ allprojects {
     }
 }
 
+//publish jcenter
+//add to encode mode
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+//resolve > Task :javadoc FAILED
+//javadoc: 错误 — 非法的程序包名称:,一般是因为kotlin打包时不能直接转成java代码的原因
+subprojects {
+    tasks.withType(Javadoc).all {
+        enabled = false
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
