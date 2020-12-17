@@ -12,7 +12,6 @@ import com.adazhdw.kthttp.entity.Param
 import com.adazhdw.ktlib.base.fragment.BaseFragment
 import com.adazhdw.ktlib.base.mvvm.viewModel
 import com.adazhdw.ktlib.ext.parseAsHtml
-import com.adazhdw.libapp.ui.dashboard.DashboardViewModel
 import com.grantgzd.kthttp.app.R
 import com.grantgzd.kthttp.app.bean.DataFeed
 import com.grantgzd.kthttp.app.bean.NetResponse

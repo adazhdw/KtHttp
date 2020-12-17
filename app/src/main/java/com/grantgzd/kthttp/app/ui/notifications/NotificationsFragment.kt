@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.adazhdw.ktlib.base.mvvm.viewModel
 import com.adazhdw.ktlib.ext.addFragment
-import com.adazhdw.libapp.ui.notifications.NotificationsViewModel
 import com.grantgzd.kthttp.app.R
 
 class NotificationsFragment : Fragment() {

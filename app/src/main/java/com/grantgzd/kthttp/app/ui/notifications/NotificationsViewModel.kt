@@ -1,4 +1,4 @@
-package com.adazhdw.libapp.ui.notifications
+package com.grantgzd.kthttp.app.ui.notifications
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

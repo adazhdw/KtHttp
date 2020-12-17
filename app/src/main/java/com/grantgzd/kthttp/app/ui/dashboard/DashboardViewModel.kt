@@ -1,4 +1,4 @@
-package com.adazhdw.libapp.ui.dashboard
+package com.grantgzd.kthttp.app.ui.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
