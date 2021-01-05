@@ -19,7 +19,7 @@ abstract class ParserImpl<T> : Parser<T> {
      * 此构造方法适用于任意Class对象，但更多用于带泛型的Class对象
      */
     constructor() {
-        mType = getSuperclassTypeParameter(javaClass, 0)
+        mType = getSuperclassTypeParameter(javaClass)
     }
 
     /**
@@ -32,7 +32,7 @@ abstract class ParserImpl<T> : Parser<T> {
     /**
      * 获取当前泛型的type
      */
-    private fun getSuperclassTypeParameter(subclass: Class<*>, index: Int): Type {
+    private fun getSuperclassTypeParameter(subclass: Class<*>, index: Int = 0): Type {
         return ClazzUtil.getClassType(subclass, index)
     }
 

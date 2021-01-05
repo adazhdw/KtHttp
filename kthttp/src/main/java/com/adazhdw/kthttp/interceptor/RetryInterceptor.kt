@@ -21,7 +21,7 @@ class RetryInterceptor(private val maxCount: Int = 3, private val sleepMillis: L
         while (response == null && tryCount < maxCount) {
             tryCount++
             try {
-                Thread.sleep(sleepMillis)
+                Thread.sleep(sleepMillis * tryCount)
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             }

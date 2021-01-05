@@ -7,13 +7,10 @@ import com.adazhdw.kthttp.converter.GsonConverter
 import com.adazhdw.kthttp.converter.IConverter
 import com.adazhdw.kthttp.interceptor.RetryInterceptor
 import com.adazhdw.kthttp.ssl.HttpsUtils
-import com.adazhdw.kthttp.util.OkHttpLogger
 import com.adazhdw.kthttp.util.logging.Level
 import com.adazhdw.kthttp.util.logging.LoggingInterceptor
-import com.adazhdw.ktlib.KtLib
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 
 /**
@@ -36,19 +33,9 @@ object KtConfig {
             .connectTimeout(timeout, TimeUnit.SECONDS)
             .callTimeout(timeout, TimeUnit.SECONDS)
             .writeTimeout(timeout, TimeUnit.SECONDS)
-            .addInterceptor(getLoggingInterceptor2())
+            .addInterceptor(getLoggingInterceptor())
             .addInterceptor(RetryInterceptor())
             .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager).build()
-    }
-
-    fun getLoggingInterceptor2(): Interceptor {
-        val interceptor = HttpLoggingInterceptor(OkHttpLogger())
-        if (isDebug) {
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        } else {
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC)
-        }
-        return interceptor
     }
 
     fun getLoggingInterceptor(): Interceptor {

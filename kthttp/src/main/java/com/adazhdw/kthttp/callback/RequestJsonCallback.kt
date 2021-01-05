@@ -21,11 +21,7 @@ abstract class RequestJsonCallback<T : Any>(owner: LifecycleOwner?) : RequestCal
 
     override fun onResult(body: ResponseBody, result: String) {
         super.onResult(body, result)
-        val data = KtConfig.converter.convert<T>(
-            result,
-            mType,
-            KtConfig.needDecodeResult
-        )
+        val data = KtConfig.converter.convert<T>(result, mType, KtConfig.needDecodeResult)
         KtExecutors.mainThread.execute {
             this.onSuccess(data)
             this.onFinish()

@@ -26,7 +26,7 @@ import java.util.Properties;
  * description：Static methods for working with types.
  **/
 public class ClazzType {
-    static final Type[] EMPTY_TYPE_ARRAY = new Type[]{};
+    private static final Type[] EMPTY_TYPE_ARRAY = new Type[]{};
 
     private ClazzType() {
         throw new UnsupportedOperationException();

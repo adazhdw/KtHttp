@@ -27,7 +27,6 @@ open class NormalParser<T> : ParserImpl<T> {
     }
 
     companion object {
-        @JvmStatic
         operator fun <T : Any> get(type: Class<T>) = NormalParser<T>(type)
     }
 }

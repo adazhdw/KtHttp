@@ -1,5 +1,6 @@
 package com.grantgzd.kthttp.app
 
+import com.adazhdw.kthttp.KtConfig
 import com.adazhdw.ktlib.Application
 
 /**
@@ -11,6 +12,7 @@ class LibApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        KtConfig.isDebug = isDebug()
     }
 
     override fun isDebug(): Boolean {
