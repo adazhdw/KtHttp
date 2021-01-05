@@ -19,6 +19,7 @@ import java.io.File
 /** @param isMultipart 是否有流参数 */
 class Param private constructor(isMultipart: Boolean) {
 
+    internal var url: String = ""
     private val headers: HttpHeaders = HttpHeaders()
     private val params: HttpParams = HttpParams(isMultipart)
     private var jsonBody: String = ""
@@ -70,6 +71,11 @@ class Param private constructor(isMultipart: Boolean) {
                 }
             }.build()
         }
+    }
+
+    fun url(url: String): Param {
+        this.url = url
+        return this
     }
 
     fun bodyType(bodyType: BodyType): Param {

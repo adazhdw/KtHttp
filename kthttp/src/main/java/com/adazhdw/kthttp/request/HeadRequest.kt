@@ -10,7 +10,7 @@ import okhttp3.RequestBody
  * date-time：2020/9/3 17:39
  * description：
  **/
-class HeadRequest(url: String, param: Param) : EmptyRequest(url, param) {
+class HeadRequest(param: Param) : EmptyRequest(param) {
 
     override fun getRequest(requestBody: RequestBody): Request {
         return requestBuilder().url(getRealUrl()).head().tag(tag).build()

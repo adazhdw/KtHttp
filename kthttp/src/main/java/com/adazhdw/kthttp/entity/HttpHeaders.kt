@@ -1,6 +1,6 @@
 package com.adazhdw.kthttp.entity
 
-import com.adazhdw.kthttp.KtHttp
+import com.adazhdw.kthttp.KtConfig
 
 /**
  * author：daguozhu
@@ -9,7 +9,7 @@ import com.adazhdw.kthttp.KtHttp
  **/
 class HttpHeaders {
     /** 请求头存放集合 */
-    internal val mHeaders: HashMap<String, String> = KtHttp.ktHttp.getCommonHeaders()
+    internal val mHeaders: HashMap<String, String> = KtConfig.getCommonHeaders()
 
     fun put(key: String, value: String) {
         mHeaders[key] = value

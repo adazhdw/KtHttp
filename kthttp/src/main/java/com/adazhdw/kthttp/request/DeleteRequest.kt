@@ -10,7 +10,7 @@ import okhttp3.RequestBody
  * date-time：2020/9/3 17:39
  * description：
  **/
-class DeleteRequest(url: String, param: Param) : EmptyRequest(url, param) {
+class DeleteRequest(param: Param) : EmptyRequest(param) {
 
     override fun getRequest(requestBody: RequestBody): Request {
         return requestBuilder().url(getRealUrl()).delete().tag(tag).build()

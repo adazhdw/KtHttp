@@ -20,9 +20,6 @@ class KtHttp private constructor() {
         val ktHttp by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { KtHttp() }
     }
 
-    private val mParams: HashMap<String, String> = hashMapOf()
-    private val mHeaders: HashMap<String, String> = hashMapOf()
-
     /**
      * 请求
      * @param url url
@@ -159,64 +156,23 @@ class KtHttp private constructor() {
         }
     }
 
-    /**
-     * 设置 公共 header 参数
-     */
-    fun addCommonHeaders(headers: Map<String, String>): KtHttp {
-        mHeaders.putAll(headers)
-        return this
-    }
-
-    /**
-     * 获取 公共 header 参数
-     */
-    fun getCommonHeaders(): HashMap<String, String> {
-        return mHeaders
-    }
-
-    /**
-     * 获取 公共 header 参数
-     */
-    fun getCommonHttpHeaders(): Headers {
-        val headers = Headers.Builder()
-        for ((name, value) in mHeaders) {
-            headers.add(name, value)
-        }
-        return headers.build()
-    }
-
-    /**
-     * 设置 公共参数
-     */
-    fun setCommonParams(params: Map<String, String>): KtHttp {
-        mParams.putAll(params)
-        return this
-    }
-
-    /**
-     * 获取 公共参数
-     */
-    fun getCommonParams(): HashMap<String, String> {
-        return mParams
-    }
+    @JvmOverloads
+    fun get(url: String, param: Param = Param.build()): GetRequest = GetRequest(param.url(url))
 
     @JvmOverloads
-    fun get(url: String, param: Param = Param.build()): GetRequest = GetRequest(url, param)
+    fun post(url: String, param: Param = Param.build()): PostRequest = PostRequest(param.url(url))
 
     @JvmOverloads
-    fun post(url: String, param: Param = Param.build()): PostRequest = PostRequest(url, param)
+    fun delete(url: String, param: Param = Param.build()): DeleteRequest = DeleteRequest(param.url(url))
 
     @JvmOverloads
-    fun delete(url: String, param: Param = Param.build()): DeleteRequest = DeleteRequest(url, param)
+    fun head(url: String, param: Param = Param.build()): HeadRequest = HeadRequest(param.url(url))
 
     @JvmOverloads
-    fun head(url: String, param: Param = Param.build()): HeadRequest = HeadRequest(url, param)
+    fun put(url: String, param: Param = Param.build()): PutRequest = PutRequest(param.url(url))
 
     @JvmOverloads
-    fun put(url: String, param: Param = Param.build()): PutRequest = PutRequest(url, param)
-
-    @JvmOverloads
-    fun patch(url: String, param: Param = Param.build()): PatchRequest = PatchRequest(url, param)
+    fun patch(url: String, param: Param = Param.build()): PatchRequest = PatchRequest(param.url(url))
 
 
 }

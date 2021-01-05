@@ -15,7 +15,7 @@ import okhttp3.RequestBody
  * date-time：2020/9/3 10:11
  * description：
  **/
-abstract class BaseRequest(val url: String, val param: Param) {
+abstract class BaseRequest(val param: Param) {
     private val okHttpClient: OkHttpClient = KtConfig.mOkHttpClient
     private var mCallProxy: CallProxy? = null
     private var mCall: Call? = null
@@ -65,7 +65,7 @@ abstract class BaseRequest(val url: String, val param: Param) {
         return builder
     }
 
-    open fun getRealUrl() = url
+    open fun getRealUrl() = param.url
 
     open fun tag(tag: Any?): BaseRequest {
         this.tag(tag.toString())

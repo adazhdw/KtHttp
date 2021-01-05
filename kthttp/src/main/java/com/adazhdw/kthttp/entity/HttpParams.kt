@@ -1,6 +1,6 @@
 package com.adazhdw.kthttp.entity
 
-import com.adazhdw.kthttp.KtHttp
+import com.adazhdw.kthttp.KtConfig
 import com.adazhdw.kthttp.constant.HttpConstant
 import com.adazhdw.ktlib.utils.MimeUtil
 import okhttp3.MediaType
@@ -14,7 +14,7 @@ import java.io.File
  **/
 class HttpParams(val isMultipart: Boolean) {
     /** 请求头存放集合 */
-    internal val mParams: HashMap<String, String> = KtHttp.ktHttp.getCommonParams()
+    internal val mParams: HashMap<String, String> = KtConfig.getCommonParams()
 
     /** 上传文件集合 */
     internal val files: MutableList<Part> = mutableListOf()

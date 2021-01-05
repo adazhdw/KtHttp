@@ -10,10 +10,10 @@ import okhttp3.RequestBody
  * date-time：2020/9/3 17:21
  * description：
  **/
-class PutRequest(url: String, param: Param) : BodyRequest(url, param) {
+class PutRequest(param: Param) : BodyRequest(param) {
 
     override fun getRequest(requestBody: RequestBody): Request {
-        return requestBuilder().put(requestBody).url(url).tag(tag).build()
+        return requestBuilder().put(requestBody).url(param.url).tag(tag).build()
     }
 
 }

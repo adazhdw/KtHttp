@@ -10,12 +10,12 @@ import okhttp3.internal.EMPTY_REQUEST
  * date-time：2020/9/3 16:25
  * description：
  **/
-abstract class EmptyRequest(url: String, param: Param) : BaseRequest(url, param) {
+abstract class EmptyRequest(param: Param) : BaseRequest(param) {
 
     final override fun getRequestBody(): RequestBody = EMPTY_REQUEST
 
     override fun getRealUrl(): String {
         val commonParams = param.params()
-        return RequestUrlUtil.getFullUrl2(url, commonParams, param.urlEncoder)
+        return RequestUrlUtil.getFullUrl2(param.url, commonParams, param.urlEncoder)
     }
 }
