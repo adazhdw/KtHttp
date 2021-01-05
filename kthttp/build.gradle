@@ -60,9 +60,9 @@ ext {
 
     publishedGroupId = 'com.adazhdw' // the id you want to add in "implement" line
     artifact = 'kthttp' // = libraryName  the id you want to add in "implement" line--must be the module name in android project
-    libraryVersion = '0.1.1'
+    libraryVersion = '0.2.0'
 
-    libraryDescription = 'publish 1.1'
+    libraryDescription = 'publish 0.2.0，DSL request'
     siteUrl = 'https://github.com/adazhdw/KtHttp'
     gitUrl = 'https://github.com/adazhdw/KtHttp.git'
     developerId = 'adazhdw1207'

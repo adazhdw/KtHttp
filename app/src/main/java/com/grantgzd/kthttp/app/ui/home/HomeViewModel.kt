@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.adazhdw.kthttp.KtHttp
 import com.adazhdw.kthttp.coroutines.toClazz
 import com.adazhdw.kthttp.entity.Param
+import com.adazhdw.kthttp.ext.get
+import com.adazhdw.kthttp.ext.request
 import com.adazhdw.ktlib.base.mvvm.BaseViewModelImpl
 import com.adazhdw.ktlib.ext.logD
 import com.adazhdw.ktlib.ext.parseAsHtml
@@ -22,10 +24,11 @@ class HomeViewModel : BaseViewModelImpl() {
     fun getText() {
         launch {
             val time = measureTimeMillis {
-                val data = KtHttp.ktHttp.get(
-                    url = "https://wanandroid.com/wxarticle/list/408/1/json",
-                    param = Param.build().addParam("k", "Android")
-                ).toClazz<NetResponse<DataFeed>>().await()
+                val data = request {
+                    get()
+                    url("https://wanandroid.com/wxarticle/list/408/1/json")
+                    addParam("k", "Android")
+                }.toClazz<NetResponse<DataFeed>>().await()
                 val stringBuilder = StringBuilder()
                 for (item in data.data.datas) {
                     stringBuilder.append("标题：${item.title.parseAsHtml()}").append("\n\n")

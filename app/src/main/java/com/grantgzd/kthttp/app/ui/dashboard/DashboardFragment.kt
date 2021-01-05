@@ -9,6 +9,8 @@ import androidx.lifecycle.Observer
 import com.adazhdw.kthttp.KtHttp
 import com.adazhdw.kthttp.coroutines.toClazz
 import com.adazhdw.kthttp.entity.Param
+import com.adazhdw.kthttp.ext.post
+import com.adazhdw.kthttp.ext.request
 import com.adazhdw.ktlib.base.fragment.BaseFragment
 import com.adazhdw.ktlib.base.mvvm.viewModel
 import com.adazhdw.ktlib.ext.parseAsHtml
@@ -39,10 +41,11 @@ class DashboardFragment(override val layoutId: Int = R.layout.fragment_dashboard
         val textView: TextView = view.findViewById(R.id.text_dashboard)
         textView.setOnClickListener {
             launch {
-                val data = KtHttp.ktHttp.post(
-                    url = "https://www.wanandroid.com/article/query/0/json",
-                    param = Param.build().addParam("k", "ViewModel")
-                ).toClazz<NetResponse<DataFeed>>().await()
+                val data = request {
+                    post()
+                    url("https://www.wanandroid.com/article/query/0/json")
+                    addParam("k", "ViewModel")
+                }.toClazz<NetResponse<DataFeed>>().await()
                 val stringBuilder = StringBuilder()
                 for (item in data.data.datas) {
                     stringBuilder.append("标题：${item.title.parseAsHtml()}").append("\n\n")
