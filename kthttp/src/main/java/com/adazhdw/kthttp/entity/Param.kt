@@ -3,6 +3,7 @@ package com.adazhdw.kthttp.entity
 import com.adazhdw.kthttp.coder.UrlCoder
 import com.adazhdw.kthttp.constant.BodyType
 import com.adazhdw.kthttp.constant.HttpConstant
+import com.adazhdw.kthttp.constant.Method
 import okhttp3.FormBody
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -20,6 +21,7 @@ import java.io.File
 class Param private constructor(isMultipart: Boolean) {
 
     internal var url: String = ""
+    internal var method: Method = Method.GET
     private val headers: HttpHeaders = HttpHeaders()
     private val params: HttpParams = HttpParams(isMultipart)
     private var jsonBody: String = ""
@@ -75,6 +77,11 @@ class Param private constructor(isMultipart: Boolean) {
 
     fun url(url: String): Param {
         this.url = url
+        return this
+    }
+
+    fun method(method: Method): Param {
+        this.method = method
         return this
     }
 
