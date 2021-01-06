@@ -6,7 +6,6 @@ import com.adazhdw.kthttp.constant.Method
 import com.adazhdw.kthttp.entity.Param
 import com.adazhdw.kthttp.request.*
 import okhttp3.Call
-import okhttp3.Headers
 
 /**
  * Author: dgz
@@ -54,7 +53,7 @@ class KtHttp private constructor() {
         param: Param = Param.build(),
         callback: RequestCallback
     ) {
-        get(url, param).tag(callback.mLifecycleOwner).execute(callback)
+        get(url, param).tag(callback.mLifecycleOwner).enqueue(callback)
     }
 
     /**
@@ -68,7 +67,7 @@ class KtHttp private constructor() {
         param: Param = Param.build(),
         callback: RequestCallback
     ) {
-        post(url, param).tag(callback.mLifecycleOwner).execute(callback)
+        post(url, param).tag(callback.mLifecycleOwner).enqueue(callback)
     }
 
     /**
@@ -82,7 +81,7 @@ class KtHttp private constructor() {
         param: Param = Param.build(),
         callback: RequestCallback
     ) {
-        delete(url, param).tag(callback.mLifecycleOwner).execute(callback)
+        delete(url, param).tag(callback.mLifecycleOwner).enqueue(callback)
     }
 
     /**
@@ -96,7 +95,7 @@ class KtHttp private constructor() {
         param: Param = Param.build(),
         callback: RequestCallback
     ) {
-        head(url, param).tag(callback.mLifecycleOwner).execute(callback)
+        head(url, param).tag(callback.mLifecycleOwner).enqueue(callback)
     }
 
     /**
@@ -110,7 +109,7 @@ class KtHttp private constructor() {
         param: Param = Param.build(),
         callback: RequestCallback
     ) {
-        put(url, param).tag(callback.mLifecycleOwner).execute(callback)
+        put(url, param).tag(callback.mLifecycleOwner).enqueue(callback)
     }
 
     /**
@@ -124,7 +123,7 @@ class KtHttp private constructor() {
         param: Param = Param.build(),
         callback: RequestCallback
     ) {
-        patch(url, param).tag(callback.mLifecycleOwner).execute(callback)
+        patch(url, param).tag(callback.mLifecycleOwner).enqueue(callback)
     }
 
     /**

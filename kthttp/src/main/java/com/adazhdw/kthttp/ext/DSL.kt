@@ -37,17 +37,17 @@ fun param(block: Param.() -> Unit): Param {
     return Param.build().apply { block(this) }
 }
 
-inline fun <reified T : Any> BaseRequest.enqueue(
+inline fun <reified T : Any> BaseRequest.execute(
     lifecycleOwner: LifecycleOwner,
     noinline success: (data: T) -> Unit
-) = this.enqueue(lifecycleOwner, success, failed = { code, msg -> })
+) = this.execute(lifecycleOwner, success, failed = { code, msg -> })
 
-inline fun <reified T : Any> BaseRequest.enqueue(
+inline fun <reified T : Any> BaseRequest.execute(
     lifecycleOwner: LifecycleOwner,
     noinline success: (data: T) -> Unit,
     noinline failed: (code: Int, msg: String?) -> Unit
 ) = this.apply {
-    this.execute(object : RequestJsonCallback<T>(lifecycleOwner) {
+    this.enqueue(object : RequestJsonCallback<T>(lifecycleOwner) {
         override fun onSuccess(data: T) {
             success.invoke(data)
         }

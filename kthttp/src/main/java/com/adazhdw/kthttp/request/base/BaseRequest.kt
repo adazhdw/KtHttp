@@ -28,7 +28,7 @@ abstract class BaseRequest(val param: Param) {
     /**
      * 执行网络请求
      */
-    fun execute(callback: RequestCallback?) {
+    fun enqueue(callback: RequestCallback?) {
         mCallProxy = CallProxy(getRawCall())
         mCallProxy!!.enqueue(OkHttpCallbackImpl(mCallProxy!!, callback))
     }
