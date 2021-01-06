@@ -51,6 +51,7 @@ dependencies {
 
     implementation 'com.adazhdw:kthttp:0.2.1'
 //    implementation project(path: ':kthttp')
+    implementation 'com.adazhdw:ktlib:1.1.1'
 
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

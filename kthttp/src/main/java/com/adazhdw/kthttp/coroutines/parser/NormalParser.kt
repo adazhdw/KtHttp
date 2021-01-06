@@ -1,6 +1,6 @@
 package com.adazhdw.kthttp.coroutines.parser
 
-import com.adazhdw.kthttp.converter.convert
+import com.adazhdw.kthttp.coroutines.convert
 import okhttp3.Response
 import java.io.IOException
 import java.lang.reflect.Type

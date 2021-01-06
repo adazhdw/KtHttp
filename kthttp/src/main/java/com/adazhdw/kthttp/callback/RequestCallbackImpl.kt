@@ -1,8 +1,8 @@
 package com.adazhdw.kthttp.callback
 
 import androidx.lifecycle.LifecycleOwner
-import com.adazhdw.ktlib.ext.logD
-import com.adazhdw.ktlib.ext.logE
+import com.adazhdw.kthttp.ext.logD
+import com.adazhdw.kthttp.ext.logE
 import okhttp3.Call
 import okhttp3.ResponseBody
 
@@ -27,7 +27,7 @@ open class RequestCallbackImpl(private val owner: LifecycleOwner?) : RequestCall
         "onHttpResponse".logD(TAG)
     }
 
-    override fun onFailure(e: Exception, code: Int, msg: String?) {
+    override fun onFailure(e: Exception, call: Call) {
         "onFailure:$e".logE(TAG)
     }
 

@@ -1,7 +1,6 @@
-package com.adazhdw.kthttp.converter
+package com.adazhdw.kthttp.coroutines
 
 import com.adazhdw.kthttp.KtConfig
-import com.adazhdw.kthttp.exception.ExceptionHelper
 import okhttp3.Response
 import java.io.IOException
 import java.lang.reflect.Type
@@ -14,7 +13,8 @@ import java.lang.reflect.Type
 
 @Throws(IOException::class)
 fun <R> Response.convert(type: Type): R {
-    val body = ExceptionHelper.getNotNullResponseBody(this).string()
+    val body = this.body ?: throw Exception("okhttp3.Response's body is null")
+    val result = body.string()
     val needEncoder = KtConfig.needDecodeResult
-    return KtConfig.converter.convert(body, type, needEncoder)
+    return KtConfig.converter.convert(result, type, needEncoder)
 }

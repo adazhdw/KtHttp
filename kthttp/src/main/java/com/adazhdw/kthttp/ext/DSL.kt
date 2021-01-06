@@ -6,6 +6,7 @@ import com.adazhdw.kthttp.constant.Method
 import com.adazhdw.kthttp.entity.Param
 import com.adazhdw.kthttp.request.*
 import com.adazhdw.kthttp.request.base.BaseRequest
+import okhttp3.Call
 
 /**
  * FileName: DSL
@@ -40,20 +41,20 @@ fun param(block: Param.() -> Unit): Param {
 inline fun <reified T : Any> BaseRequest.execute(
     lifecycleOwner: LifecycleOwner,
     noinline success: (data: T) -> Unit
-) = this.execute(lifecycleOwner, success, failed = { code, msg -> })
+) = this.execute(lifecycleOwner, success, failed = { e, call -> })
 
 inline fun <reified T : Any> BaseRequest.execute(
     lifecycleOwner: LifecycleOwner,
     noinline success: (data: T) -> Unit,
-    noinline failed: (code: Int, msg: String?) -> Unit
+    noinline failed: (e: Exception, call: Call) -> Unit
 ) = this.apply {
     this.enqueue(object : RequestJsonCallback<T>(lifecycleOwner) {
         override fun onSuccess(data: T) {
             success.invoke(data)
         }
 
-        override fun onError(code: Int, msg: String?) {
-            failed.invoke(code, msg)
+        override fun onError(e: Exception, call: Call) {
+            failed.invoke(e, call)
         }
     })
 }

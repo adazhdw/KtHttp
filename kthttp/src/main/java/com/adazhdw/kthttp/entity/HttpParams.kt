@@ -2,7 +2,7 @@ package com.adazhdw.kthttp.entity
 
 import com.adazhdw.kthttp.KtConfig
 import com.adazhdw.kthttp.constant.HttpConstant
-import com.adazhdw.ktlib.utils.MimeUtil
+import com.adazhdw.kthttp.util.MimeUtil
 import okhttp3.MediaType
 import java.io.File
 

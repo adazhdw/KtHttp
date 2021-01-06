@@ -1,10 +1,8 @@
 package com.adazhdw.kthttp.callback
 
-import com.adazhdw.kthttp.exception.ExceptionHelper
-import com.adazhdw.kthttp.exception.NetException
 import com.adazhdw.kthttp.request.CallProxy
 import com.adazhdw.kthttp.util.HttpLifecycleObserver
-import com.adazhdw.ktlib.core.KtExecutors
+import com.adazhdw.kthttp.util.KtExecutors
 import okhttp3.Call
 import okhttp3.Response
 
@@ -27,7 +25,7 @@ open class OkHttpCallbackImpl constructor(
     }
 
     override fun response(response: Response) {
-        val body = ExceptionHelper.getNotNullResponseBody(response)
+        val body = response.body ?: throw Exception("okhttp3.Response's body is null")
         val result = body.string()
         if (isLifecycleActive() && requestCallback != null) {
             requestCallback.onResult(body, result)
@@ -36,10 +34,9 @@ open class OkHttpCallbackImpl constructor(
 
     override fun failure(e: Exception, call: Call) {
         e.printStackTrace()
-        val ex: NetException = ExceptionHelper.callError(e)
         if (isLifecycleActive() && requestCallback != null) {
             KtExecutors.mainThread.execute {
-                requestCallback.onFailure(e, ex.code, ex.msg)
+                requestCallback.onFailure(e, call)
                 requestCallback.onFinish()
             }
         }

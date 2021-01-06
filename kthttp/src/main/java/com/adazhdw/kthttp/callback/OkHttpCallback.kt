@@ -3,7 +3,7 @@ package com.adazhdw.kthttp.callback
 import androidx.lifecycle.LifecycleOwner
 import com.adazhdw.kthttp.request.CallProxy
 import com.adazhdw.kthttp.util.HttpLifecycleObserver
-import com.adazhdw.ktlib.core.KtExecutors
+import com.adazhdw.kthttp.util.KtExecutors
 import com.google.gson.JsonParseException
 import okhttp3.Call
 import okhttp3.Callback

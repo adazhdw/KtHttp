@@ -19,7 +19,7 @@ interface RequestCallback {
     fun onResult(body: ResponseBody, result: String)
 
     /** 请求失败，响应错误，数据解析错误等，都会回调该方法， UI线程 */
-    fun onFailure(e: Exception, code: Int, msg: String?)
+    fun onFailure(e: Exception, call: Call)
 
     /** 请求网络结束后，UI线程 */
     fun onFinish()

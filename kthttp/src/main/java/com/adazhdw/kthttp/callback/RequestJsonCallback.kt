@@ -3,7 +3,8 @@ package com.adazhdw.kthttp.callback
 import androidx.lifecycle.LifecycleOwner
 import com.adazhdw.kthttp.KtConfig
 import com.adazhdw.kthttp.util.ClazzUtil
-import com.adazhdw.ktlib.core.KtExecutors
+import com.adazhdw.kthttp.util.KtExecutors
+import okhttp3.Call
 import okhttp3.ResponseBody
 import java.lang.reflect.Type
 
@@ -28,13 +29,13 @@ abstract class RequestJsonCallback<T : Any>(owner: LifecycleOwner?) : RequestCal
         }
     }
 
-    override fun onFailure(e: Exception, code: Int, msg: String?) {
-        super.onFailure(e, code, msg)
-        this.onError(code, msg)
+    override fun onFailure(e: Exception, call: Call) {
+        super.onFailure(e, call)
+        this.onError(e, call)
     }
 
     abstract fun onSuccess(data: T)
-    abstract fun onError(code: Int, msg: String?)
+    abstract fun onError(e: Exception, call: Call)
 
     private fun getSuperclassTypeParameter(subclass: Class<*>): Type {
         return ClazzUtil.getClassType(subclass)
