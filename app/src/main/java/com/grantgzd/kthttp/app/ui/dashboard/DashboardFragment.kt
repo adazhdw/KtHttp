@@ -6,11 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import com.adazhdw.kthttp.KtHttp
 import com.adazhdw.kthttp.coroutines.toClazz
-import com.adazhdw.kthttp.entity.Param
-import com.adazhdw.kthttp.ext.post
-import com.adazhdw.kthttp.ext.request
+import com.adazhdw.kthttp.ext.postRequest
 import com.adazhdw.ktlib.base.fragment.BaseFragment
 import com.adazhdw.ktlib.base.mvvm.viewModel
 import com.adazhdw.ktlib.ext.parseAsHtml
@@ -41,8 +38,7 @@ class DashboardFragment(override val layoutId: Int = R.layout.fragment_dashboard
         val textView: TextView = view.findViewById(R.id.text_dashboard)
         textView.setOnClickListener {
             launch {
-                val data = request {
-                    post()
+                val data = postRequest {
                     url("https://www.wanandroid.com/article/query/0/json")
                     addParam("k", "ViewModel")
                 }.toClazz<NetResponse<DataFeed>>().await()

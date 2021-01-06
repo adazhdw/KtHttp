@@ -21,7 +21,9 @@ import java.io.File
 class Param private constructor(isMultipart: Boolean) {
 
     internal var url: String = ""
+        private set
     internal var method: Method = Method.GET
+        private set
     private val headers: HttpHeaders = HttpHeaders()
     private val params: HttpParams = HttpParams(isMultipart)
     private var jsonBody: String = ""
@@ -142,6 +144,16 @@ class Param private constructor(isMultipart: Boolean) {
     fun addFormDataPart(map: Map<String, File>) {
         this.params.addFormDataPart(map)
     }
+
+    /**
+     * Param 设置请求方式的扩展方法
+     */
+    fun get(): Param = this.apply { this.method(Method.GET) }
+    fun post(): Param = this.apply { this.method(Method.POST) }
+    fun delete(): Param = this.apply { this.method(Method.DELETE) }
+    fun head(): Param = this.apply { this.method(Method.HEAD) }
+    fun patch(): Param = this.apply { this.method(Method.PATCH) }
+    fun put(): Param = this.apply { this.method(Method.PUT) }
 
     companion object {
         fun build(isMultipart: Boolean = false, bodyType: BodyType = BodyType.FORM) =

@@ -2,11 +2,7 @@ package com.grantgzd.kthttp.app.ui.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.adazhdw.kthttp.KtHttp
 import com.adazhdw.kthttp.coroutines.toClazz
-import com.adazhdw.kthttp.entity.Param
-import com.adazhdw.kthttp.ext.get
-import com.adazhdw.kthttp.ext.post
 import com.adazhdw.kthttp.ext.request
 import com.adazhdw.ktlib.base.mvvm.BaseViewModelImpl
 import com.adazhdw.ktlib.ext.logD

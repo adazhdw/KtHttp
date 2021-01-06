@@ -3,7 +3,7 @@ package com.grantgzd.kthttp.app.ui.notifications
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.adazhdw.kthttp.coroutines.toClazz
+import com.adazhdw.kthttp.ext.enqueue
 import com.adazhdw.kthttp.ext.request
 import com.adazhdw.ktlib.list.ListFragment
 import com.adazhdw.ktlib.list.adapter.ViewBindingAdapter
@@ -32,21 +32,21 @@ class WxChaptersFragment : ListFragment<WxArticleChapter, ChaptersAdapter>() {
 
     override fun onLoad(page: Int, callback: LoadDataCallback<WxArticleChapter>) {
         val url = "https://wanandroid.com/wxarticle/chapters/json"
-        launchOnUI {
+        /*launchOnUI {
             val data = request {//get() 默认为GET
                 url(url)
             }.toClazz<ListResponse<WxArticleChapter>>().await().data ?: listOf()
             val hasmore = dataSize < 25
             callback.onSuccess(data, hasmore)
-        }
-        /*request {
+        }*/
+        request {
             get()
             url(url)
         }.enqueue<ListResponse<WxArticleChapter>>(this, success = {
             val data = it.data ?: listOf()
             val hasmore = dataSize < 25
             callback.onSuccess(data, hasmore)
-        })*/
+        })
     }
 }
 

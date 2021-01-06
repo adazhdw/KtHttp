@@ -76,4 +76,5 @@ abstract class BaseRequest(val param: Param) {
         this.tag = tag
         return this
     }
+
 }

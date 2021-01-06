@@ -2,10 +2,7 @@ package com.grantgzd.kthttp.app.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.adazhdw.kthttp.KtHttp
 import com.adazhdw.kthttp.coroutines.toClazz
-import com.adazhdw.kthttp.entity.Param
-import com.adazhdw.kthttp.ext.get
 import com.adazhdw.kthttp.ext.request
 import com.adazhdw.ktlib.base.mvvm.BaseViewModelImpl
 import com.adazhdw.ktlib.ext.logD
@@ -25,7 +22,7 @@ class HomeViewModel : BaseViewModelImpl() {
         launch {
             val time = measureTimeMillis {
                 val data = request {
-                    get()
+//                    get()//默认时GET
                     url("https://wanandroid.com/wxarticle/list/408/1/json")
                     addParam("k", "Android")
                 }.toClazz<NetResponse<DataFeed>>().await()

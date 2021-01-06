@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import com.adazhdw.kthttp.coroutines.toClazz
-import com.adazhdw.kthttp.ext.get
 import com.adazhdw.kthttp.ext.request
 import com.adazhdw.ktlib.base.fragment.BaseFragment
 import com.adazhdw.ktlib.base.mvvm.viewModel
@@ -41,7 +40,7 @@ class HomeFragment : BaseFragment() {
         textView.setOnClickListener {
             launch {
                 val data = request {
-                    get()
+//                    get()//默认时GET
                     url("https://wanandroid.com/wxarticle/list/408/1/json")
                     addParam("k", "Android")
                 }.toClazz<NetResponse<DataFeed>>().await()

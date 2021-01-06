@@ -15,6 +15,28 @@ import com.adazhdw.kthttp.request.base.BaseRequest
  * History:
  */
 
+/*通过Param设置并且返回一个Request*/
+fun request(block: Param.() -> Unit): BaseRequest {
+    val param = param(block)//method默认为GET
+    return when (param.method) {
+        Method.GET -> GetRequest(param)
+        Method.POST -> PostRequest(param)
+        Method.DELETE -> DeleteRequest(param)
+        Method.HEAD -> HeadRequest(param)
+        Method.PATCH -> PatchRequest(param)
+        Method.PUT -> PutRequest(param)
+    }
+}
+
+fun postRequest(block: Param.() -> Unit): PostRequest {
+    val param = param(block).post()
+    return PostRequest(param)
+}
+
+fun param(block: Param.() -> Unit): Param {
+    return Param.build().apply { block(this) }
+}
+
 inline fun <reified T : Any> BaseRequest.enqueue(
     lifecycleOwner: LifecycleOwner,
     noinline success: (data: T) -> Unit
@@ -34,29 +56,4 @@ inline fun <reified T : Any> BaseRequest.enqueue(
             failed.invoke(code, msg)
         }
     })
-}
-
-/*通过Param设置并且返回一个Request*/
-fun request(block: Param.() -> Unit): BaseRequest {
-    val param = param(block)
-    return when (param.method) {
-        Method.GET -> GetRequest(param)
-        Method.POST -> PostRequest(param)
-        Method.DELETE -> DeleteRequest(param)
-        Method.HEAD -> HeadRequest(param)
-        Method.PATCH -> PatchRequest(param)
-        Method.PUT -> PutRequest(param)
-    }
-}
-
-/*Param 设置请求方式的扩展方法*/
-fun Param.get(): Param = this.apply { this.method(Method.GET) }
-fun Param.post(): Param = this.apply { this.method(Method.POST) }
-fun Param.delete(): Param = this.apply { this.method(Method.DELETE) }
-fun Param.head(): Param = this.apply { this.method(Method.HEAD) }
-fun Param.patch(): Param = this.apply { this.method(Method.PATCH) }
-fun Param.put(): Param = this.apply { this.method(Method.PUT) }
-
-fun param(block: Param.() -> Unit): Param {
-    return Param.build().apply { block(this) }
 }
