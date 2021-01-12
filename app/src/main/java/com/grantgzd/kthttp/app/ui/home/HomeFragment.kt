@@ -6,14 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import com.adazhdw.kthttp.coroutines.toClazz
-import com.adazhdw.kthttp.ext.request
 import com.adazhdw.ktlib.base.fragment.BaseFragment
 import com.adazhdw.ktlib.base.mvvm.viewModel
-import com.adazhdw.ktlib.ext.parseAsHtml
 import com.grantgzd.kthttp.app.R
-import com.grantgzd.kthttp.app.bean.DataFeed
-import com.grantgzd.kthttp.app.bean.NetResponse
 
 class HomeFragment : BaseFragment() {
 
@@ -37,21 +32,10 @@ class HomeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         val textView: TextView = view.findViewById(R.id.text_home)
 
+        homeViewModel.getText()
         textView.setOnClickListener {
-            launch {
-                val data = request {
-//                    get()//默认时GET
-                    url("https://wanandroid.com/wxarticle/list/408/1/json")
-                    addParam("k", "Android")
-                }.toClazz<NetResponse<DataFeed>>().await()
-                val stringBuilder = StringBuilder()
-                for (item in data.data.datas) {
-                    stringBuilder.append("标题：${item.title.parseAsHtml()}").append("\n\n")
-                }
-                textView.text = stringBuilder.toString()
-            }
-            /*homeViewModel.getText()
-            getRequest<NetResponse<DataFeed>>(
+            homeViewModel.getText()
+            /*getRequest<NetResponse<DataFeed>>(
                 url = "https://wanandroid.com/wxarticle/list/408/1/json",
                 param = Param.build().addParam("k", "Android"),
                 success = { data ->
