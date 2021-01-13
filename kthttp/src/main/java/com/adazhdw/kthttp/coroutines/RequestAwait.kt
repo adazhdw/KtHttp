@@ -2,7 +2,7 @@ package com.adazhdw.kthttp.coroutines
 
 import com.adazhdw.kthttp.coroutines.parser.NormalParser
 import com.adazhdw.kthttp.coroutines.parser.Parser
-import com.adazhdw.kthttp.request.base.BaseRequest
+import com.adazhdw.kthttp.request.HttpRequest
 
 /**
  * author：daguozhu
@@ -10,9 +10,9 @@ import com.adazhdw.kthttp.request.base.BaseRequest
  * description： BaseRequest,协程 await 方法
  **/
 
-fun <T> BaseRequest.awaitImpl(
+fun <T> HttpRequest.awaitImpl(
     parser: Parser<T>
 ): IAwait<T> = IAwaitImpl(this, parser)
 
-inline fun <reified T : Any> BaseRequest.toClazz(): IAwait<T> =
+inline fun <reified T : Any> HttpRequest.toClazz(): IAwait<T> =
     awaitImpl(object : NormalParser<T>() {})

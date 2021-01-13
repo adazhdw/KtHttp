@@ -2,48 +2,37 @@ package com.adazhdw.kthttp.ext
 
 import androidx.lifecycle.LifecycleOwner
 import com.adazhdw.kthttp.callback.RequestJsonCallback
-import com.adazhdw.kthttp.constant.Method
-import com.adazhdw.kthttp.entity.Param
-import com.adazhdw.kthttp.request.*
-import com.adazhdw.kthttp.request.base.BaseRequest
+import com.adazhdw.kthttp.request.HttpRequest
 import okhttp3.Call
 
 /**
  * FileName: DSL
  * Author: adazhdw
- * Date: 2021/1/5 17:39
- * Description:网络请求扩展类：KtHttp DSL方式请求封装
- * History:
+ * Date: 2021/1/12 19:46
+ * Description: HttpRequest Extension方法
+ * History: 1、first init
  */
 
-/*通过Param设置并且返回一个Request*/
-fun request(block: Param.() -> Unit): BaseRequest {
-    val param = param(block)//method默认为GET
-    return when (param.method) {
-        Method.GET -> GetRequest(param)
-        Method.POST -> PostRequest(param)
-        Method.DELETE -> DeleteRequest(param)
-        Method.HEAD -> HeadRequest(param)
-        Method.PATCH -> PatchRequest(param)
-        Method.PUT -> PutRequest(param)
-    }
+/**
+ * 默认请求方法为 GET
+ */
+fun httpRequest(isMultipart: Boolean = false, block: HttpRequest.() -> Unit): HttpRequest {
+    return HttpRequest(isMultipart = isMultipart).apply { block.invoke(this) }
 }
 
-fun postRequest(block: Param.() -> Unit): PostRequest {
-    val param = param(block).post()
-    return PostRequest(param)
+/**
+ * POST 请求方式
+ */
+fun postRequest(isMultipart: Boolean = false, block: HttpRequest.() -> Unit): HttpRequest {
+    return HttpRequest(isMultipart = isMultipart).post().apply { block.invoke(this) }
 }
 
-fun param(block: Param.() -> Unit): Param {
-    return Param.build().apply { block(this) }
-}
-
-inline fun <reified T : Any> BaseRequest.execute(
+inline fun <reified T : Any> HttpRequest.execute(
     lifecycleOwner: LifecycleOwner,
     noinline success: (data: T) -> Unit
 ) = this.execute(lifecycleOwner, success, failed = { e, call -> })
 
-inline fun <reified T : Any> BaseRequest.execute(
+inline fun <reified T : Any> HttpRequest.execute(
     lifecycleOwner: LifecycleOwner,
     noinline success: (data: T) -> Unit,
     noinline failed: (e: Exception, call: Call) -> Unit
@@ -58,3 +47,8 @@ inline fun <reified T : Any> BaseRequest.execute(
         }
     })
 }
+
+
+
+
+

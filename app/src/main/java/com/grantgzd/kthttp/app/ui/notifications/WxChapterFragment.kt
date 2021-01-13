@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.adazhdw.kthttp.ext.execute
-import com.adazhdw.kthttp.ext.request
+import com.adazhdw.kthttp.ext.httpRequest
 import com.adazhdw.ktlib.list.ListFragment
 import com.adazhdw.ktlib.list.adapter.ViewBindingAdapter
 import com.adazhdw.ktlib.list.holder.BaseVBViewHolder
@@ -39,8 +39,7 @@ class WxChaptersFragment : ListFragment<WxArticleChapter, ChaptersAdapter>() {
             val hasmore = dataSize < 25
             callback.onSuccess(data, hasmore)
         }*/
-        request {
-//            get()//默认是GET
+        httpRequest {
             url(url)
         }.execute<ListResponse<WxArticleChapter>>(this, success = {
             val data = it.data ?: listOf()

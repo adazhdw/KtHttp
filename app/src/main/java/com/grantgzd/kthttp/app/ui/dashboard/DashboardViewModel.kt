@@ -3,7 +3,7 @@ package com.grantgzd.kthttp.app.ui.dashboard
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.adazhdw.kthttp.coroutines.toClazz
-import com.adazhdw.kthttp.ext.request
+import com.adazhdw.kthttp.ext.postRequest
 import com.adazhdw.ktlib.base.mvvm.BaseViewModelImpl
 import com.adazhdw.ktlib.ext.logD
 import com.adazhdw.ktlib.ext.parseAsHtml
@@ -21,8 +21,7 @@ class DashboardViewModel : BaseViewModelImpl() {
     fun getText() {
         launch {
             val time = measureTimeMillis {
-                val data = request {
-                    post()
+                val data = postRequest {
                     url("https://www.wanandroid.com/article/query/0/json")
                     addParam("k", "ViewModel")
                 }.toClazz<NetResponse<DataFeed>>().await()
