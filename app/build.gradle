@@ -50,8 +50,11 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     implementation 'com.adazhdw:ktlib:1.1.1'
-    implementation 'com.adazhdw:kthttp:0.2.11'
-//    implementation project(path: ':kthttp')
+//    implementation 'com.adazhdw:kthttp:0.2.11'
+    implementation project(path: ':kthttp')
+
+    implementation 'com.yanzhenjie:album:2.1.3'
+    implementation("io.coil-kt:coil:1.1.1")
 
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
