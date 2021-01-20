@@ -23,7 +23,7 @@ open class RequestCallbackImpl(private val owner: LifecycleOwner?) : RequestCall
         "onStart".logD(TAG)
     }
 
-    override fun onResult(body: ResponseBody, result: String) {
+    override fun onResult(body: ResponseBody, call: Call) {
         "onHttpResponse".logD(TAG)
     }
 

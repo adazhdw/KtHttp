@@ -1,7 +1,7 @@
 package com.adazhdw.kthttp.ext
 
 import android.util.Log
-import com.adazhdw.kthttp.KtConfig
+import com.adazhdw.kthttp.OkExt
 
 
 const val TAG = "LogExt"
@@ -14,7 +14,7 @@ internal fun String?.logD(tag: String? = TAG) = log(tag, this, LEVEL.D)
 internal fun String?.logE(tag: String? = TAG) = log(tag, this, LEVEL.E)
 
 private fun log(tag: String?, content: String?, level: LEVEL) {
-    if (!KtConfig.isDebug) return
+    if (!OkExt.isDebug) return
     when (level) {
         LEVEL.V -> {
             Log.v(tag, content ?: "")

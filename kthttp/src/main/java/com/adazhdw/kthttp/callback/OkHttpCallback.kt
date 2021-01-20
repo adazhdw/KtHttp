@@ -1,6 +1,5 @@
 package com.adazhdw.kthttp.callback
 
-import androidx.lifecycle.LifecycleOwner
 import com.adazhdw.kthttp.request.CallProxy
 import com.adazhdw.kthttp.util.HttpLifecycleObserver
 import com.adazhdw.kthttp.util.KtExecutors
@@ -16,19 +15,24 @@ import java.io.IOException
  * description：
  **/
 
-abstract class OkHttpCallback(
-    val mCallProxy: CallProxy,
-    val mLifecycleOwner: LifecycleOwner?
+open class OkHttpCallback(
+    private val mCallProxy: CallProxy,
+    private val requestCallback: RequestCallback?
 ) : Callback {
 
     init {
-        HttpLifecycleObserver.bind(mLifecycleOwner, onDestroy = { mCallProxy.cancel() })
+        HttpLifecycleObserver.bind(requestCallback?.mLifecycleOwner, onDestroy = { mCallProxy.cancel() })
+        KtExecutors.mainThread.execute {
+            if (isLifecycleActive()) {
+                requestCallback?.onStart(mCallProxy.call)
+            }
+        }
     }
 
     override fun onResponse(call: Call, response: Response) {
         try {
             KtExecutors.networkIO.submit {
-                response.use { response(it) }
+                response.use { response(it, call) }
             }
         } catch (e: JsonParseException) {
             failure(e, call)
@@ -41,7 +45,27 @@ abstract class OkHttpCallback(
         failure(e, call)
     }
 
-    abstract fun response(response: Response)
+    open fun response(response: Response, call: Call) {
+        val body = response.body ?: throw Exception("okhttp3.Response's body is null")
+        if (isLifecycleActive() && requestCallback != null) {
+            requestCallback.onResult(body, call)
+        }
+    }
 
-    abstract fun failure(e: Exception, call: Call)
+    open fun failure(e: Exception, call: Call) {
+        e.printStackTrace()
+        if (isLifecycleActive() && requestCallback != null) {
+            KtExecutors.mainThread.execute {
+                requestCallback.onFailure(e, call)
+                requestCallback.onFinish()
+            }
+        }
+    }
+
+
+    /**
+     * 判断当前宿主是否处于活动状态
+     */
+    private fun isLifecycleActive() = HttpLifecycleObserver.isLifecycleActive(requestCallback?.mLifecycleOwner)
+
 }

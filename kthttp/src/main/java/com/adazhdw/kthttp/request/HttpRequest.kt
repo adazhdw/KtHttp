@@ -1,7 +1,7 @@
 package com.adazhdw.kthttp.request
 
-import com.adazhdw.kthttp.KtConfig
-import com.adazhdw.kthttp.callback.OkHttpCallbackImpl
+import com.adazhdw.kthttp.OkExt
+import com.adazhdw.kthttp.callback.OkHttpCallback
 import com.adazhdw.kthttp.callback.RequestCallback
 import com.adazhdw.kthttp.coder.UrlCoder
 import com.adazhdw.kthttp.constant.BodyType
@@ -33,7 +33,7 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest {
         if (mCall == null) {
             val requestBody = getRequestBody()
             val mRequest = getRequest(requestBody)
-            mCall = KtConfig.mOkHttpClient.newCall(mRequest)
+            mCall = OkExt.mOkHttpClient.newCall(mRequest)
         }
         return mCall!!
     }
@@ -77,7 +77,7 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest {
      */
     fun enqueue(callback: RequestCallback?) {
         mCallProxy = CallProxy(getRawCall())
-        mCallProxy!!.enqueue(OkHttpCallbackImpl(mCallProxy!!, callback))
+        mCallProxy!!.enqueue(OkHttpCallback(mCallProxy!!, callback))
     }
 
     /**

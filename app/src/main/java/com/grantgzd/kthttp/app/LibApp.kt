@@ -1,6 +1,6 @@
 package com.grantgzd.kthttp.app
 
-import com.adazhdw.kthttp.KtConfig
+import com.adazhdw.kthttp.OkExt
 import com.adazhdw.ktlib.Application
 
 /**
@@ -12,7 +12,7 @@ class LibApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        KtConfig.isDebug = isDebug()
+        OkExt.isDebug = isDebug()
     }
 
     override fun isDebug(): Boolean {

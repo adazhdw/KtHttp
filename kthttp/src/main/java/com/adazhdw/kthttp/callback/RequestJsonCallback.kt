@@ -1,7 +1,7 @@
 package com.adazhdw.kthttp.callback
 
 import androidx.lifecycle.LifecycleOwner
-import com.adazhdw.kthttp.KtConfig
+import com.adazhdw.kthttp.OkExt
 import com.adazhdw.kthttp.util.ClazzUtil
 import com.adazhdw.kthttp.util.KtExecutors
 import okhttp3.Call
@@ -20,9 +20,10 @@ abstract class RequestJsonCallback<T : Any>(owner: LifecycleOwner?) : RequestCal
         mType = getSuperclassTypeParameter(javaClass)
     }
 
-    override fun onResult(body: ResponseBody, result: String) {
-        super.onResult(body, result)
-        val data = KtConfig.converter.convert<T>(result, mType, KtConfig.needDecodeResult)
+    override fun onResult(body: ResponseBody, call: Call) {
+        super.onResult(body, call)
+        val result = body.string()
+        val data = OkExt.converter.convert<T>(result, mType, OkExt.needDecodeResult)
         KtExecutors.mainThread.execute {
             this.onSuccess(data)
             this.onFinish()
