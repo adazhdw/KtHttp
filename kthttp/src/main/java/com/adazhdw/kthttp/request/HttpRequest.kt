@@ -21,7 +21,7 @@ import java.io.File
  * date-time：2020/9/3 10:11
  * description：Param
  **/
-open class HttpRequest(isMultipart: Boolean = false) : IRequest {
+open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest> {
     private var mCallProxy: CallProxy? = null
     private var mCall: Call? = null
     private var tag = ""
@@ -75,7 +75,7 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest {
     /**
      * 执行网络请求
      */
-    fun enqueue(callback: RequestCallback?) {
+    override fun enqueue(callback: RequestCallback?) {
         mCallProxy = CallProxy(getRawCall())
         mCallProxy!!.enqueue(OkHttpCallback(mCallProxy!!, callback))
     }
@@ -83,16 +83,16 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest {
     /**
      * 取消网络请求
      */
-    fun cancel() {
+    override fun cancel() {
         mCallProxy?.cancel()
     }
 
-    open fun tag(tag: Any?): HttpRequest {
+    override fun tag(tag: Any?): HttpRequest {
         this.tag(tag.toString())
         return this
     }
 
-    open fun tag(tag: String): HttpRequest {
+    override fun tag(tag: String): HttpRequest {
         this.tag = tag
         return this
     }
