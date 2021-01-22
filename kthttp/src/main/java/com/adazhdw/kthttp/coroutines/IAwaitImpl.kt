@@ -9,7 +9,7 @@ import com.adazhdw.kthttp.request.IRequest
  * description：
  **/
 class IAwaitImpl<T>(
-    private val iRequest: IRequest,
+    private val iRequest: IRequest<*>,
     private val parser: Parser<T>
 ) : IAwait<T> {
     override suspend fun await(): T {

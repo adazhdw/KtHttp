@@ -1,5 +1,6 @@
 package com.adazhdw.kthttp.constant
 
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 
 
@@ -20,7 +21,9 @@ object HttpConstant {
     const val ERROR_REQUEST_TIMEOUT_ERROR = 1006
 
 
-    val JSON = "application/json; charset=utf-8".toMediaType()
+    val MEDIA_TYPE_PLAIN: MediaType = "text/plain;charset=utf-8".toMediaType()
+    val MEDIA_TYPE_STREAM: MediaType = "application/octet-stream".toMediaType()
+    val MEDIA_TYPE_JSON: MediaType = "application/json; charset=utf-8".toMediaType()
     val PNG = "image/png; charset=UTF-8".toMediaType()
     val JPG = "image/jpeg; charset=UTF-8".toMediaType()
 

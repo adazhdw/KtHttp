@@ -126,11 +126,11 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest> {
 
     private fun getJsonRequestBody(): RequestBody {
         return if (jsonBody.isNotBlank()) {
-            jsonBody.toRequestBody(HttpConstant.JSON)
+            jsonBody.toRequestBody(HttpConstant.MEDIA_TYPE_JSON)
         } else {
             val jsonObject = JSONObject()
             for ((key, value) in params.mParams) jsonObject.put(key, value)
-            jsonObject.toString().toRequestBody(HttpConstant.JSON)
+            jsonObject.toString().toRequestBody(HttpConstant.MEDIA_TYPE_JSON)
         }
     }
 
