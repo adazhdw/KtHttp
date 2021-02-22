@@ -12,7 +12,7 @@ import java.lang.reflect.Type
  **/
 
 @Throws(IOException::class)
-fun <R> Response.convert(type: Type): R {
+fun <R> Response.convert(type: Type?): R {
     val needEncoder = OkExt.needDecodeResult
     return OkExt.converter.convert(this, type, needEncoder)
 }
