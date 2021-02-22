@@ -2,7 +2,7 @@ package com.adazhdw.kthttp.callback
 
 import androidx.lifecycle.LifecycleOwner
 import okhttp3.Call
-import okhttp3.ResponseBody
+import okhttp3.Response
 
 /**
  * author：daguozhu
@@ -16,7 +16,7 @@ interface RequestCallback {
     fun onStart(call: Call)
 
     /** 对返回数据进行操作的回调， UI线程 */
-    fun onResult(body: ResponseBody, call: Call)
+    fun onResult(response: Response, call: Call)
 
     /** 请求失败，响应错误，数据解析错误等，都会回调该方法， UI线程 */
     fun onFailure(e: Exception, call: Call)

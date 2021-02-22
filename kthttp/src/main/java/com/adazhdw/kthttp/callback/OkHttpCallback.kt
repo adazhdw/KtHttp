@@ -46,9 +46,9 @@ open class OkHttpCallback(
     }
 
     open fun response(response: Response, call: Call) {
-        val body = response.body ?: throw Exception("okhttp3.Response's body is null")
+//        val body = response.body ?: throw Exception("okhttp3.Response's body is null")
         if (isLifecycleActive() && requestCallback != null) {
-            requestCallback.onResult(body, call)
+            requestCallback.onResult(response, call)
         }
     }
 

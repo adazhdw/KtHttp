@@ -13,8 +13,6 @@ import java.lang.reflect.Type
 
 @Throws(IOException::class)
 fun <R> Response.convert(type: Type): R {
-    val body = this.body ?: throw Exception("okhttp3.Response's body is null")
-    val result = body.string()
     val needEncoder = OkExt.needDecodeResult
-    return OkExt.converter.convert(result, type, needEncoder)
+    return OkExt.converter.convert(this, type, needEncoder)
 }

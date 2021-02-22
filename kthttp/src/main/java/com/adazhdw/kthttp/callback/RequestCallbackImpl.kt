@@ -4,7 +4,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.adazhdw.kthttp.ext.logD
 import com.adazhdw.kthttp.ext.logE
 import okhttp3.Call
-import okhttp3.ResponseBody
+import okhttp3.Response
 
 /**
  * author：daguozhu
@@ -23,7 +23,7 @@ open class RequestCallbackImpl(private val owner: LifecycleOwner?) : RequestCall
         "onStart".logD(TAG)
     }
 
-    override fun onResult(body: ResponseBody, call: Call) {
+    override fun onResult(response: Response, call: Call) {
         "onHttpResponse".logD(TAG)
     }
 

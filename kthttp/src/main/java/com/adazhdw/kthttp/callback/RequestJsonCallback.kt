@@ -5,7 +5,7 @@ import com.adazhdw.kthttp.OkExt
 import com.adazhdw.kthttp.util.ClazzUtil
 import com.adazhdw.kthttp.util.KtExecutors
 import okhttp3.Call
-import okhttp3.ResponseBody
+import okhttp3.Response
 import java.lang.reflect.Type
 
 /**
@@ -20,10 +20,9 @@ abstract class RequestJsonCallback<T : Any>(owner: LifecycleOwner?) : RequestCal
         mType = getSuperclassTypeParameter(javaClass)
     }
 
-    override fun onResult(body: ResponseBody, call: Call) {
-        super.onResult(body, call)
-        val result = body.string()
-        val data = OkExt.converter.convert<T>(result, mType, OkExt.needDecodeResult)
+    override fun onResult(response: Response, call: Call) {
+        super.onResult(response, call)
+        val data = OkExt.converter.convert<T>(response, mType, OkExt.needDecodeResult)
         KtExecutors.mainThread.execute {
             this.onSuccess(data)
             this.onFinish()
