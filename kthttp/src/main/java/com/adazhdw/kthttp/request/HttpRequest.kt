@@ -1,6 +1,6 @@
 package com.adazhdw.kthttp.request
 
-import com.adazhdw.kthttp.OkExt
+import com.adazhdw.kthttp.OkConfig
 import com.adazhdw.kthttp.callback.OkHttpCallback
 import com.adazhdw.kthttp.callback.RequestCallback
 import com.adazhdw.kthttp.coder.UrlCoder
@@ -21,7 +21,7 @@ import java.io.File
  * date-time：2020/9/3 10:11
  * description：Param
  **/
-open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest> {
+open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest>, IParams<HttpRequest> {
     private var mCallProxy: CallProxy? = null
     private var mCall: Call? = null
     private var tag = ""
@@ -33,7 +33,7 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest> {
         if (mCall == null) {
             val requestBody = getRequestBody()
             val mRequest = getRequest(requestBody)
-            mCall = OkExt.mOkHttpClient.newCall(mRequest)
+            mCall = OkConfig.getInstance().mOkHttpClient.newCall(mRequest)
         }
         return mCall!!
     }
@@ -157,71 +157,61 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest> {
         }
     }
 
-    fun url(url: String): HttpRequest {
+    override fun url(url: String): HttpRequest = apply {
         this.url = url
-        return this
     }
 
-    fun method(method: Method): HttpRequest {
+    override fun method(method: Method): HttpRequest = apply {
         this.method = method
-        return this
     }
 
-    fun bodyType(bodyType: BodyType): HttpRequest {
+    override fun bodyType(bodyType: BodyType): HttpRequest = apply {
         this.bodyType = bodyType
-        return this
     }
 
     fun bodyType() = this.bodyType
 
-    fun setUrlEncoder(urlEncoder: Boolean): HttpRequest {
+    override fun setUrlEncoder(urlEncoder: Boolean): HttpRequest = apply {
         this.urlEncoder = urlEncoder
-        return this
     }
 
-    fun setNeedHeaders(needHeaders: Boolean): HttpRequest {
+    override fun setNeedHeaders(needHeaders: Boolean): HttpRequest = apply {
         this.needHeaders = needHeaders
-        return this
     }
 
-    fun setJsonBody(jsonBody: String): HttpRequest {
+    override fun setJsonBody(jsonBody: String): HttpRequest = apply {
         this.jsonBody = jsonBody
-        return this
     }
 
-    fun addHeaders(headers: Map<String, String>): HttpRequest {
+    override fun addHeaders(headers: Map<String, String>): HttpRequest = apply {
         this.headers.putAll(headers)
-        return this
     }
 
-    fun addHeader(key: String, value: String): HttpRequest {
+    override fun addHeader(key: String, value: String): HttpRequest = apply {
         this.headers.put(key, value)
-        return this
     }
 
     fun headers(): HashMap<String, String> {
         return this.headers.mHeaders
     }
 
-    fun addParam(key: String, value: String): HttpRequest {
+    override fun addParam(key: String, value: String): HttpRequest = apply {
         this.params.put(key, value)
-        return this
     }
 
-    fun addParams(paramMap: Map<String, String>): HttpRequest {
+    override fun addParams(paramMap: Map<String, String>): HttpRequest = apply {
         this.params.putAll(paramMap)
-        return this
     }
 
     fun params(): HashMap<String, String> {
         return this.params.mParams
     }
 
-    fun addFormDataPart(key: String, file: File) {
+    override fun addFormDataPart(key: String, file: File) = apply {
         this.params.addFormDataPart(key, file)
     }
 
-    fun addFormDataPart(map: Map<String, File>) {
+    override fun addFormDataPart(map: Map<String, File>) = apply {
         this.params.addFormDataPart(map)
     }
 

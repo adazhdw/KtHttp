@@ -22,4 +22,5 @@ interface IRequest<Req : IRequest<Req>> {
     fun cancel()
     fun tag(tag: Any?): Req
     fun tag(tag: String): Req
+
 }

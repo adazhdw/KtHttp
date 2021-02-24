@@ -1,6 +1,6 @@
 package com.adazhdw.kthttp.entity
 
-import com.adazhdw.kthttp.OkExt
+import com.adazhdw.kthttp.OkConfig
 import com.adazhdw.kthttp.constant.HttpConstant
 import com.adazhdw.kthttp.util.MimeUtil
 import okhttp3.MediaType
@@ -14,10 +14,14 @@ import java.io.File
  **/
 class HttpParams(val isMultipart: Boolean) {
     /** 请求头存放集合 */
-    internal val mParams: HashMap<String, String> = OkExt.getCommonParams()
+    internal val mParams: HashMap<String, String> = hashMapOf()
 
     /** 上传文件集合 */
     internal val files: MutableList<Part> = mutableListOf()
+
+    init {
+        mParams.putAll(OkConfig.getInstance().getCommonParams())
+    }
 
     fun put(key: String, value: String) {
         mParams[key] = value

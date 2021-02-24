@@ -1,6 +1,6 @@
 package com.adazhdw.kthttp.coroutines
 
-import com.adazhdw.kthttp.OkExt
+import com.adazhdw.kthttp.OkConfig
 import okhttp3.Response
 import java.io.IOException
 import java.lang.reflect.Type
@@ -13,6 +13,6 @@ import java.lang.reflect.Type
 
 @Throws(IOException::class)
 fun <R> Response.convert(type: Type?): R {
-    val needEncoder = OkExt.needDecodeResult
-    return OkExt.converter.convert(this, type, needEncoder)
+    val needEncoder = OkConfig.getInstance().needDecodeResult
+    return OkConfig.getInstance().converter.convert(this, type, needEncoder)
 }

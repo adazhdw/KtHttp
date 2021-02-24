@@ -1,6 +1,6 @@
 package com.adazhdw.kthttp.converter
 
-import com.adazhdw.kthttp.OkExt
+import com.adazhdw.kthttp.OkConfig
 import com.adazhdw.kthttp.util.GsonUtils
 import com.google.gson.Gson
 import okhttp3.Response
@@ -24,7 +24,7 @@ class GsonConverter private constructor(private val gson: Gson) : IConverter {
         val body = response.body ?: throw Exception("okhttp3.Response's body is null")
         var result2 = body.string()
         if (needDecodeResult) {
-            result2 = OkExt.coder.decode(result2)
+            result2 = OkConfig.getInstance().coder.decode(result2)
         }
         if (type === String::class.java) return result2 as T
         return gson.fromJson(result2, type)
