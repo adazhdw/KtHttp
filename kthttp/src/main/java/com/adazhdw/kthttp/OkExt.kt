@@ -92,7 +92,7 @@ object OkExt {
         noinline success: (data: T) -> Unit,
         noinline failure: (e: Exception) -> Unit
     ) {
-        postRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
+        headRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
             override fun onSuccess(data: T) {
                 success.invoke(data)
             }
@@ -120,7 +120,7 @@ object OkExt {
         noinline success: (data: T) -> Unit,
         noinline failure: (e: Exception) -> Unit
     ) {
-        postRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
+        deleteRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
             override fun onSuccess(data: T) {
                 success.invoke(data)
             }
@@ -148,7 +148,7 @@ object OkExt {
         noinline success: (data: T) -> Unit,
         noinline failure: (e: Exception) -> Unit
     ) {
-        postRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
+        putRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
             override fun onSuccess(data: T) {
                 success.invoke(data)
             }
@@ -176,7 +176,7 @@ object OkExt {
         noinline success: (data: T) -> Unit,
         noinline failure: (e: Exception) -> Unit
     ) {
-        postRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
+        patchRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
             override fun onSuccess(data: T) {
                 success.invoke(data)
             }
