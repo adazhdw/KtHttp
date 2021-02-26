@@ -13,6 +13,6 @@ import java.lang.reflect.Type
 
 @Throws(IOException::class)
 fun <R> Response.convert(type: Type?): R {
-    val needEncoder = OkConfig.getInstance().needDecodeResult
-    return OkConfig.getInstance().converter.convert(this, type, needEncoder)
+    val needEncoder = OkConfig.config.needDecodeResult
+    return OkConfig.config.converter.convert(this, type, needEncoder)
 }

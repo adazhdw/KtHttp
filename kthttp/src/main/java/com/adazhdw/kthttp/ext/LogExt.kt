@@ -14,7 +14,7 @@ internal fun String?.logD(tag: String? = TAG) = log(tag, this, LEVEL.D)
 internal fun String?.logE(tag: String? = TAG) = log(tag, this, LEVEL.E)
 
 private fun log(tag: String?, content: String?, level: LEVEL) {
-    if (!OkConfig.getInstance().isDebug) return
+    if (!OkConfig.config.isDebug) return
     when (level) {
         LEVEL.V -> {
             Log.v(tag, content ?: "")

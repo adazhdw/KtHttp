@@ -33,7 +33,7 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest>, IP
         if (mCall == null) {
             val requestBody = getRequestBody()
             val mRequest = getRequest(requestBody)
-            mCall = OkConfig.getInstance().mOkHttpClient.newCall(mRequest)
+            mCall = OkConfig.config.mOkHttpClient.newCall(mRequest)
         }
         return mCall!!
     }

@@ -13,7 +13,7 @@ class LibApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        OkConfig.getInstance()
+        OkConfig.config
             .debug(isDebug())
             .needDecodeResult(false)
             .setCoder(UrlCoder.create())

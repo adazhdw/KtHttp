@@ -23,8 +23,7 @@ import java.util.concurrent.TimeUnit
 class OkConfig private constructor() {
 
     companion object {
-        private val config by lazy { OkConfig() }
-        fun getInstance() = config
+        val config by lazy { OkConfig() }
     }
 
     var coder: ICoder = UrlCoder.create()

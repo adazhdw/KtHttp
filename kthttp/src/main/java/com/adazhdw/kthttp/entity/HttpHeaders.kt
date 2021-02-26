@@ -12,7 +12,7 @@ class HttpHeaders {
     internal val mHeaders: HashMap<String, String> = hashMapOf()
 
     init {
-        mHeaders.putAll(OkConfig.getInstance().getCommonHeaders())
+        mHeaders.putAll(OkConfig.config.getCommonHeaders())
     }
 
     fun put(key: String, value: String) {

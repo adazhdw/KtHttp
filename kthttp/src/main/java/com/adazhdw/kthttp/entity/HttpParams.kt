@@ -20,7 +20,7 @@ class HttpParams(val isMultipart: Boolean) {
     internal val files: MutableList<Part> = mutableListOf()
 
     init {
-        mParams.putAll(OkConfig.getInstance().getCommonParams())
+        mParams.putAll(OkConfig.config.getCommonParams())
     }
 
     fun put(key: String, value: String) {
