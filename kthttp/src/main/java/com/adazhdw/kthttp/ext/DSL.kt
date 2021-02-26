@@ -28,14 +28,14 @@ fun postRequest(isMultipart: Boolean = false, block: HttpRequest.() -> Unit): Ht
 }
 
 inline fun <reified T : Any> HttpRequest.execute(
-    lifecycleOwner: LifecycleOwner,
+    lifecycleOwner: LifecycleOwner?,
     noinline success: (data: T) -> Unit
-) = this.execute(lifecycleOwner, success, failed = { e, call -> })
+) = this.execute(lifecycleOwner, success, failure = { e, call -> })
 
 inline fun <reified T : Any> HttpRequest.execute(
-    lifecycleOwner: LifecycleOwner,
+    lifecycleOwner: LifecycleOwner?,
     noinline success: (data: T) -> Unit,
-    noinline failed: (e: Exception, call: Call) -> Unit
+    noinline failure: (e: Exception, call: Call) -> Unit
 ) = this.apply {
     this.enqueue(object : RequestJsonCallback<T>(lifecycleOwner) {
         override fun onSuccess(data: T) {
@@ -43,7 +43,7 @@ inline fun <reified T : Any> HttpRequest.execute(
         }
 
         override fun onError(e: Exception, call: Call) {
-            failed.invoke(e, call)
+            failure.invoke(e, call)
         }
     })
 }

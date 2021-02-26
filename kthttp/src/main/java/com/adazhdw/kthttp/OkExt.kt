@@ -1,7 +1,7 @@
 package com.adazhdw.kthttp
 
 import androidx.lifecycle.LifecycleOwner
-import com.adazhdw.kthttp.callback.RequestJsonCallback
+import com.adazhdw.kthttp.ext.execute
 import com.adazhdw.kthttp.request.HttpRequest
 import okhttp3.Call
 
@@ -27,24 +27,16 @@ object OkExt {
         url: String,
         noinline success: (data: T) -> Unit
     ) {
-        get(owner, url, success, failure = {})
+        getRequest(url).execute(owner, success)
     }
 
     inline fun <reified T : Any> get(
         owner: LifecycleOwner?,
         url: String,
         noinline success: (data: T) -> Unit,
-        noinline failure: (e: Exception) -> Unit
+        noinline failure: (e: Exception, call: Call) -> Unit
     ) {
-        getRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
-            override fun onSuccess(data: T) {
-                success.invoke(data)
-            }
-
-            override fun onError(e: Exception, call: Call) {
-                failure.invoke(e)
-            }
-        })
+        getRequest(url).execute(owner, success, failure)
     }
 
     /**
@@ -55,24 +47,16 @@ object OkExt {
         url: String,
         noinline success: (data: T) -> Unit
     ) {
-        post(owner, url, success, failure = {})
+        postRequest(url).execute(owner, success)
     }
 
     inline fun <reified T : Any> post(
         owner: LifecycleOwner?,
         url: String,
         noinline success: (data: T) -> Unit,
-        noinline failure: (e: Exception) -> Unit
+        noinline failure: (e: Exception, call: Call) -> Unit
     ) {
-        postRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
-            override fun onSuccess(data: T) {
-                success.invoke(data)
-            }
-
-            override fun onError(e: Exception, call: Call) {
-                failure.invoke(e)
-            }
-        })
+        postRequest(url).execute(owner, success, failure)
     }
 
     /**
@@ -83,24 +67,16 @@ object OkExt {
         url: String,
         noinline success: (data: T) -> Unit
     ) {
-        head(owner, url, success, failure = {})
+        headRequest(url).execute(owner, success)
     }
 
     inline fun <reified T : Any> head(
         owner: LifecycleOwner?,
         url: String,
         noinline success: (data: T) -> Unit,
-        noinline failure: (e: Exception) -> Unit
+        noinline failure: (e: Exception, call: Call) -> Unit
     ) {
-        headRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
-            override fun onSuccess(data: T) {
-                success.invoke(data)
-            }
-
-            override fun onError(e: Exception, call: Call) {
-                failure.invoke(e)
-            }
-        })
+        headRequest(url).execute(owner, success, failure)
     }
 
     /**
@@ -111,24 +87,16 @@ object OkExt {
         url: String,
         noinline success: (data: T) -> Unit
     ) {
-        delete(owner, url, success, failure = {})
+        deleteRequest(url).execute(owner, success)
     }
 
     inline fun <reified T : Any> delete(
         owner: LifecycleOwner?,
         url: String,
         noinline success: (data: T) -> Unit,
-        noinline failure: (e: Exception) -> Unit
+        noinline failure: (e: Exception, call: Call) -> Unit
     ) {
-        deleteRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
-            override fun onSuccess(data: T) {
-                success.invoke(data)
-            }
-
-            override fun onError(e: Exception, call: Call) {
-                failure.invoke(e)
-            }
-        })
+        deleteRequest(url).execute(owner, success, failure)
     }
 
     /**
@@ -139,24 +107,16 @@ object OkExt {
         url: String,
         noinline success: (data: T) -> Unit
     ) {
-        put(owner, url, success, failure = {})
+        putRequest(url).execute(owner, success)
     }
 
     inline fun <reified T : Any> put(
         owner: LifecycleOwner?,
         url: String,
         noinline success: (data: T) -> Unit,
-        noinline failure: (e: Exception) -> Unit
+        noinline failure: (e: Exception, call: Call) -> Unit
     ) {
-        putRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
-            override fun onSuccess(data: T) {
-                success.invoke(data)
-            }
-
-            override fun onError(e: Exception, call: Call) {
-                failure.invoke(e)
-            }
-        })
+        putRequest(url).execute(owner, success, failure)
     }
 
     /**
@@ -167,24 +127,16 @@ object OkExt {
         url: String,
         noinline success: (data: T) -> Unit
     ) {
-        patch(owner, url, success, failure = {})
+        patchRequest(url).execute(owner, success)
     }
 
     inline fun <reified T : Any> patch(
         owner: LifecycleOwner?,
         url: String,
         noinline success: (data: T) -> Unit,
-        noinline failure: (e: Exception) -> Unit
+        noinline failure: (e: Exception, call: Call) -> Unit
     ) {
-        patchRequest(url).enqueue(object : RequestJsonCallback<T>(owner) {
-            override fun onSuccess(data: T) {
-                success.invoke(data)
-            }
-
-            override fun onError(e: Exception, call: Call) {
-                failure.invoke(e)
-            }
-        })
+        patchRequest(url).execute(owner, success, failure)
     }
 
 }
