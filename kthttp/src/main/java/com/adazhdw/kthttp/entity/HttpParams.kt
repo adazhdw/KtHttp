@@ -12,32 +12,14 @@ import java.io.File
  * description：请求参数封装
  * @param isMultipart /** 是否有流参数 */
  **/
-class HttpParams(val isMultipart: Boolean) {
+class HttpParams(val isMultipart: Boolean) : MapEntity<Any>() {
     /** 请求头存放集合 */
-    internal val mParams: HashMap<String, String> = hashMapOf()
-
     /** 上传文件集合 */
     internal val files: MutableList<Part> = mutableListOf()
 
     init {
-        mParams.putAll(OkConfig.config.getCommonParams())
+        contents.putAll(OkConfig.config.getCommonParams())
     }
-
-    fun put(key: String, value: String) {
-        mParams[key] = value
-    }
-
-    fun putAll(params: Map<String, String>) {
-        mParams.putAll(params)
-    }
-
-    fun remove(key: String) {
-        mParams.remove(key)
-    }
-
-    fun get(key: String): String? = mParams[key]
-
-    fun isEmpty(): Boolean = mParams.isEmpty()
 
     fun addFormDataPart(key: String, file: File) {
         if (!file.exists() || file.length() == 0L) return

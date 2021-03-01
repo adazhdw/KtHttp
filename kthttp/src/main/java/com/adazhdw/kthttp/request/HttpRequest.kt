@@ -129,7 +129,7 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest>, IP
             jsonBody.toRequestBody(HttpConstant.MEDIA_TYPE_JSON)
         } else {
             val jsonObject = JSONObject()
-            for ((key, value) in params.mParams) jsonObject.put(key, value)
+            for ((key, value) in params.contents) jsonObject.put(key, value)
             jsonObject.toString().toRequestBody(HttpConstant.MEDIA_TYPE_JSON)
         }
     }
@@ -144,13 +144,13 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest>, IP
                     part.wrapper.file.asRequestBody(part.wrapper.mediaType)
                 )
             }
-            for ((key, value) in params.mParams) {
+            for ((key, value) in params.contents) {
                 builder.addFormDataPart(key, value.toString())
             }
             return builder.build()
         } else {
             return FormBody.Builder().apply {
-                for ((name, value) in params.mParams) {
+                for ((name, value) in params.contents) {
                     add(name, value.toString())
                 }
             }.build()
@@ -192,7 +192,7 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest>, IP
     }
 
     fun headers(): HashMap<String, String> {
-        return this.headers.mHeaders
+        return this.headers.contents
     }
 
     override fun addParam(key: String, value: String): HttpRequest = apply {
@@ -203,8 +203,8 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest>, IP
         this.params.putAll(paramMap)
     }
 
-    fun params(): HashMap<String, String> {
-        return this.params.mParams
+    fun params(): HashMap<String, Any> {
+        return this.params.contents
     }
 
     override fun addFormDataPart(key: String, file: File) = apply {

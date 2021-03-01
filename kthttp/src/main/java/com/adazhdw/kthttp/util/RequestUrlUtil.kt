@@ -11,7 +11,7 @@ import java.net.URLEncoder
  **/
 
 object RequestUrlUtil {
-    fun getFullUrl(url: String, params: Map<String, String>, urlEncoder: Boolean): String {
+    fun getFullUrl(url: String, params: Map<String, Any>, urlEncoder: Boolean): String {
         val urlBuilder = StringBuilder()
         urlBuilder.append(url)
         if (!url.contains("?") && params.isNotEmpty()) {
@@ -24,7 +24,7 @@ object RequestUrlUtil {
             if (urlEncoder) {
                 try {
                     name = URLEncoder.encode(key, "UTF-8")
-                    value = URLEncoder.encode(keyValue, "UTF-8")
+                    value = URLEncoder.encode(keyValue.toString(), "UTF-8")
                 } catch (e: UnsupportedEncodingException) {
                     e.printStackTrace()
                 }
@@ -37,7 +37,7 @@ object RequestUrlUtil {
         return urlBuilder.toString()
     }
 
-    fun getFullUrl2(url: String, params: Map<String, String>, urlEncoder: Boolean): String {
+    fun getFullUrl2(url: String, params: Map<String, Any>, urlEncoder: Boolean): String {
         val urlBuilder = url.toHttpUrlOrNull()?.newBuilder() ?: return ""
         for ((key, keyValue) in params) {
             var name = key
@@ -45,15 +45,15 @@ object RequestUrlUtil {
             if (urlEncoder) {
                 try {
                     name = URLEncoder.encode(key, "UTF-8")
-                    value = URLEncoder.encode(keyValue, "UTF-8")
+                    value = URLEncoder.encode(keyValue.toString(), "UTF-8")
                 } catch (e: UnsupportedEncodingException) {
                     e.printStackTrace()
                 }
             }
             if (urlEncoder) {
-                urlBuilder.addEncodedQueryParameter(name, value)
+                urlBuilder.addEncodedQueryParameter(name, value.toString())
             } else {
-                urlBuilder.addQueryParameter(name, value)
+                urlBuilder.addQueryParameter(name, value.toString())
             }
         }
         return urlBuilder.build().toString()

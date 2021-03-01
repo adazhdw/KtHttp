@@ -49,7 +49,7 @@ class Param private constructor(isMultipart: Boolean) {
             jsonBody.toRequestBody(HttpConstant.MEDIA_TYPE_JSON)
         } else {
             val jsonObject = JSONObject()
-            for ((key, value) in params.mParams) jsonObject.put(key, value)
+            for ((key, value) in params.contents) jsonObject.put(key, value)
             jsonObject.toString().toRequestBody(HttpConstant.MEDIA_TYPE_JSON)
         }
     }
@@ -64,13 +64,13 @@ class Param private constructor(isMultipart: Boolean) {
                     part.wrapper.file.asRequestBody(part.wrapper.mediaType)
                 )
             }
-            for ((key, value) in params.mParams) {
+            for ((key, value) in params.contents) {
                 builder.addFormDataPart(key, value.toString())
             }
             return builder.build()
         } else {
             return FormBody.Builder().apply {
-                for ((name, value) in params.mParams) {
+                for ((name, value) in params.contents) {
                     add(name, value.toString())
                 }
             }.build()
@@ -120,7 +120,7 @@ class Param private constructor(isMultipart: Boolean) {
     }
 
     fun headers(): HashMap<String, String> {
-        return this.headers.mHeaders
+        return this.headers.contents
     }
 
     fun addParam(key: String, value: String): Param {
@@ -133,8 +133,8 @@ class Param private constructor(isMultipart: Boolean) {
         return this
     }
 
-    fun params(): HashMap<String, String> {
-        return this.params.mParams
+    fun params(): HashMap<String, Any> {
+        return this.params.contents
     }
 
     fun addFormDataPart(key: String, file: File) {

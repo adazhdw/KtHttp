@@ -7,28 +7,10 @@ import com.adazhdw.kthttp.OkConfig
  * date-time：2020/11/17 16:40
  * description：请求头封装
  **/
-class HttpHeaders {
+class HttpHeaders : MapEntity<String>() {
     /** 请求头存放集合 */
-    internal val mHeaders: HashMap<String, String> = hashMapOf()
-
     init {
-        mHeaders.putAll(OkConfig.config.getCommonHeaders())
+        contents.putAll(OkConfig.config.getCommonHeaders())
     }
-
-    fun put(key: String, value: String) {
-        mHeaders[key] = value
-    }
-
-    fun putAll(headers: Map<String, String>) {
-        mHeaders.putAll(headers)
-    }
-
-    fun remove(key: String) {
-        mHeaders.remove(key)
-    }
-
-    fun get(key: String): String? = mHeaders[key]
-
-    fun isEmpty(): Boolean = mHeaders.isEmpty()
 
 }
