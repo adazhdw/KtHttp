@@ -6,7 +6,7 @@ import com.adazhdw.kthttp.constant.HttpConstant
 import com.adazhdw.kthttp.converter.GsonConverter
 import com.adazhdw.kthttp.converter.IConverter
 import com.adazhdw.kthttp.interceptor.RetryInterceptor
-import com.adazhdw.kthttp.ssl.HttpsUtils
+import com.adazhdw.kthttp.ssl.SSLUtils
 import com.adazhdw.kthttp.util.logging.Level
 import com.adazhdw.kthttp.util.logging.LoggingInterceptor
 import okhttp3.Headers
@@ -41,7 +41,7 @@ class OkConfig private constructor() {
 
     @JvmOverloads
     fun getOkHttpClient(timeout: Long = HttpConstant.DEFAULT_TIMEOUT): OkHttpClient {
-        val sslParams = HttpsUtils.getSslSocketFactory()
+        val sslParams = SSLUtils.getSslSocketFactory()
         return OkHttpClient.Builder()
             .connectTimeout(timeout, TimeUnit.SECONDS)
             .callTimeout(timeout, TimeUnit.SECONDS)

@@ -27,7 +27,7 @@ import javax.net.ssl.X509TrustManager;
  * Date: 2020/09/01
  * Time: 16:33
  */
-public class HttpsUtils {
+public class SSLUtils {
     public static SSLParams getSslSocketFactory() {
         return getSslSocketFactory(null, null, null);
     }
