@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.progress
+package com.adazhdw.kthttp.request.progress
 
 import com.adazhdw.kthttp.util.KtExecutors
 import okhttp3.MediaType
