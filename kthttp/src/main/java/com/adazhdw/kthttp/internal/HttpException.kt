@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.request.exception
+package com.adazhdw.kthttp.internal
 
 /**
  * name：HttpException

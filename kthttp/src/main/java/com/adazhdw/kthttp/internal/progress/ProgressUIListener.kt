@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.request.progress
+package com.adazhdw.kthttp.internal.progress
 
 import android.os.Bundle
 import android.os.Handler

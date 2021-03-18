@@ -1,6 +1,6 @@
 package com.adazhdw.kthttp.callback
 
-import com.adazhdw.kthttp.request.CallProxy
+import com.adazhdw.kthttp.internal.CallProxy
 import com.adazhdw.kthttp.util.HttpLifecycleObserver
 import com.adazhdw.kthttp.util.KtExecutors
 import com.google.gson.JsonParseException

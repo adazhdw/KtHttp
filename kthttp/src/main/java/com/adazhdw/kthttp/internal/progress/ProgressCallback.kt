@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.request.progress
+package com.adazhdw.kthttp.internal.progress
 
 /**
  * 流读写进度

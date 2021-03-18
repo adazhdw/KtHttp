@@ -2,7 +2,7 @@ package com.adazhdw.kthttp.ext
 
 import androidx.lifecycle.LifecycleOwner
 import com.adazhdw.kthttp.callback.RequestJsonCallback
-import com.adazhdw.kthttp.request.HttpRequest
+import com.adazhdw.kthttp.internal.HttpRequest
 import okhttp3.Call
 
 /**

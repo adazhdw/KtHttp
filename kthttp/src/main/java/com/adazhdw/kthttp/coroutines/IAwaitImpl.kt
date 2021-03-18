@@ -1,7 +1,7 @@
 package com.adazhdw.kthttp.coroutines
 
 import com.adazhdw.kthttp.coroutines.parser.Parser
-import com.adazhdw.kthttp.request.IRequest
+import com.adazhdw.kthttp.internal.IRequest
 
 /**
  * author：daguozhu

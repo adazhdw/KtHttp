@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.request.entity
+package com.adazhdw.kthttp.internal
 
 import com.adazhdw.kthttp.OkConfig
 import com.adazhdw.kthttp.constant.HttpConstant

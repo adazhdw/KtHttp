@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.request.entity
+package com.adazhdw.kthttp.internal
 
 /**
  * name：MapEntity

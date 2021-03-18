@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.request
+package com.adazhdw.kthttp.internal
 
 import com.adazhdw.kthttp.callback.RequestCallback
 import com.adazhdw.kthttp.constant.BodyType

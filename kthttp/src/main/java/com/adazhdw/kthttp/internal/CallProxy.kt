@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.request
+package com.adazhdw.kthttp.internal
 
 import okhttp3.Call
 import okhttp3.Callback

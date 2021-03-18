@@ -2,7 +2,7 @@ package com.adazhdw.kthttp
 
 import androidx.lifecycle.LifecycleOwner
 import com.adazhdw.kthttp.ext.execute
-import com.adazhdw.kthttp.request.HttpRequest
+import com.adazhdw.kthttp.internal.HttpRequest
 import okhttp3.Call
 
 /**
@@ -10,7 +10,7 @@ import okhttp3.Call
  * date-time：2020/11/16 15:05
  * description：
  **/
-object OkExt {
+object KtHttp {
 
     fun getRequest(url: String) = HttpRequest().get().url(url)
     fun postRequest(url: String) = HttpRequest().post().url(url)

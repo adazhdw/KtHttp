@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.request
+package com.adazhdw.kthttp.internal
 
 import com.adazhdw.kthttp.OkConfig
 import com.adazhdw.kthttp.callback.OkHttpCallback
@@ -7,9 +7,6 @@ import com.adazhdw.kthttp.coder.UrlCoder
 import com.adazhdw.kthttp.constant.BodyType
 import com.adazhdw.kthttp.constant.HttpConstant
 import com.adazhdw.kthttp.constant.Method
-import com.adazhdw.kthttp.request.entity.HttpHeaders
-import com.adazhdw.kthttp.request.entity.HttpParams
-import com.adazhdw.kthttp.request.exception.HttpException
 import com.adazhdw.kthttp.util.IOUtils
 import com.adazhdw.kthttp.util.RequestUrlUtil
 import okhttp3.RequestBody.Companion.asRequestBody
