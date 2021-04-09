@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.ext
+package com.adazhdw.kthttp.util
 
 import android.util.Log
 import com.adazhdw.kthttp.BuildConfig

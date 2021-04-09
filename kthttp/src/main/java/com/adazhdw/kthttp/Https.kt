@@ -1,7 +1,6 @@
 package com.adazhdw.kthttp
 
 import androidx.lifecycle.LifecycleOwner
-import com.adazhdw.kthttp.ext.execute
 import okhttp3.Call
 
 /**

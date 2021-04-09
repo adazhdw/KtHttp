@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.ssl;
+package com.adazhdw.kthttp.util;
 
 
 import java.io.IOException;

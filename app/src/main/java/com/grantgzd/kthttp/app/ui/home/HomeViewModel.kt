@@ -3,7 +3,7 @@ package com.grantgzd.kthttp.app.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.adazhdw.kthttp.coroutines.toClazz
-import com.adazhdw.kthttp.ext.httpRequest
+import com.adazhdw.kthttp.httpRequest
 import com.adazhdw.ktlib.base.mvvm.BaseViewModelImpl
 import com.adazhdw.ktlib.ext.logD
 import com.adazhdw.ktlib.ext.parseAsHtml

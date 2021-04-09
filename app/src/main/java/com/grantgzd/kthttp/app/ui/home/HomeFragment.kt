@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import com.adazhdw.kthttp.ext.execute
-import com.adazhdw.kthttp.ext.httpRequest
+import com.adazhdw.kthttp.execute
+import com.adazhdw.kthttp.httpRequest
 import com.adazhdw.ktlib.base.fragment.BaseFragment
 import com.adazhdw.ktlib.base.mvvm.viewModel
 import com.adazhdw.ktlib.ext.parseAsHtml
