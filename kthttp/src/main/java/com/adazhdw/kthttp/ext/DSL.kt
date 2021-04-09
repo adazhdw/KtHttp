@@ -1,6 +1,7 @@
 package com.adazhdw.kthttp.ext
 
 import androidx.lifecycle.LifecycleOwner
+import com.adazhdw.kthttp.Https
 import com.adazhdw.kthttp.callback.RequestJsonCallback
 import com.adazhdw.kthttp.internal.HttpRequest
 import okhttp3.Call
@@ -16,15 +17,15 @@ import okhttp3.Call
 /**
  * 默认请求方法为 GET
  */
-fun httpRequest(isMultipart: Boolean = false, block: HttpRequest.() -> Unit): HttpRequest {
-    return HttpRequest(isMultipart = isMultipart).apply { block.invoke(this) }
+fun httpRequest(block: HttpRequest.() -> Unit): HttpRequest {
+    return Https.request().get().apply { block.invoke(this) }
 }
 
 /**
  * POST 请求方式
  */
-fun postRequest(isMultipart: Boolean = false, block: HttpRequest.() -> Unit): HttpRequest {
-    return HttpRequest(isMultipart = isMultipart).post().apply { block.invoke(this) }
+fun postRequest(block: HttpRequest.() -> Unit): HttpRequest {
+    return Https.request().post().apply { block.invoke(this) }
 }
 
 inline fun <reified T : Any> HttpRequest.execute(

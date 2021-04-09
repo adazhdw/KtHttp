@@ -1,7 +1,5 @@
 package com.grantgzd.kthttp.app
 
-import com.adazhdw.kthttp.OkConfig
-import com.adazhdw.kthttp.coder.UrlCoder
 import com.adazhdw.ktlib.Application
 
 /**
@@ -13,10 +11,6 @@ class LibApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        OkConfig.config
-            .debug(isDebug())
-            .needDecodeResult(false)
-            .setCoder(UrlCoder.create())
     }
 
     override fun isDebug(): Boolean {

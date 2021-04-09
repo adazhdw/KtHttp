@@ -1,6 +1,6 @@
 package com.adazhdw.kthttp.internal
 
-import com.adazhdw.kthttp.OkConfig
+import com.adazhdw.kthttp.HttpClient
 import com.adazhdw.kthttp.constant.HttpConstant
 import com.adazhdw.kthttp.util.MimeUtil
 import okhttp3.MediaType
@@ -10,15 +10,14 @@ import java.io.File
  * author：daguozhu
  * date-time：2020/11/17 16:40
  * description：请求参数封装
- * @param isMultipart /** 是否有流参数 */
  **/
-class HttpParams(val isMultipart: Boolean) : MapEntity<Any>() {
+class HttpParams(httpClient: HttpClient) : MapEntity<Any>() {
     /** 请求头存放集合 */
     /** 上传文件集合 */
     internal val files: MutableList<Part> = mutableListOf()
 
     init {
-        contents.putAll(OkConfig.config.getCommonParams())
+        contents.putAll(httpClient.commonParams)
     }
 
     fun addFormDataPart(key: String, file: File) {

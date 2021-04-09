@@ -2,7 +2,6 @@ package com.adazhdw.kthttp
 
 import androidx.lifecycle.LifecycleOwner
 import com.adazhdw.kthttp.ext.execute
-import com.adazhdw.kthttp.internal.HttpRequest
 import okhttp3.Call
 
 /**
@@ -10,14 +9,22 @@ import okhttp3.Call
  * date-time：2020/11/16 15:05
  * description：
  **/
-object KtHttp {
+object Https {
 
-    fun getRequest(url: String) = HttpRequest().get().url(url)
-    fun postRequest(url: String) = HttpRequest().post().url(url)
-    fun headRequest(url: String) = HttpRequest().head().url(url)
-    fun deleteRequest(url: String) = HttpRequest().delete().url(url)
-    fun putRequest(url: String) = HttpRequest().put().url(url)
-    fun patchRequest(url: String) = HttpRequest().patch().url(url)
+    private val httpClient by lazy { http() }
+
+    internal fun http(): HttpClient {
+        val builder = HttpClient.Builder()
+        return builder.build()
+    }
+
+    fun request() = httpClient.request()
+    fun getRequest(url: String) = httpClient.request().get().url(url)
+    fun postRequest(url: String) = httpClient.request().post().url(url)
+    fun headRequest(url: String) = httpClient.request().head().url(url)
+    fun deleteRequest(url: String) = httpClient.request().delete().url(url)
+    fun putRequest(url: String) = httpClient.request().put().url(url)
+    fun patchRequest(url: String) = httpClient.request().patch().url(url)
 
     /**
      * GET 方式请求

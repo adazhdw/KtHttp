@@ -2,7 +2,7 @@ package com.adazhdw.kthttp.internal
 
 import android.os.Build
 import android.text.TextUtils
-import com.adazhdw.kthttp.OkConfig
+import com.adazhdw.kthttp.HttpClient
 import java.util.*
 
 /**
@@ -10,10 +10,10 @@ import java.util.*
  * date-time：2020/11/17 16:40
  * description：请求头封装
  **/
-class HttpHeaders : MapEntity<String>() {
+class HttpHeaders(httpClient: HttpClient) : MapEntity<String>() {
     /** 请求头存放集合 */
     init {
-        contents.putAll(OkConfig.config.getCommonHeaders())
+        contents.putAll(httpClient.commonHeaders)
     }
 
     companion object {

@@ -1,6 +1,6 @@
 package com.adazhdw.kthttp.internal
 
-import com.adazhdw.kthttp.OkConfig
+import com.adazhdw.kthttp.HttpClient
 import com.adazhdw.kthttp.callback.OkHttpCallback
 import com.adazhdw.kthttp.callback.RequestCallback
 import com.adazhdw.kthttp.coder.UrlCoder
@@ -22,15 +22,15 @@ import java.util.concurrent.TimeUnit
  * date-time：2020/9/3 10:11
  * description：HttpRequest
  **/
-open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest> {
+open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpRequest> {
     /**
      * ---HTTP 相关参数和方法--------------------------------------------------------------------------------
      */
 
     private var url: String = ""
     private var method: Method = Method.GET
-    private val headers: HttpHeaders = HttpHeaders()
-    private val params: HttpParams = HttpParams(isMultipart)
+    private val headers: HttpHeaders = HttpHeaders(httpClient)
+    private val params: HttpParams = HttpParams(httpClient)
     private var jsonBody: String = ""
     private var bodyType: BodyType = BodyType.FORM
     private val urlCoder = UrlCoder.create()
@@ -167,7 +167,7 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest> {
         if (mCall == null) {
             val requestBody = getRequestBody()
             val mRequest = getRequest(requestBody)
-            mCall = OkConfig.config.mOkHttpClient.newCall(mRequest)
+            mCall = httpClient.client.newCall(mRequest)
         }
         return mCall!!
     }
@@ -191,7 +191,7 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest> {
     }
 
     private fun getFormBody(): okhttp3.RequestBody {
-        if (params.isMultipart && params.files.isNotEmpty()) {
+        if (params.files.isNotEmpty()) {
             val builder = okhttp3.MultipartBody.Builder().setType(okhttp3.MultipartBody.FORM)
             for (part in params.files) {
                 builder.addFormDataPart(
@@ -263,7 +263,7 @@ open class HttpRequest(isMultipart: Boolean = false) : IRequest<HttpRequest> {
                     .body(byteData.toResponseBody(body.contentType()))
                     .build()
 
-                val httpResponse = HttpResponse(newResponse)
+                val httpResponse = HttpResponse(newResponse,httpClient)
                 if (!httpResponse.succeed) {
                     if (!mCallProxy!!.isCanceled()) {
                         mCallProxy?.cancel()
