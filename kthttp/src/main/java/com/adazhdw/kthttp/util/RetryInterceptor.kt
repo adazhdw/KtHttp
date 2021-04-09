@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.interceptor
+package com.adazhdw.kthttp.util
 
 import okhttp3.Interceptor
 import okhttp3.Request

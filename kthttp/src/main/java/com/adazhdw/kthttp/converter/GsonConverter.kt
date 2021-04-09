@@ -10,7 +10,7 @@ import java.lang.reflect.Type
  * date-time：2020/11/3 19:05
  * description：
  **/
-class GsonConverter private constructor(private val gson: Gson) : IConverter {
+class GsonConverter private constructor(private val gson: Gson) : Converter {
 
     companion object {
         fun create(): GsonConverter {

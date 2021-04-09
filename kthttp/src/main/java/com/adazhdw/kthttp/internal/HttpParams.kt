@@ -1,7 +1,6 @@
 package com.adazhdw.kthttp.internal
 
 import com.adazhdw.kthttp.HttpClient
-import com.adazhdw.kthttp.constant.HttpConstant
 import com.adazhdw.kthttp.util.MimeUtil
 import okhttp3.MediaType
 import java.io.File
@@ -24,13 +23,13 @@ class HttpParams(httpClient: HttpClient) : MapEntity<Any>() {
         if (!file.exists() || file.length() == 0L) return
         val isPng = file.name.indexOf("png") > 0 || file.name.indexOf("PNG") > 0
         if (isPng) {
-            this.files.add(Part(key, Part.FileWrapper(file, HttpConstant.PNG)))
+            this.files.add(Part(key, Part.FileWrapper(file, HttpHeaders.PNG)))
             return
         }
         val isJpg = file.name.indexOf("jpg") > 0 || file.name.indexOf("JPG") > 0
                 || file.name.indexOf("jpeg") > 0 || file.name.indexOf("JPEG") > 0
         if (isJpg) {
-            this.files.add(Part(key, Part.FileWrapper(file, HttpConstant.JPG)))
+            this.files.add(Part(key, Part.FileWrapper(file, HttpHeaders.JPG)))
             return
         }
         if (!isPng && !isJpg) {

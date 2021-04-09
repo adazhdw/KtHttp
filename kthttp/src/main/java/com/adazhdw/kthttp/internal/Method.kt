@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.constant
+package com.adazhdw.kthttp.internal
 
 
 /**

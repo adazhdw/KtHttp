@@ -3,10 +3,6 @@ package com.adazhdw.kthttp.internal
 import com.adazhdw.kthttp.HttpClient
 import com.adazhdw.kthttp.callback.OkHttpCallback
 import com.adazhdw.kthttp.callback.RequestCallback
-import com.adazhdw.kthttp.coder.UrlCoder
-import com.adazhdw.kthttp.constant.BodyType
-import com.adazhdw.kthttp.constant.HttpConstant
-import com.adazhdw.kthttp.constant.Method
 import com.adazhdw.kthttp.util.IOUtils
 import com.adazhdw.kthttp.util.RequestUrlUtil
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -33,17 +29,12 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
     private val params: HttpParams = HttpParams(httpClient)
     private var jsonBody: String = ""
     private var bodyType: BodyType = BodyType.FORM
-    private val urlCoder = UrlCoder.create()
 
     /**
      * URL编码，只对GET,DELETE,HEAD有效
      */
     private var urlEncoder: Boolean = false
     private var needHeaders: Boolean = false
-    private var connectTimeout: TimeoutHolder = TimeoutHolder(0)
-    private var readTimeout: TimeoutHolder = TimeoutHolder(0)
-    private var writeTimeout: TimeoutHolder = TimeoutHolder(0)
-
 
     private var mCallProxy: CallProxy? = null
     private var mCall: okhttp3.Call? = null
@@ -107,39 +98,6 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
         this.params.addFormDataPart(map)
     }
 
-    override fun connectTimeout(connectTimeout: Int): HttpRequest {
-        if (connectTimeout < 0) return this
-        return connectTimeout(connectTimeout, TimeUnit.SECONDS)
-    }
-
-    override fun connectTimeout(connectTimeout: Int, timeUnit: TimeUnit): HttpRequest {
-        if (connectTimeout < 0) return this
-        this.connectTimeout = TimeoutHolder(connectTimeout, timeUnit)
-        return this
-    }
-
-    override fun readTimeout(readTimeout: Int): HttpRequest {
-        if (readTimeout < 0) return this
-        return readTimeout(readTimeout, TimeUnit.SECONDS)
-    }
-
-    override fun readTimeout(readTimeout: Int, timeUnit: TimeUnit): HttpRequest {
-        if (readTimeout < 0) return this
-        this.readTimeout = TimeoutHolder(readTimeout, timeUnit)
-        return this
-    }
-
-    override fun writeTimeout(writeTimeout: Int): HttpRequest {
-        if (writeTimeout < 0) return this
-        return writeTimeout(writeTimeout, TimeUnit.SECONDS)
-    }
-
-    override fun writeTimeout(writeTimeout: Int, timeUnit: TimeUnit): HttpRequest {
-        if (writeTimeout < 0) return this
-        this.writeTimeout = TimeoutHolder(writeTimeout, timeUnit)
-        return this
-    }
-
     override fun tag(tag: Any?): HttpRequest {
         this.tag(tag.toString())
         return this
@@ -182,11 +140,11 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
 
     private fun getJsonRequestBody(): okhttp3.RequestBody {
         return if (jsonBody.isNotBlank()) {
-            jsonBody.toRequestBody(HttpConstant.MEDIA_TYPE_JSON)
+            jsonBody.toRequestBody(HttpHeaders.MEDIA_TYPE_JSON)
         } else {
             val jsonObject = JSONObject()
             for ((key, value) in params.contents) jsonObject.put(key, value)
-            jsonObject.toString().toRequestBody(HttpConstant.MEDIA_TYPE_JSON)
+            jsonObject.toString().toRequestBody(HttpHeaders.MEDIA_TYPE_JSON)
         }
     }
 
@@ -194,11 +152,7 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
         if (params.files.isNotEmpty()) {
             val builder = okhttp3.MultipartBody.Builder().setType(okhttp3.MultipartBody.FORM)
             for (part in params.files) {
-                builder.addFormDataPart(
-                    part.key,
-                    urlCoder.encode(part.wrapper.fileName),
-                    part.wrapper.file.asRequestBody(part.wrapper.mediaType)
-                )
+                builder.addFormDataPart(part.key, part.wrapper.fileName, part.wrapper.file.asRequestBody(part.wrapper.mediaType))
             }
             for ((key, value) in params.contents) {
                 builder.addFormDataPart(key, value.toString())
@@ -263,7 +217,7 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
                     .body(byteData.toResponseBody(body.contentType()))
                     .build()
 
-                val httpResponse = HttpResponse(newResponse,httpClient)
+                val httpResponse = HttpResponse(newResponse, httpClient)
                 if (!httpResponse.succeed) {
                     if (!mCallProxy!!.isCanceled()) {
                         mCallProxy?.cancel()
@@ -296,6 +250,6 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
         mCallProxy?.cancel()
     }
 
-    class TimeoutHolder(val timeOut: Int, val timeUnit: TimeUnit = TimeUnit.SECONDS)
+    class TimeoutHolder(val timeOut: Long, val timeUnit: TimeUnit = TimeUnit.SECONDS)
 
 }

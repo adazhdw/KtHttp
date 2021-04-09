@@ -3,6 +3,8 @@ package com.adazhdw.kthttp.internal
 import android.os.Build
 import android.text.TextUtils
 import com.adazhdw.kthttp.HttpClient
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import java.util.*
 
 /**
@@ -55,6 +57,12 @@ class HttpHeaders(httpClient: HttpClient) : MapEntity<String>() {
         const val KEY_SET_COOKIE = "Set-Cookie"
         const val KEY_USER_AGENT = "User-Agent"
         val VALUE_USER_AGENT: String = getUserAgent()
+
+        val MEDIA_TYPE_PLAIN: MediaType = "text/plain;charset=utf-8".toMediaType()
+        val MEDIA_TYPE_STREAM: MediaType = "application/octet-stream".toMediaType()
+        val MEDIA_TYPE_JSON: MediaType = "application/json; charset=utf-8".toMediaType()
+        val PNG = "image/png; charset=UTF-8".toMediaType()
+        val JPG = "image/jpeg; charset=UTF-8".toMediaType()
 
         private var acceptLanguage: String? = ""
         private var userAgent: String? = ""

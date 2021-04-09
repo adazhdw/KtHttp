@@ -8,7 +8,7 @@ import java.lang.reflect.Type
  * date-time：2020/9/5 16:13
  * description：
  **/
-interface IConverter {
+interface Converter {
     /**
      * 拿到响应后，将数据转换成需要的格式，子线程中执行，可以是耗时操作
      *

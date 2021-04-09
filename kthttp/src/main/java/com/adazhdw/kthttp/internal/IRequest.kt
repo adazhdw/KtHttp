@@ -1,8 +1,6 @@
 package com.adazhdw.kthttp.internal
 
 import com.adazhdw.kthttp.callback.RequestCallback
-import com.adazhdw.kthttp.constant.BodyType
-import com.adazhdw.kthttp.constant.Method
 import okhttp3.Call
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -30,13 +28,6 @@ interface IRequest<Req : IRequest<Req>> {
     fun addParams(paramMap: Map<String, String>): Req
     fun addFormDataPart(key: String, file: File): Req
     fun addFormDataPart(map: Map<String, File>): Req
-
-    fun connectTimeout(connectTimeout: Int): Req
-    fun connectTimeout(connectTimeout: Int, timeUnit: TimeUnit): Req
-    fun readTimeout(readTimeout: Int): Req
-    fun readTimeout(readTimeout: Int, timeUnit: TimeUnit): Req
-    fun writeTimeout(writeTimeout: Int): Req
-    fun writeTimeout(writeTimeout: Int, timeUnit: TimeUnit): Req
 
     fun getRawCall(): Call
     fun getRequest(requestBody: RequestBody): Request
