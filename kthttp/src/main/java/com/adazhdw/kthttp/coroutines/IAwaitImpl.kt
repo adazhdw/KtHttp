@@ -1,7 +1,7 @@
 package com.adazhdw.kthttp.coroutines
 
 import com.adazhdw.kthttp.coroutines.parser.Parser
-import com.adazhdw.kthttp.internal.IRequest
+import com.adazhdw.kthttp.internal.HttpRequest
 
 /**
  * author：daguozhu
@@ -9,7 +9,7 @@ import com.adazhdw.kthttp.internal.IRequest
  * description：
  **/
 class IAwaitImpl<T>(
-    private val iRequest: IRequest<*>,
+    private val iRequest: HttpRequest,
     private val parser: Parser<T>
 ) : IAwait<T> {
     override suspend fun await(): T {

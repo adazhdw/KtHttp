@@ -32,6 +32,17 @@ public class ClazzType {
         throw new UnsupportedOperationException();
     }
 
+    @NotNull
+    public static Type getType(Class<?> clazz, int index) {
+        Type superclass = clazz.getGenericSuperclass();
+        if (superclass instanceof Class<?>) {
+            throw new RuntimeException("Missing type parameter.");
+        }
+        ParameterizedType parameterizedType = (ParameterizedType) superclass;
+        Preconditions.checkNotNull(parameterizedType);
+        return canonicalize(parameterizedType.getActualTypeArguments()[index]);
+    }
+
     /**
      * Returns a new parameterized type, applying {@code typeArguments} to
      * {@code rawType} and enclosed by {@code ownerType}.

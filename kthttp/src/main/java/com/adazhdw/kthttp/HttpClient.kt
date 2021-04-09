@@ -2,7 +2,7 @@ package com.adazhdw.kthttp
 
 import com.adazhdw.kthttp.converter.Converter
 import com.adazhdw.kthttp.converter.GsonConverter
-import com.adazhdw.kthttp.internal.BodyType
+import com.adazhdw.kthttp.internal.HttpBodyType
 import com.adazhdw.kthttp.internal.HttpRequest
 import com.adazhdw.kthttp.util.KtExecutors
 import okhttp3.Interceptor
@@ -22,7 +22,7 @@ class HttpClient private constructor(builder: Builder) {
     internal var readTimeout: HttpRequest.TimeoutHolder = builder.readTimeout
     internal var mainExecutor: Executor = builder.mainExecutor ?: KtExecutors.mainThread
     internal var resultConverter: Converter = builder.resultConverter
-    internal var bodyType: BodyType = builder.bodyType
+    internal var bodyType: HttpBodyType = builder.bodyType
     internal var charset: Charset = builder.charset
     internal val commonHeaders: MutableMap<String, String> = builder.commonHeaders
     internal val commonParams: MutableMap<String, String> = builder.commonParams
@@ -41,7 +41,7 @@ class HttpClient private constructor(builder: Builder) {
         internal val networkInterceptors: MutableList<Interceptor> = mutableListOf()
         internal var mainExecutor: Executor? = null
         internal var resultConverter: Converter = GsonConverter.create()
-        internal var bodyType: BodyType = BodyType.FORM
+        internal var bodyType: HttpBodyType = HttpBodyType.FORM
         internal var charset: Charset = Charsets.UTF_8
         internal val commonHeaders: MutableMap<String, String>
         internal val commonParams: MutableMap<String, String>
@@ -101,7 +101,7 @@ class HttpClient private constructor(builder: Builder) {
             this.mainExecutor = mainExecutor
         }
 
-        fun bodyType(bodyType: BodyType) = apply {
+        fun bodyType(bodyType: HttpBodyType) = apply {
             this.bodyType = bodyType
         }
 

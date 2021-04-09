@@ -1,6 +1,6 @@
 package com.adazhdw.kthttp.callback
 
-import com.adazhdw.kthttp.internal.CallProxy
+import com.adazhdw.kthttp.internal.HttpCallProxy
 import com.adazhdw.kthttp.util.HttpLifecycleObserver
 import com.adazhdw.kthttp.util.KtExecutors
 import com.google.gson.JsonParseException
@@ -16,7 +16,7 @@ import java.io.IOException
  **/
 
 open class OkHttpCallback(
-    private val mCallProxy: CallProxy,
+    private val mCallProxy: HttpCallProxy,
     private val requestCallback: RequestCallback?
 ) : Callback {
 

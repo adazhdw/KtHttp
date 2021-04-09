@@ -2,7 +2,7 @@ package com.adazhdw.kthttp.callback
 
 import androidx.lifecycle.LifecycleOwner
 import com.adazhdw.kthttp.coroutines.convert
-import com.adazhdw.kthttp.util.ClazzUtil
+import com.adazhdw.kthttp.util.ClazzType
 import com.adazhdw.kthttp.util.KtExecutors
 import okhttp3.Call
 import okhttp3.Response
@@ -38,7 +38,7 @@ abstract class RequestJsonCallback<T : Any>(owner: LifecycleOwner?) : RequestCal
     abstract fun onError(e: Exception, call: Call)
 
     private fun getSuperclassTypeParameter(subclass: Class<*>): Type {
-        return ClazzUtil.getClassType(subclass)
+        return ClazzType.getType(subclass,0)
     }
 
 }

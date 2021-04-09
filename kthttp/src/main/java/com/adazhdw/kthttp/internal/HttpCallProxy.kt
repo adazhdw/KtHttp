@@ -11,7 +11,7 @@ import okio.Timeout
  * date-time：2020/11/17 19:50
  * description：
  **/
-class CallProxy(val call: Call) : Call {
+class HttpCallProxy(val call: Call) : Call {
 
     override fun request(): Request {
         return call.request()

@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
  * date-time：2020/9/3 10:11
  * description：HttpRequest
  **/
-open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpRequest> {
+open class HttpRequest(private val httpClient: HttpClient) {
     /**
      * ---HTTP 相关参数和方法--------------------------------------------------------------------------------
      */
@@ -28,7 +28,7 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
     private val headers: HttpHeaders = HttpHeaders(httpClient)
     private val params: HttpParams = HttpParams(httpClient)
     private var jsonBody: String = ""
-    private var bodyType: BodyType = BodyType.FORM
+    private var bodyType: HttpBodyType = HttpBodyType.FORM
 
     /**
      * URL编码，只对GET,DELETE,HEAD有效
@@ -36,41 +36,41 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
     private var urlEncoder: Boolean = false
     private var needHeaders: Boolean = false
 
-    private var mCallProxy: CallProxy? = null
+    private var mCallProxy: HttpCallProxy? = null
     private var mCall: okhttp3.Call? = null
     private var tag = ""
 
-    override fun url(url: String): HttpRequest = apply {
+    fun url(url: String): HttpRequest = apply {
         this.url = url
     }
 
-    override fun method(method: Method): HttpRequest = apply {
+    fun method(method: Method): HttpRequest = apply {
         this.method = method
     }
 
-    override fun bodyType(bodyType: BodyType): HttpRequest = apply {
+    fun bodyType(bodyType: HttpBodyType): HttpRequest = apply {
         this.bodyType = bodyType
     }
 
     fun bodyType() = this.bodyType
 
-    override fun setUrlEncoder(urlEncoder: Boolean): HttpRequest = apply {
+    fun setUrlEncoder(urlEncoder: Boolean): HttpRequest = apply {
         this.urlEncoder = urlEncoder
     }
 
-    override fun setNeedHeaders(needHeaders: Boolean): HttpRequest = apply {
+    fun setNeedHeaders(needHeaders: Boolean): HttpRequest = apply {
         this.needHeaders = needHeaders
     }
 
-    override fun setJsonBody(jsonBody: String): HttpRequest = apply {
+    fun setJsonBody(jsonBody: String): HttpRequest = apply {
         this.jsonBody = jsonBody
     }
 
-    override fun addHeaders(headers: Map<String, String>): HttpRequest = apply {
+    fun addHeaders(headers: Map<String, String>): HttpRequest = apply {
         this.headers.putAll(headers)
     }
 
-    override fun addHeader(key: String, value: String): HttpRequest = apply {
+    fun addHeader(key: String, value: String): HttpRequest = apply {
         this.headers.put(key, value)
     }
 
@@ -78,11 +78,11 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
         return this.headers.contents
     }
 
-    override fun addParam(key: String, value: String): HttpRequest = apply {
+    fun addParam(key: String, value: String): HttpRequest = apply {
         this.params.put(key, value)
     }
 
-    override fun addParams(paramMap: Map<String, String>): HttpRequest = apply {
+    fun addParams(paramMap: Map<String, String>): HttpRequest = apply {
         this.params.putAll(paramMap)
     }
 
@@ -90,20 +90,20 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
         return this.params.contents
     }
 
-    override fun addFormDataPart(key: String, file: File) = apply {
+    fun addFormDataPart(key: String, file: File) = apply {
         this.params.addFormDataPart(key, file)
     }
 
-    override fun addFormDataPart(map: Map<String, File>) = apply {
+    fun addFormDataPart(map: Map<String, File>) = apply {
         this.params.addFormDataPart(map)
     }
 
-    override fun tag(tag: Any?): HttpRequest {
+    fun tag(tag: Any?): HttpRequest {
         this.tag(tag.toString())
         return this
     }
 
-    override fun tag(tag: String): HttpRequest {
+    fun tag(tag: String): HttpRequest {
         this.tag = tag
         return this
     }
@@ -121,7 +121,7 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
     /**
      * 获取当前请求的 okhttp.Call
      */
-    override fun getRawCall(): okhttp3.Call {
+    fun getRawCall(): okhttp3.Call {
         if (mCall == null) {
             val requestBody = getRequestBody()
             val mRequest = getRequest(requestBody)
@@ -130,8 +130,8 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
         return mCall!!
     }
 
-    override fun getRequestBody(): okhttp3.RequestBody {
-        return if (bodyType() == BodyType.JSON) {
+    fun getRequestBody(): okhttp3.RequestBody {
+        return if (bodyType() == HttpBodyType.JSON) {
             getJsonRequestBody()
         } else {
             getFormBody()
@@ -170,7 +170,7 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
     /**
      * 生成一个 Request.Builder，并且给当前请求 Request 添加 headers
      */
-    override fun requestBuilder(): okhttp3.Request.Builder {
+    fun requestBuilder(): okhttp3.Request.Builder {
         val builder = okhttp3.Request.Builder()
         if (needHeaders) {
             for ((key, value) in headers()) {
@@ -180,7 +180,7 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
         return builder
     }
 
-    override fun getRealUrl(): String {
+    fun getRealUrl(): String {
         return when (method) {
             Method.GET, Method.DELETE, Method.HEAD -> RequestUrlUtil.getFullUrl2(url, params(), urlEncoder)
             else -> url
@@ -190,7 +190,7 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
     /**
      * 根据请求方法类型获取 Request
      */
-    override fun getRequest(requestBody: okhttp3.RequestBody): okhttp3.Request {
+    fun getRequest(requestBody: okhttp3.RequestBody): okhttp3.Request {
         return when (method) {
             Method.GET -> requestBuilder().url(getRealUrl()).get().tag(tag).build()
             Method.DELETE -> requestBuilder().url(getRealUrl()).delete().tag(tag).build()
@@ -204,8 +204,8 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
     /**
      * 同步网络请求
      */
-    override fun execute(): HttpResponse {
-        mCallProxy = CallProxy(getRawCall())
+    fun execute(): HttpResponse {
+        mCallProxy = HttpCallProxy(getRawCall())
         var response: okhttp3.Response? = null
         try {
             response = mCallProxy!!.execute()
@@ -238,15 +238,15 @@ open class HttpRequest(private val httpClient: HttpClient) : IRequest<HttpReques
     /**
      * 异步执行网络请求
      */
-    override fun enqueue(callback: RequestCallback?) {
-        mCallProxy = CallProxy(getRawCall())
+    fun enqueue(callback: RequestCallback?) {
+        mCallProxy = HttpCallProxy(getRawCall())
         mCallProxy!!.enqueue(OkHttpCallback(mCallProxy!!, callback))
     }
 
     /**
      * 取消网络请求
      */
-    override fun cancel() {
+    fun cancel() {
         mCallProxy?.cancel()
     }
 

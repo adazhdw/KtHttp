@@ -1,7 +1,6 @@
 package com.adazhdw.kthttp.coroutines.parser
 
 import com.adazhdw.kthttp.util.ClazzType
-import com.adazhdw.kthttp.util.ClazzUtil
 import com.adazhdw.kthttp.util.Preconditions
 import java.lang.reflect.Type
 
@@ -33,7 +32,7 @@ abstract class ParserImpl<T> : Parser<T> {
      * 获取当前泛型的type
      */
     private fun getSuperclassTypeParameter(subclass: Class<*>, index: Int = 0): Type {
-        return ClazzUtil.getClassType(subclass, index)
+        return ClazzType.getType(subclass, index)
     }
 
 }

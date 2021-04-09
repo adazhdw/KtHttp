@@ -5,7 +5,7 @@ package com.adazhdw.kthttp.internal
  * date-time：2020/11/17 17:13
  * description：
  **/
-enum class BodyType {
+enum class HttpBodyType {
 
     /**
      * 表单提交

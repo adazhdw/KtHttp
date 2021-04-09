@@ -1,8 +1,8 @@
 package com.adazhdw.kthttp.callback
 
 import androidx.lifecycle.LifecycleOwner
-import com.adazhdw.kthttp.ext.logD
-import com.adazhdw.kthttp.ext.logE
+import com.adazhdw.kthttp.util.logD
+import com.adazhdw.kthttp.util.logE
 import okhttp3.Call
 import okhttp3.Response
 
