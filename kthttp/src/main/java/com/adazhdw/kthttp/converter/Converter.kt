@@ -17,7 +17,7 @@ interface Converter {
      * @throws Exception 转换过程发生的异常
      */
     @Throws(Throwable::class)
-    fun <T> convert(response: Response, type: Type?, needDecodeResult: Boolean): T
+    fun <T> convert(response: Response, type: Type?): T
 
     /**
      * 拿到响应后，将数据转换成需要的格式，子线程中执行，可以是耗时操作

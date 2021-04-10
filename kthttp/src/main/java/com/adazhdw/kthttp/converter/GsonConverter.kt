@@ -19,7 +19,7 @@ class GsonConverter private constructor(private val gson: Gson) : Converter {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> convert(response: Response, type: Type?, needDecodeResult: Boolean): T {
+    override fun <T> convert(response: Response, type: Type?): T {
         val body = response.body ?: throw Exception("okhttp3.Response's body is null")
         val result = body.string()
         if (type === String::class.java) return result as T
