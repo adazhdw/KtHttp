@@ -6,7 +6,7 @@ import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
 
-object KtExecutors {
+object ExecutorUtils {
 
     private const val THREAD_COUNT = 3
 

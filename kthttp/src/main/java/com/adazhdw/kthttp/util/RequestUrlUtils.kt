@@ -10,7 +10,7 @@ import java.net.URLEncoder
  * description：
  **/
 
-object RequestUrlUtil {
+object RequestUrlUtils {
     fun getFullUrl(url: String, params: Map<String, Any>, urlEncoder: Boolean): String {
         val urlBuilder = StringBuilder()
         urlBuilder.append(url)

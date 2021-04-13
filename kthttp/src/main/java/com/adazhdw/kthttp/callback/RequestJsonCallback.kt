@@ -3,7 +3,7 @@ package com.adazhdw.kthttp.callback
 import androidx.lifecycle.LifecycleOwner
 import com.adazhdw.kthttp.coroutines.convert
 import com.adazhdw.kthttp.util.ClazzType
-import com.adazhdw.kthttp.util.KtExecutors
+import com.adazhdw.kthttp.util.ExecutorUtils
 import okhttp3.Call
 import okhttp3.Response
 import java.lang.reflect.Type
@@ -23,7 +23,7 @@ abstract class RequestJsonCallback<T : Any>(owner: LifecycleOwner?) : RequestCal
     override fun onResult(response: Response, call: Call) {
         super.onResult(response, call)
         val data = response.convert<T>(mType)
-        KtExecutors.mainThread.execute {
+        ExecutorUtils.mainThread.execute {
             this.onSuccess(data)
             this.onFinish()
         }

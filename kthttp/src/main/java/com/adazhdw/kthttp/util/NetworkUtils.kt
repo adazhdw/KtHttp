@@ -13,7 +13,7 @@ import androidx.annotation.RequiresPermission
  * description：
  **/
 
-object NetworkUtil {
+object NetworkUtils {
 
     @RequiresPermission(permission.ACCESS_NETWORK_STATE)
     fun isConnected(context: Context): Boolean {

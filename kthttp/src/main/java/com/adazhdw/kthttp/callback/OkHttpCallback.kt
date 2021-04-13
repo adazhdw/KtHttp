@@ -2,7 +2,7 @@ package com.adazhdw.kthttp.callback
 
 import com.adazhdw.kthttp.internal.HttpCallProxy
 import com.adazhdw.kthttp.util.HttpLifecycleObserver
-import com.adazhdw.kthttp.util.KtExecutors
+import com.adazhdw.kthttp.util.ExecutorUtils
 import com.google.gson.JsonParseException
 import okhttp3.Call
 import okhttp3.Callback
@@ -22,7 +22,7 @@ open class OkHttpCallback(
 
     init {
         HttpLifecycleObserver.bind(requestCallback?.mLifecycleOwner, onDestroy = { mCallProxy.cancel() })
-        KtExecutors.mainThread.execute {
+        ExecutorUtils.mainThread.execute {
             if (isLifecycleActive()) {
                 requestCallback?.onStart(mCallProxy.call)
             }
@@ -31,7 +31,7 @@ open class OkHttpCallback(
 
     override fun onResponse(call: Call, response: Response) {
         try {
-            KtExecutors.networkIO.submit {
+            ExecutorUtils.networkIO.submit {
                 response.use { response(it, call) }
             }
         } catch (e: JsonParseException) {
@@ -55,7 +55,7 @@ open class OkHttpCallback(
     open fun failure(e: Exception, call: Call) {
         e.printStackTrace()
         if (isLifecycleActive() && requestCallback != null) {
-            KtExecutors.mainThread.execute {
+            ExecutorUtils.mainThread.execute {
                 requestCallback.onFailure(e, call)
                 requestCallback.onFinish()
             }

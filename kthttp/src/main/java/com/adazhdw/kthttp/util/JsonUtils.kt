@@ -4,7 +4,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-object JsonUtil {
+object JsonUtils {
 
     @JvmOverloads
     fun formatJson(json: String, indentSpaces: Int = 4): String {

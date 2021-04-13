@@ -9,7 +9,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.util.*
 
 
-object MimeUtil {
+object MimeUtils {
     fun getMimeType(context: Context, url: String?): String? {
         val uri = Uri.parse(url)
         return if (uri.scheme == ContentResolver.SCHEME_CONTENT) {

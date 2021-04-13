@@ -4,7 +4,7 @@ import com.adazhdw.kthttp.HttpClient
 import com.adazhdw.kthttp.callback.OkHttpCallback
 import com.adazhdw.kthttp.callback.RequestCallback
 import com.adazhdw.kthttp.util.IOUtils
-import com.adazhdw.kthttp.util.RequestUrlUtil
+import com.adazhdw.kthttp.util.RequestUrlUtils
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -182,7 +182,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
 
     fun getRealUrl(): String {
         return when (method) {
-            Method.GET, Method.DELETE, Method.HEAD -> RequestUrlUtil.getFullUrl2(url, params(), urlEncoder)
+            Method.GET, Method.DELETE, Method.HEAD -> RequestUrlUtils.getFullUrl2(url, params(), urlEncoder)
             else -> url
         }
     }

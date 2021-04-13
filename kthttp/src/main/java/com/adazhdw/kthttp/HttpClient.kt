@@ -4,7 +4,7 @@ import com.adazhdw.kthttp.converter.Converter
 import com.adazhdw.kthttp.converter.GsonConverter
 import com.adazhdw.kthttp.internal.HttpBodyType
 import com.adazhdw.kthttp.internal.HttpRequest
-import com.adazhdw.kthttp.util.KtExecutors
+import com.adazhdw.kthttp.util.ExecutorUtils
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.nio.charset.Charset
@@ -20,7 +20,7 @@ class HttpClient private constructor(builder: Builder) {
     internal var writeTimeout: HttpRequest.TimeoutHolder = builder.writeTimeout
     internal var connectTimeout: HttpRequest.TimeoutHolder = builder.connectTimeout
     internal var readTimeout: HttpRequest.TimeoutHolder = builder.readTimeout
-    internal var mainExecutor: Executor = builder.mainExecutor ?: KtExecutors.mainThread
+    internal var mainExecutor: Executor = builder.mainExecutor ?: ExecutorUtils.mainThread
     internal var resultConverter: Converter = builder.resultConverter
     internal var bodyType: HttpBodyType = builder.bodyType
     internal var charset: Charset = builder.charset

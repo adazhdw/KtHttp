@@ -1,7 +1,7 @@
 package com.adazhdw.kthttp.internal
 
 import com.adazhdw.kthttp.HttpClient
-import com.adazhdw.kthttp.util.MimeUtil
+import com.adazhdw.kthttp.util.MimeUtils
 import okhttp3.MediaType
 import java.io.File
 
@@ -41,6 +41,6 @@ class HttpParams(httpClient: HttpClient) : MapEntity<Any>() {
         for ((key, file) in map) addFormDataPart(key, file)
     }
 
-    private fun mediaType(file: File): MediaType? = MimeUtil.getMediaType(file.path)
+    private fun mediaType(file: File): MediaType? = MimeUtils.getMediaType(file.path)
 
 }
