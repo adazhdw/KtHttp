@@ -2,9 +2,6 @@ package com.adazhdw.kthttp.coroutines
 
 import com.adazhdw.kthttp.coroutines.parser.Parser
 import kotlinx.coroutines.suspendCancellableCoroutine
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
 import java.io.IOException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -15,34 +12,34 @@ import kotlin.coroutines.resumeWithException
  * Description: okhttp3.Call await 方法
  */
 
-internal suspend fun Call.await(): Response {
+internal suspend fun okhttp3.Call.await(): okhttp3.Response {
     return suspendCancellableCoroutine { continuation ->
         continuation.invokeOnCancellation {
             cancel()
         }
-        this.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
+        this.enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: okhttp3.Call, e: IOException) {
                 continuation.resumeWithException(e)
             }
 
-            override fun onResponse(call: Call, response: Response) {
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
                 continuation.resume(response)
             }
         })
     }
 }
 
-internal suspend fun <T> Call.await(parser: Parser<T>): T {
+internal suspend fun <T> okhttp3.Call.await(parser: Parser<T>): T {
     return suspendCancellableCoroutine { continuation ->
         continuation.invokeOnCancellation {
             cancel()
         }
-        this.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
+        this.enqueue(object : okhttp3.Callback {
+            override fun onFailure(call: okhttp3.Call, e: IOException) {
                 continuation.resumeWithException(e)
             }
 
-            override fun onResponse(call: Call, response: Response) {
+            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
                 try {
                     continuation.resume(parser.parse(response))
                 } catch (e: Exception) {

@@ -49,30 +49,4 @@ dependencies {
 
 }
 
-//发布jcenter    gradlew clean build install bintrayUpload
-ext {
-    bintrayRepo = 'android-libraries' // the repository name in Bintray dashboard
-    bintrayName = 'kthttp' // the package name of the bintray repository
-    libraryName = 'kthttp'// the module name in android studio project
-
-    publishedGroupId = 'com.adazhdw' // the id you want to add in "implement" line
-    artifact = 'kthttp' // = libraryName  the id you want to add in "implement" line--must be the module name in android project
-    libraryVersion = '0.2.24'
-
-    libraryDescription = 'publish 0.2.24，...OkExt 代码优化，OkConfig优化'
-    siteUrl = 'https://github.com/adazhdw/KtHttp'
-    gitUrl = 'https://github.com/adazhdw/KtHttp.git'
-    developerId = 'adazhdw1207'
-    developerName = 'Lucas Da'
-    developerEmail = 'adazhdw1207@gmail.com'
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-}
-
-if (project.rootProject.file('local.properties').exists()) {
-//    apply from: 'https://raw.githubusercontent.com/numetriclabz/jcenter/master/installv.gradle'
-//    apply from: 'https://raw.githubusercontent.com/numetriclabz/jcenter/master/bintrayv.gradle'
-    apply from: 'bintray.gradle'
-}
-
+apply from: '../jitpack.gradle'

@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.util
+package com.adazhdw.kthttp.internal
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
