@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.callback
+package com.adazhdw.kthttp.internal.callback
 
 import androidx.lifecycle.LifecycleOwner
 import okhttp3.Call

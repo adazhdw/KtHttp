@@ -1,16 +1,19 @@
 package com.adazhdw.kthttp.internal
 
 import com.adazhdw.kthttp.HttpClient
-import com.adazhdw.kthttp.callback.OkHttpCallback
-import com.adazhdw.kthttp.callback.RequestCallback
+import com.adazhdw.kthttp.internal.callback.OkHttpCallback
+import com.adazhdw.kthttp.internal.callback.RequestCallback
 import com.adazhdw.kthttp.util.IOUtils
+import com.adazhdw.kthttp.util.MimeUtils
 import com.adazhdw.kthttp.util.RequestUrlUtils
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody.Companion.toResponseBody
+import okhttp3.internal.http.HttpMethod
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -25,16 +28,18 @@ open class HttpRequest(private val httpClient: HttpClient) {
 
     private var url: String = ""
     private var method: Method = Method.GET
-    private val headers: HttpHeaders = HttpHeaders(httpClient)
-    private val params: HttpParams = HttpParams(httpClient)
-    private var jsonBody: String = ""
+    private val headers by lazy { mutableMapOf<String, String>() }// 请求任务的头信息
+    private val queryParams by lazy { mutableMapOf<String, String>() }// URL参数（查询参数）
+    private val bodyParams by lazy { mutableMapOf<String, String>() }// 报文体参数
+    private val fileParams by lazy { mutableListOf<Part>() } // 文件上传参数
+    private var requestBody: String = ""
     private var bodyType: HttpBodyType = HttpBodyType.FORM
 
     /**
      * URL编码，只对GET,DELETE,HEAD有效
      */
     private var urlEncoder: Boolean = false
-    private var needHeaders: Boolean = false
+    private var needHeader: Boolean = false
 
     private var mCallProxy: HttpCallProxy? = null
     private var mCall: okhttp3.Call? = null
@@ -52,18 +57,12 @@ open class HttpRequest(private val httpClient: HttpClient) {
         this.bodyType = bodyType
     }
 
-    fun bodyType() = this.bodyType
-
     fun urlEncoder(urlEncoder: Boolean): HttpRequest = apply {
         this.urlEncoder = urlEncoder
     }
 
-    fun needHeaders(needHeaders: Boolean): HttpRequest = apply {
-        this.needHeaders = needHeaders
-    }
-
-    fun jsonBody(jsonBody: String): HttpRequest = apply {
-        this.jsonBody = jsonBody
+    fun needHeader(needHeader: Boolean): HttpRequest = apply {
+        this.needHeader = needHeader
     }
 
     fun addHeaders(headers: Map<String, String>): HttpRequest = apply {
@@ -71,35 +70,54 @@ open class HttpRequest(private val httpClient: HttpClient) {
     }
 
     fun addHeader(key: String, value: String): HttpRequest = apply {
-        this.headers[key] = value
+        headers[key] = value
     }
 
-    fun headers(): HashMap<String, String> {
-        return this.headers.contents
+    fun queryParams(key: String, value: String): HttpRequest = apply {
+        queryParams[key] = value
     }
 
-    fun addParam(key: String, value: String): HttpRequest = apply {
-        this.params.put(key, value)
+    fun queryParams(paramMap: Map<String, String>): HttpRequest = apply {
+        queryParams.putAll(paramMap)
     }
 
-    fun addParams(paramMap: Map<String, String>): HttpRequest = apply {
-        this.params.putAll(paramMap)
+    fun bodyParams(key: String, value: String): HttpRequest = apply {
+        bodyParams[key] = value
     }
 
-    fun params(): HashMap<String, Any> {
-        return this.params.contents
+    fun bodyParams(paramMap: Map<String, String>): HttpRequest = apply {
+        bodyParams.putAll(paramMap)
     }
 
-    fun addFormDataPart(key: String, file: File) = apply {
-        this.params.addFormDataPart(key, file)
+    fun requestBody(requestBody: String): HttpRequest = apply {
+        this.requestBody = requestBody
     }
 
-    fun addFormDataPart(map: Map<String, File>) = apply {
-        this.params.addFormDataPart(map)
+    fun addFileParam(key: String, file: File): HttpRequest {
+        if (!file.exists() || file.length() == 0L) return this
+        val isPng = file.name.indexOf("png") > 0 || file.name.indexOf("PNG") > 0
+        if (isPng) {
+            this.fileParams.add(Part(key, Part.FileWrapper(file, HttpHeaders.PNG)))
+            return this
+        }
+        val isJpg = file.name.indexOf("jpg") > 0 || file.name.indexOf("JPG") > 0
+                || file.name.indexOf("jpeg") > 0 || file.name.indexOf("JPEG") > 0
+        if (isJpg) {
+            this.fileParams.add(Part(key, Part.FileWrapper(file, HttpHeaders.JPG)))
+            return this
+        }
+        if (!isPng && !isJpg) {
+            this.fileParams.add(Part(key, Part.FileWrapper(file, MimeUtils.getMediaType(file.path))))
+        }
+        return this
+    }
+
+    fun addFileParam(map: Map<String, File>) = apply {
+        for ((key, file) in map) addFileParam(key, file)
     }
 
     fun tag(tag: Any?): HttpRequest {
-        this.tag(tag.toString())
+        tag(tag.toString())
         return this
     }
 
@@ -111,93 +129,127 @@ open class HttpRequest(private val httpClient: HttpClient) {
     /**
      * Param 设置请求方式的扩展方法
      */
-    fun get(): HttpRequest = this.apply { this.method(Method.GET) }
-    fun post(): HttpRequest = this.apply { this.method(Method.POST) }
-    fun delete(): HttpRequest = this.apply { this.method(Method.DELETE) }
-    fun head(): HttpRequest = this.apply { this.method(Method.HEAD) }
-    fun patch(): HttpRequest = this.apply { this.method(Method.PATCH) }
-    fun put(): HttpRequest = this.apply { this.method(Method.PUT) }
+    fun get(): HttpRequest = apply { method(Method.GET) }
+    fun post(): HttpRequest = apply { method(Method.POST) }
+    fun delete(): HttpRequest = apply { method(Method.DELETE) }
+    fun head(): HttpRequest = apply { method(Method.HEAD) }
+    fun patch(): HttpRequest = apply { method(Method.PATCH) }
+    fun put(): HttpRequest = apply { method(Method.PUT) }
 
     /**
      * 获取当前请求的 okhttp.Call
      */
     fun getRawCall(): okhttp3.Call {
         if (mCall == null) {
-            val requestBody = getRequestBody()
-            val mRequest = getRequest(requestBody)
+            val mRequest = getRequest()
             mCall = httpClient.client.newCall(mRequest)
         }
         return mCall!!
     }
 
-    private fun getRequestBody(): okhttp3.RequestBody {
-        return if (bodyType() == HttpBodyType.JSON) {
+    /**
+     * 根据请求方法类型获取 Request
+     */
+    private fun getRequest(): okhttp3.Request {
+        val method = this.method.name.toUpperCase(Locale.getDefault())
+        val bodyCanUsed = HttpMethod.permitsRequestBody(method)//okhttp3.RequestBody可以用在请求体中
+        val requireBody = HttpMethod.requiresRequestBody(method)//请求体中必须设置okhttp3.RequestBody
+        assertNotConflict(bodyCanUsed)
+        if (!requireBody) {
+            queryParams.putAll(httpClient.commonParams)
+        }
+        val realUrl = RequestUrlUtils.getFullUrl2(url, queryParams, urlEncoder)
+        val requestBuilder = okhttp3.Request.Builder().url(realUrl).tag(tag)
+
+        if (needHeader) {
+            for ((key, value) in headers) {//专属请求header
+                requestBuilder.addHeader(key, value)
+            }
+            for ((key, value) in httpClient.commonHeaders) {//接口通用header
+                requestBuilder.addHeader(key, value)
+            }
+        }
+        if (bodyCanUsed) {
+            val requestBody: okhttp3.RequestBody? = getRequestBody()
+            requestBuilder.method(method, requestBody)
+        } else {
+            requestBuilder.method(method, null)
+        }
+        return requestBuilder.build()
+    }
+
+    private fun assertNotConflict(bodyCanUsed: Boolean) {
+        if (!bodyCanUsed) {
+            when {
+                requestBody.isNotBlank() -> {
+                    throw HttpException("GET | HEAD request cannot call the requestBody() method!")
+                }
+                bodyParams.isNotEmpty() -> {
+                    throw HttpException("GET | HEAD request cannot call the bodyParams() method!")
+                }
+                fileParams.isNotEmpty() -> {
+                    throw HttpException("GET | HEAD request cannot call the addFileParam() method!")
+                }
+            }
+        }
+        if (requestBody.isNotBlank()) {
+            when {
+                bodyParams.isNotEmpty() -> {
+                    throw HttpException("The methods bodyParams() and requestBody() cannot be called at the same time")
+                }
+                fileParams.isNotEmpty() -> {
+                    throw HttpException("The methods addFileParam() and requestBody() cannot be called at the same time")
+                }
+            }
+        }
+    }
+
+    private fun getRequestBody(): okhttp3.RequestBody? {
+        return if (bodyType == HttpBodyType.JSON) {
             getJsonRequestBody()
         } else {
             getFormBody()
         }
     }
 
-    private fun getJsonRequestBody(): okhttp3.RequestBody {
-        return if (jsonBody.isNotBlank()) {
-            jsonBody.toRequestBody(HttpHeaders.MEDIA_TYPE_JSON)
-        } else {
-            val jsonObject = JSONObject()
-            for ((key, value) in params.contents) jsonObject.put(key, value)
-            jsonObject.toString().toRequestBody(HttpHeaders.MEDIA_TYPE_JSON)
+    private fun getJsonRequestBody(): okhttp3.RequestBody? {
+        return when {
+            requestBody.isNotBlank() -> {
+                requestBody.toRequestBody(HttpHeaders.MEDIA_TYPE_JSON)
+            }
+            bodyParams.isNotEmpty() -> {
+                val jsonObject = JSONObject()
+                for ((key, value) in bodyParams) jsonObject.put(key, value)
+                jsonObject.toString().toRequestBody(HttpHeaders.MEDIA_TYPE_JSON)
+            }
+            else -> {
+                null
+            }
         }
     }
 
     private fun getFormBody(): okhttp3.RequestBody {
-        if (params.files.isNotEmpty()) {
-            val builder = okhttp3.MultipartBody.Builder().setType(okhttp3.MultipartBody.FORM)
-            for (part in params.files) {
-                builder.addFormDataPart(part.key, part.wrapper.fileName, part.wrapper.file.asRequestBody(part.wrapper.mediaType))
-            }
-            for ((key, value) in params.contents) {
-                builder.addFormDataPart(key, value.toString())
-            }
-            return builder.build()
-        } else {
-            return okhttp3.FormBody.Builder().apply {
-                for ((name, value) in params.contents) {
-                    add(name, value.toString())
+        when {
+            fileParams.isNotEmpty() -> {
+                val builder = okhttp3.MultipartBody.Builder().setType(okhttp3.MultipartBody.FORM)
+                for (part in fileParams) {
+                    builder.addFormDataPart(part.key, part.wrapper.fileName, part.wrapper.file.asRequestBody(part.wrapper.mediaType))
                 }
-            }.build()
-        }
-    }
-
-    /**
-     * 生成一个 Request.Builder，并且给当前请求 Request 添加 headers
-     */
-    private fun requestBuilder(): okhttp3.Request.Builder {
-        val builder = okhttp3.Request.Builder()
-        if (needHeaders) {
-            for ((key, value) in headers()) {
-                builder.addHeader(key, value)
+                for ((key, value) in bodyParams) {
+                    builder.addFormDataPart(key, value)
+                }
+                return builder.build()
             }
-        }
-        return builder
-    }
-
-    private fun getRealUrl(): String {
-        return when (method) {
-            Method.GET, Method.DELETE, Method.HEAD -> RequestUrlUtils.getFullUrl2(url, params(), urlEncoder)
-            else -> url
-        }
-    }
-
-    /**
-     * 根据请求方法类型获取 Request
-     */
-    private fun getRequest(requestBody: okhttp3.RequestBody): okhttp3.Request {
-        return when (method) {
-            Method.GET -> requestBuilder().url(getRealUrl()).get().tag(tag).build()
-            Method.DELETE -> requestBuilder().url(getRealUrl()).delete().tag(tag).build()
-            Method.HEAD -> requestBuilder().url(getRealUrl()).head().tag(tag).build()
-            Method.POST -> requestBuilder().url(getRealUrl()).post(requestBody).tag(tag).build()
-            Method.PATCH -> requestBuilder().url(getRealUrl()).patch(requestBody).tag(tag).build()
-            Method.PUT -> requestBuilder().url(getRealUrl()).put(requestBody).tag(tag).build()
+            bodyParams.isNotEmpty() -> {
+                return okhttp3.FormBody.Builder().apply {
+                    for ((name, value) in bodyParams) {
+                        add(name, value)
+                    }
+                }.build()
+            }
+            else -> {
+                return okhttp3.FormBody.Builder().build()
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.adazhdw.kthttp.callback
+package com.adazhdw.kthttp.internal.callback
 
 import com.adazhdw.kthttp.internal.HttpCallProxy
 import com.adazhdw.kthttp.internal.HttpLifecycleObserver

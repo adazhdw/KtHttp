@@ -24,7 +24,7 @@ class HomeViewModel : BaseViewModelImpl() {
                 val data = getRequest {
 //                    get()//默认时GET
                     url("https://wanandroid.com/wxarticle/list/408/1/json")
-                    addParam("k", "Android")
+                    queryParams("k", "Android")
                 }.toClazz<NetResponse<DataFeed>>().await()
                 val stringBuilder = StringBuilder()
                 for (item in data.data.datas) {

@@ -2,7 +2,6 @@ package com.adazhdw.kthttp.internal
 
 import android.os.Build
 import android.text.TextUtils
-import com.adazhdw.kthttp.HttpClient
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import java.util.*
@@ -12,11 +11,7 @@ import java.util.*
  * date-time：2020/11/17 16:40
  * description：请求头封装
  **/
-class HttpHeaders(httpClient: HttpClient) : MapEntity<String>() {
-    /** 请求头存放集合 */
-    init {
-        contents.putAll(httpClient.commonHeaders)
-    }
+class HttpHeaders {
 
     companion object {
 

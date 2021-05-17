@@ -47,7 +47,7 @@ class HomeFragment : BaseFragment() {
         val textView: TextView = view?.findViewById(R.id.text_home) ?: return
         getRequest {
             url("https://wanandroid.com/wxarticle/list/408/1/json")
-            addParam("k", "Android")
+            queryParams("k", "Android")
         }.async<NetResponse<DataFeed>>(lifecycleOwner = this, success = { data ->
             val stringBuilder = StringBuilder()
             for (item in data.data.datas) {

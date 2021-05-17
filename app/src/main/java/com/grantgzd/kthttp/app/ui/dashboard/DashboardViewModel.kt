@@ -23,7 +23,7 @@ class DashboardViewModel : BaseViewModelImpl() {
             val time = measureTimeMillis {
                 val data = postRequest {
                     url("https://www.wanandroid.com/article/query/0/json")
-                    addParam("k", "ViewModel")
+                    bodyParams("k", "ViewModel")
                 }.toClazz<NetResponse<DataFeed>>().await()
                 val stringBuilder = StringBuilder()
                 for (item in data.data.datas) {
