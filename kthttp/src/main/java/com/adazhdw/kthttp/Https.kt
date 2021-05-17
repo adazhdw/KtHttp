@@ -7,9 +7,9 @@ package com.adazhdw.kthttp
  **/
 object Https {
 
-    private val httpClient by lazy { http() }
+    internal val httpClient by lazy { httpClient() }
 
-    internal fun http(): HttpClient {
+    private fun httpClient(): HttpClient {
         val builder = HttpClient.Builder()
         return builder.build()
     }

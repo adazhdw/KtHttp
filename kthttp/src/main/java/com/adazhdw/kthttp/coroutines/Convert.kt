@@ -13,5 +13,6 @@ import java.lang.reflect.Type
 
 @Throws(IOException::class)
 fun <R> Response.convert(type: Type?): R {
-    return Https.http().resultConverter.convert(this, type)
+    val converter = Https.httpClient.resultConverter
+    return converter.convert(this, type)
 }
