@@ -18,7 +18,7 @@ import java.io.IOException
 /**
  * 默认请求方法为 GET
  */
-fun httpRequest(block: HttpRequest.() -> Unit): HttpRequest {
+fun getRequest(block: HttpRequest.() -> Unit): HttpRequest {
     return Https.request().get().apply { block.invoke(this) }
 }
 
@@ -27,6 +27,34 @@ fun httpRequest(block: HttpRequest.() -> Unit): HttpRequest {
  */
 fun postRequest(block: HttpRequest.() -> Unit): HttpRequest {
     return Https.request().post().apply { block.invoke(this) }
+}
+
+/**
+ * HEAD 请求
+ */
+fun headRequest(block: HttpRequest.() -> Unit): HttpRequest {
+    return Https.request().head().apply { block.invoke(this) }
+}
+
+/**
+ * DELETE 请求
+ */
+fun deleteRequest(block: HttpRequest.() -> Unit): HttpRequest {
+    return Https.request().delete().apply { block.invoke(this) }
+}
+
+/**
+ * PUT 请求
+ */
+fun putRequest(block: HttpRequest.() -> Unit): HttpRequest {
+    return Https.request().put().apply { block.invoke(this) }
+}
+
+/**
+ * PATCH 请求
+ */
+fun patchRequest(block: HttpRequest.() -> Unit): HttpRequest {
+    return Https.request().patch().apply { block.invoke(this) }
 }
 
 
@@ -39,7 +67,7 @@ inline fun <reified T : Any> HttpRequest.sync(
     noinline failure: (e: Exception) -> Unit
 ) {
     try {
-        val response = this.sync()
+        val response = this.execute()
         if (response.isSuccessful) {
             success.invoke(response.toBean(object : TypeRef<T>() {}))
         } else {
@@ -61,7 +89,7 @@ inline fun <reified T : Any> HttpRequest.async(
     noinline success: (data: T) -> Unit,
     noinline failure: (e: Exception, call: Call) -> Unit
 ) = this.apply {
-    this.async(object : RequestJsonCallback<T>(lifecycleOwner) {
+    this.enqueue(object : RequestJsonCallback<T>(lifecycleOwner) {
         override fun onSuccess(data: T) {
             success.invoke(data)
         }

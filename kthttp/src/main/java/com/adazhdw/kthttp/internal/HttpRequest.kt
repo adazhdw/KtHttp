@@ -54,15 +54,15 @@ open class HttpRequest(private val httpClient: HttpClient) {
 
     fun bodyType() = this.bodyType
 
-    fun setUrlEncoder(urlEncoder: Boolean): HttpRequest = apply {
+    fun urlEncoder(urlEncoder: Boolean): HttpRequest = apply {
         this.urlEncoder = urlEncoder
     }
 
-    fun setNeedHeaders(needHeaders: Boolean): HttpRequest = apply {
+    fun needHeaders(needHeaders: Boolean): HttpRequest = apply {
         this.needHeaders = needHeaders
     }
 
-    fun setJsonBody(jsonBody: String): HttpRequest = apply {
+    fun jsonBody(jsonBody: String): HttpRequest = apply {
         this.jsonBody = jsonBody
     }
 
@@ -71,7 +71,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
     }
 
     fun addHeader(key: String, value: String): HttpRequest = apply {
-        this.headers.put(key, value)
+        this.headers[key] = value
     }
 
     fun headers(): HashMap<String, String> {
@@ -204,7 +204,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
     /**
      * 同步网络请求
      */
-    fun sync(): HttpResponse {
+    fun execute(): HttpResponse {
         mCallProxy = HttpCallProxy(getRawCall())
         var response: okhttp3.Response? = null
         try {
@@ -238,7 +238,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
     /**
      * 异步执行网络请求
      */
-    fun async(callback: RequestCallback?) {
+    fun enqueue(callback: RequestCallback?) {
         mCallProxy = HttpCallProxy(getRawCall())
         mCallProxy!!.enqueue(OkHttpCallback(mCallProxy!!, callback))
     }

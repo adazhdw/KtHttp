@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import com.adazhdw.kthttp.async
-import com.adazhdw.kthttp.httpRequest
+import com.adazhdw.kthttp.getRequest
 import com.adazhdw.ktlib.base.fragment.BaseFragment
 import com.adazhdw.ktlib.base.mvvm.viewModel
 import com.adazhdw.ktlib.ext.parseAsHtml
@@ -45,7 +45,7 @@ class HomeFragment : BaseFragment() {
 
     private fun requestText() {
         val textView: TextView = view?.findViewById(R.id.text_home) ?: return
-        httpRequest {
+        getRequest {
             url("https://wanandroid.com/wxarticle/list/408/1/json")
             addParam("k", "Android")
         }.async<NetResponse<DataFeed>>(lifecycleOwner = this, success = { data ->
