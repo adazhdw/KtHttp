@@ -204,7 +204,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
     /**
      * 同步网络请求
      */
-    fun execute(): HttpResponse {
+    fun executeRequest(): HttpResponse {
         mCallProxy = HttpCallProxy(getRawCall())
         var response: okhttp3.Response? = null
         try {
@@ -218,7 +218,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
                     .build()
 
                 val httpResponse = HttpResponse(newResponse, httpClient)
-                if (!httpResponse.succeed) {
+                if (!httpResponse.isSuccessful) {
                     if (!mCallProxy!!.isCanceled()) {
                         mCallProxy?.cancel()
                     }
@@ -238,7 +238,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
     /**
      * 异步执行网络请求
      */
-    fun enqueue(callback: RequestCallback?) {
+    fun enqueueRequest(callback: RequestCallback?) {
         mCallProxy = HttpCallProxy(getRawCall())
         mCallProxy!!.enqueue(OkHttpCallback(mCallProxy!!, callback))
     }

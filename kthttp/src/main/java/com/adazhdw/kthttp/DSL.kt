@@ -3,6 +3,7 @@ package com.adazhdw.kthttp
 import androidx.lifecycle.LifecycleOwner
 import com.adazhdw.kthttp.callback.RequestJsonCallback
 import com.adazhdw.kthttp.internal.HttpRequest
+import com.adazhdw.kthttp.internal.TypeRef
 import okhttp3.Call
 
 /**
@@ -27,17 +28,35 @@ fun postRequest(block: HttpRequest.() -> Unit): HttpRequest {
     return Https.request().post().apply { block.invoke(this) }
 }
 
-inline fun <reified T : Any> HttpRequest.execute(
-    lifecycleOwner: LifecycleOwner?,
-    noinline success: (data: T) -> Unit
-) = this.execute(lifecycleOwner, success, failure = { e, call -> })
 
 inline fun <reified T : Any> HttpRequest.execute(
+    noinline success: (data: T) -> Unit
+) = this.execute(success, failure = { e -> })
+
+inline fun <reified T : Any> HttpRequest.execute(
+    noinline success: (data: T) -> Unit,
+    noinline failure: (e: Exception) -> Unit
+) {
+    val response = this.executeRequest()
+    if (response.isSuccessful) {
+        success.invoke(response.toBean(object : TypeRef<T>() {}))
+    } else {
+        failure.invoke(Exception(response.message))
+    }
+}
+
+
+inline fun <reified T : Any> HttpRequest.enqueue(
+    lifecycleOwner: LifecycleOwner?,
+    noinline success: (data: T) -> Unit
+) = this.enqueue(lifecycleOwner, success, failure = { e, call -> })
+
+inline fun <reified T : Any> HttpRequest.enqueue(
     lifecycleOwner: LifecycleOwner?,
     noinline success: (data: T) -> Unit,
     noinline failure: (e: Exception, call: Call) -> Unit
 ) = this.apply {
-    this.enqueue(object : RequestJsonCallback<T>(lifecycleOwner) {
+    this.enqueueRequest(object : RequestJsonCallback<T>(lifecycleOwner) {
         override fun onSuccess(data: T) {
             success.invoke(data)
         }

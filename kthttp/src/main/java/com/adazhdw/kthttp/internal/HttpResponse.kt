@@ -15,14 +15,15 @@ import java.lang.reflect.Type
 class HttpResponse(private val rawResponse: Response, private val httpClient: HttpClient) : Toable {
     val message: String = rawResponse.message
     val code: Int = rawResponse.code
-    val succeed: Boolean = rawResponse.isSuccessful
+    val isSuccessful: Boolean = rawResponse.isSuccessful
     val headers: Headers = rawResponse.headers
     private val result: String = bodyToString()
 
     override fun bodyToString(): String {
         try {
-            val body = rawResponse.body
-            return body?.string() ?: ""
+            rawResponse.body?.use {
+                return it.string()
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         }

@@ -49,7 +49,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
-    implementation 'com.adazhdw:ktlib:1.1.1'
+    implementation 'com.github.adazhdw:KtLibTest:0.5.0'
 //    implementation 'com.adazhdw:kthttp:0.2.24'
     implementation project(path: ':kthttp')
 

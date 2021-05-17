@@ -17,6 +17,10 @@ object Https {
         return builder.build()
     }
 
+    fun newBuilder(): HttpClient.Builder {
+        return httpClient.newBuilder()
+    }
+
     fun request() = httpClient.request()
     fun getRequest(url: String) = httpClient.request().get().url(url)
     fun postRequest(url: String) = httpClient.request().post().url(url)
@@ -33,7 +37,7 @@ object Https {
         url: String,
         noinline success: (data: T) -> Unit
     ) {
-        getRequest(url).execute(owner, success)
+        getRequest(url).enqueue(owner, success)
     }
 
     inline fun <reified T : Any> get(
@@ -42,7 +46,7 @@ object Https {
         noinline success: (data: T) -> Unit,
         noinline failure: (e: Exception, call: Call) -> Unit
     ) {
-        getRequest(url).execute(owner, success, failure)
+        getRequest(url).enqueue(owner, success, failure)
     }
 
     /**
@@ -53,7 +57,7 @@ object Https {
         url: String,
         noinline success: (data: T) -> Unit
     ) {
-        postRequest(url).execute(owner, success)
+        postRequest(url).enqueue(owner, success)
     }
 
     inline fun <reified T : Any> post(
@@ -62,7 +66,7 @@ object Https {
         noinline success: (data: T) -> Unit,
         noinline failure: (e: Exception, call: Call) -> Unit
     ) {
-        postRequest(url).execute(owner, success, failure)
+        postRequest(url).enqueue(owner, success, failure)
     }
 
     /**
@@ -73,7 +77,7 @@ object Https {
         url: String,
         noinline success: (data: T) -> Unit
     ) {
-        headRequest(url).execute(owner, success)
+        headRequest(url).enqueue(owner, success)
     }
 
     inline fun <reified T : Any> head(
@@ -82,7 +86,7 @@ object Https {
         noinline success: (data: T) -> Unit,
         noinline failure: (e: Exception, call: Call) -> Unit
     ) {
-        headRequest(url).execute(owner, success, failure)
+        headRequest(url).enqueue(owner, success, failure)
     }
 
     /**
@@ -93,7 +97,7 @@ object Https {
         url: String,
         noinline success: (data: T) -> Unit
     ) {
-        deleteRequest(url).execute(owner, success)
+        deleteRequest(url).enqueue(owner, success)
     }
 
     inline fun <reified T : Any> delete(
@@ -102,7 +106,7 @@ object Https {
         noinline success: (data: T) -> Unit,
         noinline failure: (e: Exception, call: Call) -> Unit
     ) {
-        deleteRequest(url).execute(owner, success, failure)
+        deleteRequest(url).enqueue(owner, success, failure)
     }
 
     /**
@@ -113,7 +117,7 @@ object Https {
         url: String,
         noinline success: (data: T) -> Unit
     ) {
-        putRequest(url).execute(owner, success)
+        putRequest(url).enqueue(owner, success)
     }
 
     inline fun <reified T : Any> put(
@@ -122,7 +126,7 @@ object Https {
         noinline success: (data: T) -> Unit,
         noinline failure: (e: Exception, call: Call) -> Unit
     ) {
-        putRequest(url).execute(owner, success, failure)
+        putRequest(url).enqueue(owner, success, failure)
     }
 
     /**
@@ -133,7 +137,7 @@ object Https {
         url: String,
         noinline success: (data: T) -> Unit
     ) {
-        patchRequest(url).execute(owner, success)
+        patchRequest(url).enqueue(owner, success)
     }
 
     inline fun <reified T : Any> patch(
@@ -142,7 +146,7 @@ object Https {
         noinline success: (data: T) -> Unit,
         noinline failure: (e: Exception, call: Call) -> Unit
     ) {
-        patchRequest(url).execute(owner, success, failure)
+        patchRequest(url).enqueue(owner, success, failure)
     }
 
 }

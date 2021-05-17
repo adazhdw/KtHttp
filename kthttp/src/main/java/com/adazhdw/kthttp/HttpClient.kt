@@ -16,6 +16,10 @@ class HttpClient private constructor(builder: Builder) {
 
     fun request(): HttpRequest = HttpRequest(this)
 
+    fun newBuilder():Builder{
+        return Builder(this)
+    }
+
     internal var client: OkHttpClient = builder.client!!
     internal var writeTimeout: HttpRequest.TimeoutHolder = builder.writeTimeout
     internal var connectTimeout: HttpRequest.TimeoutHolder = builder.connectTimeout
