@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import com.adazhdw.kthttp.enqueue
+import com.adazhdw.kthttp.async
 import com.adazhdw.kthttp.httpRequest
 import com.adazhdw.ktlib.base.fragment.BaseFragment
 import com.adazhdw.ktlib.base.mvvm.viewModel
@@ -48,7 +48,7 @@ class HomeFragment : BaseFragment() {
         httpRequest {
             url("https://wanandroid.com/wxarticle/list/408/1/json")
             addParam("k", "Android")
-        }.enqueue<NetResponse<DataFeed>>(lifecycleOwner = this, success = { data ->
+        }.async<NetResponse<DataFeed>>(lifecycleOwner = this, success = { data ->
             val stringBuilder = StringBuilder()
             for (item in data.data.datas) {
                 stringBuilder.append("标题：${item.title.parseAsHtml()}").append("\n\n")

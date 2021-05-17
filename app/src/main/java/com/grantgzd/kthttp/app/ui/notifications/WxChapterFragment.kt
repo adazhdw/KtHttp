@@ -3,8 +3,7 @@ package com.grantgzd.kthttp.app.ui.notifications
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.adazhdw.kthttp.enqueue
-import com.adazhdw.kthttp.execute
+import com.adazhdw.kthttp.sync
 import com.adazhdw.kthttp.httpRequest
 import com.adazhdw.ktlib.list.ListFragment
 import com.adazhdw.ktlib.list.adapter.ViewBindingAdapter
@@ -42,7 +41,7 @@ class WxChaptersFragment : ListFragment<WxArticleChapter, ChaptersAdapter>() {
         }*/
         httpRequest {
             url(url)
-        }.execute<ListResponse<WxArticleChapter>>(success = {
+        }.sync<ListResponse<WxArticleChapter>>(success = {
             val data = it.data ?: listOf()
             val hasmore = dataSize < 25
             callback.onSuccess(data, hasmore)

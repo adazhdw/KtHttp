@@ -5,6 +5,7 @@ import com.adazhdw.kthttp.callback.RequestJsonCallback
 import com.adazhdw.kthttp.internal.HttpRequest
 import com.adazhdw.kthttp.internal.TypeRef
 import okhttp3.Call
+import java.io.IOException
 
 /**
  * FileName: DSL
@@ -29,34 +30,38 @@ fun postRequest(block: HttpRequest.() -> Unit): HttpRequest {
 }
 
 
-inline fun <reified T : Any> HttpRequest.execute(
+inline fun <reified T : Any> HttpRequest.sync(
     noinline success: (data: T) -> Unit
-) = this.execute(success, failure = { e -> })
+) = this.sync(success, failure = { e -> })
 
-inline fun <reified T : Any> HttpRequest.execute(
+inline fun <reified T : Any> HttpRequest.sync(
     noinline success: (data: T) -> Unit,
     noinline failure: (e: Exception) -> Unit
 ) {
-    val response = this.executeRequest()
-    if (response.isSuccessful) {
-        success.invoke(response.toBean(object : TypeRef<T>() {}))
-    } else {
-        failure.invoke(Exception(response.message))
+    try {
+        val response = this.sync()
+        if (response.isSuccessful) {
+            success.invoke(response.toBean(object : TypeRef<T>() {}))
+        } else {
+            failure.invoke(Exception(response.message))
+        }
+    } catch (e: IOException) {
+        failure.invoke(e)
     }
 }
 
 
-inline fun <reified T : Any> HttpRequest.enqueue(
+inline fun <reified T : Any> HttpRequest.async(
     lifecycleOwner: LifecycleOwner?,
     noinline success: (data: T) -> Unit
-) = this.enqueue(lifecycleOwner, success, failure = { e, call -> })
+) = this.async(lifecycleOwner, success, failure = { e, call -> })
 
-inline fun <reified T : Any> HttpRequest.enqueue(
+inline fun <reified T : Any> HttpRequest.async(
     lifecycleOwner: LifecycleOwner?,
     noinline success: (data: T) -> Unit,
     noinline failure: (e: Exception, call: Call) -> Unit
 ) = this.apply {
-    this.enqueueRequest(object : RequestJsonCallback<T>(lifecycleOwner) {
+    this.async(object : RequestJsonCallback<T>(lifecycleOwner) {
         override fun onSuccess(data: T) {
             success.invoke(data)
         }

@@ -11,37 +11,37 @@ import okio.Timeout
  * date-time：2020/11/17 19:50
  * description：
  **/
-class HttpCallProxy(val call: Call) : Call {
+class HttpCallProxy(val call: Call) {
 
-    override fun request(): Request {
+    fun request(): Request {
         return call.request()
     }
 
-    override fun enqueue(responseCallback: Callback) {
+    fun enqueue(responseCallback: Callback) {
         call.enqueue(responseCallback)
     }
 
-    override fun execute(): Response {
+    fun execute(): Response {
         return call.execute()
     }
 
-    override fun cancel() {
+    fun cancel() {
         call.cancel()
     }
 
-    override fun clone(): Call {
+    fun clone(): Call {
         return call.clone()
     }
 
-    override fun isCanceled(): Boolean {
+    fun isCanceled(): Boolean {
         return call.isCanceled()
     }
 
-    override fun isExecuted(): Boolean {
+    fun isExecuted(): Boolean {
         return call.isExecuted()
     }
 
-    override fun timeout(): Timeout {
+    fun timeout(): Timeout {
         return call.timeout()
     }
 }

@@ -130,7 +130,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
         return mCall!!
     }
 
-    fun getRequestBody(): okhttp3.RequestBody {
+    private fun getRequestBody(): okhttp3.RequestBody {
         return if (bodyType() == HttpBodyType.JSON) {
             getJsonRequestBody()
         } else {
@@ -170,7 +170,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
     /**
      * 生成一个 Request.Builder，并且给当前请求 Request 添加 headers
      */
-    fun requestBuilder(): okhttp3.Request.Builder {
+    private fun requestBuilder(): okhttp3.Request.Builder {
         val builder = okhttp3.Request.Builder()
         if (needHeaders) {
             for ((key, value) in headers()) {
@@ -180,7 +180,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
         return builder
     }
 
-    fun getRealUrl(): String {
+    private fun getRealUrl(): String {
         return when (method) {
             Method.GET, Method.DELETE, Method.HEAD -> RequestUrlUtils.getFullUrl2(url, params(), urlEncoder)
             else -> url
@@ -190,7 +190,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
     /**
      * 根据请求方法类型获取 Request
      */
-    fun getRequest(requestBody: okhttp3.RequestBody): okhttp3.Request {
+    private fun getRequest(requestBody: okhttp3.RequestBody): okhttp3.Request {
         return when (method) {
             Method.GET -> requestBuilder().url(getRealUrl()).get().tag(tag).build()
             Method.DELETE -> requestBuilder().url(getRealUrl()).delete().tag(tag).build()
@@ -204,7 +204,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
     /**
      * 同步网络请求
      */
-    fun executeRequest(): HttpResponse {
+    fun sync(): HttpResponse {
         mCallProxy = HttpCallProxy(getRawCall())
         var response: okhttp3.Response? = null
         try {
@@ -238,7 +238,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
     /**
      * 异步执行网络请求
      */
-    fun enqueueRequest(callback: RequestCallback?) {
+    fun async(callback: RequestCallback?) {
         mCallProxy = HttpCallProxy(getRawCall())
         mCallProxy!!.enqueue(OkHttpCallback(mCallProxy!!, callback))
     }
