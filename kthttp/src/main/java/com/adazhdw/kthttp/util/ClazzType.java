@@ -43,6 +43,16 @@ public class ClazzType {
         return canonicalize(parameterizedType.getActualTypeArguments()[index]);
     }
 
+    @NotNull
+    public static Type getType(Type superclass, int index) {
+        if (superclass instanceof Class<?>) {
+            throw new RuntimeException("Missing type parameter.");
+        }
+        ParameterizedType parameterizedType = (ParameterizedType) superclass;
+        Preconditions.checkNotNull(parameterizedType);
+        return canonicalize(parameterizedType.getActualTypeArguments()[index]);
+    }
+
     /**
      * Returns a new parameterized type, applying {@code typeArguments} to
      * {@code rawType} and enclosed by {@code ownerType}.

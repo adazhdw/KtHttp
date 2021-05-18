@@ -1,5 +1,6 @@
 package com.adazhdw.kthttp.internal
 
+import com.adazhdw.kthttp.util.ClazzType
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
@@ -8,6 +9,6 @@ abstract class TypeRef<T> {
 
     init {
         val superClass = javaClass.genericSuperclass
-        type = (superClass as ParameterizedType).actualTypeArguments[0]
+        type = ClazzType.getType(superClass,0)
     }
 }

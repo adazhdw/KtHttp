@@ -53,6 +53,16 @@ open class HttpRequest(private val httpClient: HttpClient) {
         this.method = method
     }
 
+    /**
+     * Param 设置请求方式的扩展方法
+     */
+    fun get(): HttpRequest = apply { method(Method.GET) }
+    fun post(): HttpRequest = apply { method(Method.POST) }
+    fun delete(): HttpRequest = apply { method(Method.DELETE) }
+    fun head(): HttpRequest = apply { method(Method.HEAD) }
+    fun patch(): HttpRequest = apply { method(Method.PATCH) }
+    fun put(): HttpRequest = apply { method(Method.PUT) }
+
     fun bodyType(bodyType: HttpBodyType): HttpRequest = apply {
         this.bodyType = bodyType
     }
@@ -127,14 +137,46 @@ open class HttpRequest(private val httpClient: HttpClient) {
     }
 
     /**
-     * Param 设置请求方式的扩展方法
+     * 同步网络请求
      */
-    fun get(): HttpRequest = apply { method(Method.GET) }
-    fun post(): HttpRequest = apply { method(Method.POST) }
-    fun delete(): HttpRequest = apply { method(Method.DELETE) }
-    fun head(): HttpRequest = apply { method(Method.HEAD) }
-    fun patch(): HttpRequest = apply { method(Method.PATCH) }
-    fun put(): HttpRequest = apply { method(Method.PUT) }
+    fun execute(): HttpResponse {
+        mCallProxy = HttpCallProxy(getRawCall())
+        var response: okhttp3.Response? = null
+        try {
+            response = mCallProxy!!.execute()
+            val body = response.body
+            if (body != null) {
+                val byteData = body.bytes()
+
+                val newResponse = response.newBuilder()
+                    .body(byteData.toResponseBody(body.contentType()))
+                    .build()
+
+                val httpResponse = HttpResponse(newResponse, httpClient)
+                if (!httpResponse.isSuccessful) {
+                    if (!mCallProxy!!.isCanceled()) {
+                        mCallProxy?.cancel()
+                    }
+                }
+                return httpResponse
+            } else {
+                throw HttpException("okhttp3.Response's body is null")
+            }
+        } catch (e: IOException) {
+            throw HttpException(e)
+        } finally {
+            IOUtils.closeQuietly(response)
+        }
+
+    }
+
+    /**
+     * 异步执行网络请求
+     */
+    fun enqueue(callback: RequestCallback?) {
+        mCallProxy = HttpCallProxy(getRawCall())
+        mCallProxy!!.enqueue(OkHttpCallback(mCallProxy!!, callback))
+    }
 
     /**
      * 获取当前请求的 okhttp.Call
@@ -251,48 +293,6 @@ open class HttpRequest(private val httpClient: HttpClient) {
                 return okhttp3.FormBody.Builder().build()
             }
         }
-    }
-
-    /**
-     * 同步网络请求
-     */
-    fun execute(): HttpResponse {
-        mCallProxy = HttpCallProxy(getRawCall())
-        var response: okhttp3.Response? = null
-        try {
-            response = mCallProxy!!.execute()
-            val body = response.body
-            if (body != null) {
-                val byteData = body.bytes()
-
-                val newResponse = response.newBuilder()
-                    .body(byteData.toResponseBody(body.contentType()))
-                    .build()
-
-                val httpResponse = HttpResponse(newResponse, httpClient)
-                if (!httpResponse.isSuccessful) {
-                    if (!mCallProxy!!.isCanceled()) {
-                        mCallProxy?.cancel()
-                    }
-                }
-                return httpResponse
-            } else {
-                throw HttpException("okhttp3.Response's body is null")
-            }
-        } catch (e: IOException) {
-            throw HttpException(e)
-        } finally {
-            IOUtils.closeQuietly(response)
-        }
-
-    }
-
-    /**
-     * 异步执行网络请求
-     */
-    fun enqueue(callback: RequestCallback?) {
-        mCallProxy = HttpCallProxy(getRawCall())
-        mCallProxy!!.enqueue(OkHttpCallback(mCallProxy!!, callback))
     }
 
     /**
