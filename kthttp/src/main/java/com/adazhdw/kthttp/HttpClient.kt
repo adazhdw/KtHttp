@@ -139,7 +139,7 @@ class HttpClient private constructor(builder: Builder) {
         }
 
         fun commonHeaders(name: String, value: String) = apply {
-            if (name.isNotEmpty() && value.isNotBlank()) {
+            if (name.isNotEmpty()) {
                 this.commonHeaders[name] = value
             }
         }
@@ -151,7 +151,7 @@ class HttpClient private constructor(builder: Builder) {
         }
 
         fun commonParams(name: String, value: String) = apply {
-            if (name.isNotEmpty() && value.isNotBlank()) {
+            if (name.isNotEmpty()) {
                 this.commonParams[name] = value
             }
         }
@@ -169,7 +169,7 @@ class HttpClient private constructor(builder: Builder) {
                 builder.addInterceptor(interceptor)
             }
             for (interceptor in networkInterceptors) {
-                builder.addInterceptor(interceptor)
+                builder.addNetworkInterceptor(interceptor)
             }
             client = builder.build()
             return HttpClient(this)

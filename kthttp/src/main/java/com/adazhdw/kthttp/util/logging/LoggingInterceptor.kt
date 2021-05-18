@@ -136,7 +136,9 @@ class LoggingInterceptor private constructor(private val builder: Builder) : Int
          * Add a field with the specified value
          */
         fun addHeader(name: String, value: String): Builder {
-            headers[name] = value
+            if (name.isNotBlank()){
+                headers[name] = value
+            }
             return this
         }
 
@@ -147,7 +149,9 @@ class LoggingInterceptor private constructor(private val builder: Builder) : Int
          * Add a field with the specified value
          */
         fun addQueryParam(name: String, value: String): Builder {
-            httpUrl[name] = value
+            if (name.isNotBlank()){
+                httpUrl[name] = value
+            }
             return this
         }
 

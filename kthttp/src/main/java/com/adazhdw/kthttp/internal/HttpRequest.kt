@@ -80,11 +80,15 @@ open class HttpRequest(val httpClient: HttpClient) {
     }
 
     fun addHeader(key: String, value: String): HttpRequest = apply {
-        headers[key] = value
+        if (key.isNotBlank()) {
+            headers[key] = value
+        }
     }
 
     fun queryParams(key: String, value: String): HttpRequest = apply {
-        queryParams[key] = value
+        if (key.isNotBlank()) {
+            queryParams[key] = value
+        }
     }
 
     fun queryParams(paramMap: Map<String, String>): HttpRequest = apply {
@@ -92,7 +96,9 @@ open class HttpRequest(val httpClient: HttpClient) {
     }
 
     fun bodyParams(key: String, value: String): HttpRequest = apply {
-        bodyParams[key] = value
+        if (key.isNotBlank()) {
+            bodyParams[key] = value
+        }
     }
 
     fun bodyParams(paramMap: Map<String, String>): HttpRequest = apply {
@@ -104,7 +110,7 @@ open class HttpRequest(val httpClient: HttpClient) {
     }
 
     fun addFileParam(key: String, file: File): HttpRequest {
-        if (!file.exists() || file.length() == 0L) return this
+        if (key.isBlank() || !file.exists() || file.length() == 0L) return this
         val isPng = file.name.indexOf("png") > 0 || file.name.indexOf("PNG") > 0
         if (isPng) {
             this.fileParams.add(Part(key, Part.FileWrapper(file, HttpHeaders.PNG)))

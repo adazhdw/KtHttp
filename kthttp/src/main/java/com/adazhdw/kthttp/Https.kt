@@ -7,7 +7,7 @@ package com.adazhdw.kthttp
  **/
 object Https {
 
-    internal val httpClient by lazy { httpClient() }
+    internal val httpClient by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) { httpClient() }
 
     private fun httpClient(): HttpClient {
         val builder = HttpClient.Builder()
