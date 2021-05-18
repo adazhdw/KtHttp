@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
  * date-time：2020/9/3 10:11
  * description：HttpRequest
  **/
-open class HttpRequest(private val httpClient: HttpClient) {
+open class HttpRequest(val httpClient: HttpClient) {
     /**
      * ---HTTP 相关参数和方法--------------------------------------------------------------------------------
      */
@@ -175,7 +175,7 @@ open class HttpRequest(private val httpClient: HttpClient) {
      */
     fun enqueue(callback: RequestCallback?) {
         mCallProxy = HttpCallProxy(getRawCall())
-        mCallProxy!!.enqueue(OkHttpCallback(mCallProxy!!, callback))
+        mCallProxy!!.enqueue(OkHttpCallback(httpClient, mCallProxy!!, callback))
     }
 
     /**

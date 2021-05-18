@@ -1,9 +1,9 @@
 package com.adazhdw.kthttp
 
 import androidx.lifecycle.LifecycleOwner
-import com.adazhdw.kthttp.internal.callback.RequestJsonCallback
 import com.adazhdw.kthttp.internal.HttpRequest
 import com.adazhdw.kthttp.internal.TypeRef
+import com.adazhdw.kthttp.internal.callback.RequestJsonCallback
 import okhttp3.Call
 import java.io.IOException
 
@@ -89,12 +89,12 @@ inline fun <reified T : Any> HttpRequest.async(
     noinline success: (data: T) -> Unit,
     noinline failure: (e: Exception, call: Call) -> Unit
 ) = this.apply {
-    this.enqueue(object : RequestJsonCallback<T>(lifecycleOwner) {
+    this.enqueue(object : RequestJsonCallback<T>(lifecycleOwner, this@apply.httpClient) {
         override fun onSuccess(data: T) {
             success.invoke(data)
         }
 
-        override fun onError(e: Exception, call: Call) {
+        override fun onFailure(e: Exception, call: Call) {
             failure.invoke(e, call)
         }
     })

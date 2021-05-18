@@ -1,8 +1,8 @@
 package com.adazhdw.kthttp.internal.callback
 
+import com.adazhdw.kthttp.HttpClient
 import com.adazhdw.kthttp.internal.HttpCallProxy
 import com.adazhdw.kthttp.internal.HttpLifecycleObserver
-import com.adazhdw.kthttp.util.ExecutorUtils
 import com.google.gson.JsonParseException
 import okhttp3.Call
 import okhttp3.Callback
@@ -16,24 +16,23 @@ import java.io.IOException
  **/
 
 open class OkHttpCallback(
+    private val httpClient: HttpClient,
     private val mCallProxy: HttpCallProxy,
     private val requestCallback: RequestCallback?
 ) : Callback {
 
     init {
         HttpLifecycleObserver.bind(requestCallback?.mLifecycleOwner, onDestroy = { mCallProxy.cancel() })
-        ExecutorUtils.mainThread.execute {
+        execute(Runnable {
             if (isLifecycleActive()) {
                 requestCallback?.onStart(mCallProxy.call)
             }
-        }
+        }, false)
     }
 
     override fun onResponse(call: Call, response: Response) {
         try {
-            ExecutorUtils.networkIO.submit {
-                response.use { response(it, call) }
-            }
+            response(response, call)
         } catch (e: JsonParseException) {
             failure(e, call)
         } catch (e: Exception) {
@@ -46,20 +45,27 @@ open class OkHttpCallback(
     }
 
     open fun response(response: Response, call: Call) {
-//        val body = response.body ?: throw Exception("okhttp3.Response's body is null")
         if (isLifecycleActive() && requestCallback != null) {
-            requestCallback.onResult(response, call)
+            execute(Runnable {
+                response.use {
+                    requestCallback.onResult(it, call)
+                }
+            }, true)
         }
     }
 
     open fun failure(e: Exception, call: Call) {
         e.printStackTrace()
         if (isLifecycleActive() && requestCallback != null) {
-            ExecutorUtils.mainThread.execute {
+            execute(Runnable {
                 requestCallback.onFailure(e, call)
                 requestCallback.onFinish()
-            }
+            }, false)
         }
+    }
+
+    private fun execute(runnable: Runnable, onIO: Boolean) {
+        httpClient.execute(runnable, onIO)
     }
 
 

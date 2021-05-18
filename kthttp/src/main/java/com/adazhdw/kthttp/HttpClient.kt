@@ -16,7 +16,7 @@ class HttpClient private constructor(builder: Builder) {
 
     fun request(): HttpRequest = HttpRequest(this)
 
-    fun newBuilder():Builder{
+    fun newBuilder(): Builder {
         return Builder(this)
     }
 
@@ -25,11 +25,20 @@ class HttpClient private constructor(builder: Builder) {
     internal var connectTimeout: HttpRequest.TimeoutHolder = builder.connectTimeout
     internal var readTimeout: HttpRequest.TimeoutHolder = builder.readTimeout
     internal var mainExecutor: Executor = builder.mainExecutor ?: ExecutorUtils.mainThread
+    internal var workExecutor: Executor = builder.workExecutor ?: ExecutorUtils.networkIO
     internal var resultConverter: Converter = builder.resultConverter
     internal var bodyType: HttpBodyType = builder.bodyType
     internal var charset: Charset = builder.charset
     internal val commonHeaders: MutableMap<String, String> = builder.commonHeaders
     internal val commonParams: MutableMap<String, String> = builder.commonParams
+
+    fun execute(runnable: Runnable, onIO: Boolean) {
+        var executor = mainExecutor
+        if (onIO) {
+            executor = workExecutor
+        }
+        executor.execute(runnable)
+    }
 
     interface OkHttpConfig {
         fun config(builder: OkHttpClient.Builder)
@@ -44,6 +53,7 @@ class HttpClient private constructor(builder: Builder) {
         internal val interceptors: MutableList<Interceptor> = mutableListOf()
         internal val networkInterceptors: MutableList<Interceptor> = mutableListOf()
         internal var mainExecutor: Executor? = null
+        internal var workExecutor: Executor? = null
         internal var resultConverter: Converter = GsonConverter.create()
         internal var bodyType: HttpBodyType = HttpBodyType.FORM
         internal var charset: Charset = Charsets.UTF_8
@@ -57,6 +67,7 @@ class HttpClient private constructor(builder: Builder) {
                 this.connectTimeout = httpClient.connectTimeout
                 this.readTimeout = httpClient.readTimeout
                 this.mainExecutor = httpClient.mainExecutor
+                this.workExecutor = httpClient.workExecutor
                 this.bodyType = httpClient.bodyType
                 this.charset = httpClient.charset
                 this.commonHeaders = httpClient.commonHeaders
@@ -103,6 +114,10 @@ class HttpClient private constructor(builder: Builder) {
 
         fun mainExecutor(mainExecutor: Executor) = apply {
             this.mainExecutor = mainExecutor
+        }
+
+        fun workExecutor(workExecutor: Executor) = apply {
+            this.workExecutor = workExecutor
         }
 
         fun bodyType(bodyType: HttpBodyType) = apply {

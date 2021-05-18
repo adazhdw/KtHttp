@@ -1,6 +1,7 @@
 package com.adazhdw.kthttp.internal.callback
 
 import androidx.lifecycle.LifecycleOwner
+import com.adazhdw.kthttp.HttpClient
 import okhttp3.Call
 import okhttp3.Response
 
@@ -11,6 +12,7 @@ import okhttp3.Response
  **/
 interface RequestCallback {
     val mLifecycleOwner: LifecycleOwner?
+    val httpClient: HttpClient
 
     /** 请求网络开始前，UI线程 */
     fun onStart(call: Call)
