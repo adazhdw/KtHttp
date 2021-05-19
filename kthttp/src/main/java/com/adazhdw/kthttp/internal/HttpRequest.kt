@@ -279,7 +279,8 @@ class SyncHttpRequest(httpClient: HttpClient) : HttpRequest(httpClient) {
      * 同步网络请求
      */
     fun executeRequest(): HttpResponse {
-        mCallProxy = HttpCallProxy(getRawCall())
+        val call = getRawCall()
+        mCallProxy = HttpCallProxy(call)
         var response: okhttp3.Response? = null
         try {
             response = mCallProxy!!.execute()
@@ -317,7 +318,8 @@ class AsyncHttpRequest(httpClient: HttpClient) : HttpRequest(httpClient) {
      * 异步执行网络请求
      */
     fun enqueueRequest(callback: RequestCallback?) {
-        mCallProxy = HttpCallProxy(getRawCall())
+        val call = getRawCall()
+        mCallProxy = HttpCallProxy(call)
         mCallProxy!!.enqueue(OkHttpCallback(httpClient, mCallProxy!!, callback))
     }
 
