@@ -9,13 +9,12 @@ import com.adazhdw.kthttp.internal.HttpRequest
  * description：
  **/
 class IAwaitImpl<T>(
-    private val iRequest: HttpRequest,
+    private val request: HttpRequest,
     private val parser: Parser<T>
 ) : IAwait<T> {
     override suspend fun await(): T {
         return try {
-            val call = iRequest.getRawCall()
-            call.await(parser)
+            request.await(parser)
         } catch (t: Throwable) {
             t.printStackTrace()
             throw t

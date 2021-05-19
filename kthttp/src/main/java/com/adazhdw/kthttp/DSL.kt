@@ -67,7 +67,7 @@ inline fun <reified T : Any> HttpRequest.execute(
     noinline failure: (e: Exception) -> Unit
 ) {
     try {
-        val response = this.sync().executeRequest()
+        val response = this.executeRequest()
         if (response.isSuccessful) {
             success.invoke(response.toBean(object : TypeRef<T>() {}))
         } else {
@@ -89,7 +89,7 @@ inline fun <reified T : Any> HttpRequest.enqueue(
     noinline success: (data: T) -> Unit,
     noinline failure: (e: Exception, call: Call) -> Unit
 ) = this.apply {
-    this.async().enqueueRequest(object : RequestJsonCallback<T>(lifecycleOwner, this@apply.httpClient) {
+    this.enqueueRequest(object : RequestJsonCallback<T>(lifecycleOwner, this@apply.httpClient) {
         override fun onSuccess(data: T) {
             success.invoke(data)
         }

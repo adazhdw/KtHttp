@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import com.adazhdw.kthttp.async
+import com.adazhdw.kthttp.enqueue
 import com.adazhdw.kthttp.getRequest
 import com.adazhdw.ktlib.base.fragment.BaseFragment
 import com.adazhdw.ktlib.base.mvvm.viewModel
@@ -28,6 +28,7 @@ class HomeFragment : BaseFragment() {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val textView: TextView = root.findViewById(R.id.text_home)
         homeViewModel.text.observe(viewLifecycleOwner, Observer {
+            textView.text = ""
             textView.text = it
         })
         return root
@@ -48,7 +49,7 @@ class HomeFragment : BaseFragment() {
         getRequest {
             url("https://wanandroid.com/wxarticle/list/408/1/json")
             queryParams("k", "Android")
-        }.async<NetResponse<DataFeed>>(lifecycleOwner = this, success = { data ->
+        }.enqueue<NetResponse<DataFeed>>(lifecycleOwner = this, success = { data ->
             val stringBuilder = StringBuilder()
             for (item in data.data.datas) {
                 stringBuilder.append("标题：${item.title.parseAsHtml()}").append("\n\n")

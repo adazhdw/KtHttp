@@ -23,6 +23,7 @@ class DashboardFragment(override val layoutId: Int = R.layout.fragment_dashboard
         val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
         val textView: TextView = root.findViewById(R.id.text_dashboard)
         dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
+            textView.text = ""
             textView.text = it
         })
         return root

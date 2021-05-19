@@ -41,12 +41,9 @@ open class HttpRequest(val httpClient: HttpClient) {
     private var urlEncoder: Boolean = false
     private var needHeader: Boolean = false
 
-    protected var mCallProxy: HttpCallProxy? = null
-    private var mCall: okhttp3.Call? = null
+    private var mCallProxy: HttpCallProxy? = null
+    private val mCall: okhttp3.Call by lazy { getRawCall() }
     private var tag = ""
-
-    fun sync() = SyncHttpRequest(httpClient)
-    fun async() = AsyncHttpRequest(httpClient)
 
     fun url(url: String): HttpRequest = apply {
         this.url = url
@@ -146,14 +143,60 @@ open class HttpRequest(val httpClient: HttpClient) {
     }
 
     /**
+     * 同步网络请求
+     */
+    fun executeRequest(): HttpResponse {
+        val proxy = getCallProxy()
+        var response: okhttp3.Response? = null
+        try {
+            response = proxy.execute()
+            val body = response.body
+            if (body != null) {
+                val byteData = body.bytes()
+
+                val newResponse = response.newBuilder()
+                    .body(byteData.toResponseBody(body.contentType()))
+                    .build()
+
+                val httpResponse = HttpResponse(newResponse, httpClient)
+                if (!httpResponse.isSuccessful) {
+                    if (!proxy.isCanceled()) {
+                        proxy.cancel()
+                    }
+                }
+                return httpResponse
+            } else {
+                throw HttpException("okhttp3.Response's body is null")
+            }
+        } catch (e: IOException) {
+            throw HttpException(e)
+        } finally {
+            IOUtils.closeQuietly(response)
+        }
+
+    }
+
+    /**
+     * 异步执行网络请求
+     */
+    fun enqueueRequest(callback: RequestCallback?) {
+        val proxy = getCallProxy()
+        proxy.enqueue(OkHttpCallback(httpClient, proxy, callback))
+    }
+
+    /**
      * 获取当前请求的 okhttp.Call
      */
-    fun getRawCall(): okhttp3.Call {
-        if (mCall == null) {
-            val mRequest = getRequest()
-            mCall = httpClient.client.newCall(mRequest)
+    private fun getRawCall(): okhttp3.Call {
+        val mRequest = getRequest()
+        return httpClient.client.newCall(mRequest)
+    }
+
+    fun getCallProxy(): HttpCallProxy {
+        if (mCallProxy == null) {
+            mCallProxy = HttpCallProxy(mCall)
         }
-        return mCall!!
+        return mCallProxy!!
     }
 
     /**
@@ -266,61 +309,9 @@ open class HttpRequest(val httpClient: HttpClient) {
      * 取消网络请求
      */
     fun cancel() {
-        mCallProxy?.cancel()
+        getCallProxy().cancel()
     }
 
     class TimeoutHolder(val timeOut: Long, val timeUnit: TimeUnit = TimeUnit.SECONDS)
-
-}
-
-class SyncHttpRequest(httpClient: HttpClient) : HttpRequest(httpClient) {
-
-    /**
-     * 同步网络请求
-     */
-    fun executeRequest(): HttpResponse {
-        val call = getRawCall()
-        mCallProxy = HttpCallProxy(call)
-        var response: okhttp3.Response? = null
-        try {
-            response = mCallProxy!!.execute()
-            val body = response.body
-            if (body != null) {
-                val byteData = body.bytes()
-
-                val newResponse = response.newBuilder()
-                    .body(byteData.toResponseBody(body.contentType()))
-                    .build()
-
-                val httpResponse = HttpResponse(newResponse, httpClient)
-                if (!httpResponse.isSuccessful) {
-                    if (!mCallProxy!!.isCanceled()) {
-                        mCallProxy?.cancel()
-                    }
-                }
-                return httpResponse
-            } else {
-                throw HttpException("okhttp3.Response's body is null")
-            }
-        } catch (e: IOException) {
-            throw HttpException(e)
-        } finally {
-            IOUtils.closeQuietly(response)
-        }
-
-    }
-
-}
-
-class AsyncHttpRequest(httpClient: HttpClient) : HttpRequest(httpClient) {
-
-    /**
-     * 异步执行网络请求
-     */
-    fun enqueueRequest(callback: RequestCallback?) {
-        val call = getRawCall()
-        mCallProxy = HttpCallProxy(call)
-        mCallProxy!!.enqueue(OkHttpCallback(httpClient, mCallProxy!!, callback))
-    }
 
 }

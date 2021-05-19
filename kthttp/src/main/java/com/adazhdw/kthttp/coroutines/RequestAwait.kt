@@ -16,3 +16,7 @@ fun <T> HttpRequest.awaitImpl(
 
 inline fun <reified T : Any> HttpRequest.toClazz(): IAwait<T> =
     awaitImpl(object : NormalParser<T>() {})
+
+internal suspend fun <T> HttpRequest.await(parser: Parser<T>): T {
+    return getCallProxy().call.await(parser)
+}
