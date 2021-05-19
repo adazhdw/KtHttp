@@ -58,16 +58,16 @@ fun patchRequest(block: HttpRequest.() -> Unit): HttpRequest {
 }
 
 
-inline fun <reified T : Any> HttpRequest.sync(
+inline fun <reified T : Any> HttpRequest.execute(
     noinline success: (data: T) -> Unit
-) = this.sync(success, failure = { e -> })
+) = this.execute(success, failure = { e -> })
 
-inline fun <reified T : Any> HttpRequest.sync(
+inline fun <reified T : Any> HttpRequest.execute(
     noinline success: (data: T) -> Unit,
     noinline failure: (e: Exception) -> Unit
 ) {
     try {
-        val response = this.execute()
+        val response = this.sync().executeRequest()
         if (response.isSuccessful) {
             success.invoke(response.toBean(object : TypeRef<T>() {}))
         } else {
@@ -79,17 +79,17 @@ inline fun <reified T : Any> HttpRequest.sync(
 }
 
 
-inline fun <reified T : Any> HttpRequest.async(
+inline fun <reified T : Any> HttpRequest.enqueue(
     lifecycleOwner: LifecycleOwner?,
     noinline success: (data: T) -> Unit
-) = this.async(lifecycleOwner, success, failure = { e, call -> })
+) = this.enqueue(lifecycleOwner, success, failure = { e, call -> })
 
-inline fun <reified T : Any> HttpRequest.async(
+inline fun <reified T : Any> HttpRequest.enqueue(
     lifecycleOwner: LifecycleOwner?,
     noinline success: (data: T) -> Unit,
     noinline failure: (e: Exception, call: Call) -> Unit
 ) = this.apply {
-    this.enqueue(object : RequestJsonCallback<T>(lifecycleOwner, this@apply.httpClient) {
+    this.async().enqueueRequest(object : RequestJsonCallback<T>(lifecycleOwner, this@apply.httpClient) {
         override fun onSuccess(data: T) {
             success.invoke(data)
         }

@@ -41,9 +41,12 @@ open class HttpRequest(val httpClient: HttpClient) {
     private var urlEncoder: Boolean = false
     private var needHeader: Boolean = false
 
-    private var mCallProxy: HttpCallProxy? = null
+    protected var mCallProxy: HttpCallProxy? = null
     private var mCall: okhttp3.Call? = null
     private var tag = ""
+
+    fun sync() = SyncHttpRequest(httpClient)
+    fun async() = AsyncHttpRequest(httpClient)
 
     fun url(url: String): HttpRequest = apply {
         this.url = url
@@ -140,48 +143,6 @@ open class HttpRequest(val httpClient: HttpClient) {
     fun tag(tag: String): HttpRequest {
         this.tag = tag
         return this
-    }
-
-    /**
-     * 同步网络请求
-     */
-    fun execute(): HttpResponse {
-        mCallProxy = HttpCallProxy(getRawCall())
-        var response: okhttp3.Response? = null
-        try {
-            response = mCallProxy!!.execute()
-            val body = response.body
-            if (body != null) {
-                val byteData = body.bytes()
-
-                val newResponse = response.newBuilder()
-                    .body(byteData.toResponseBody(body.contentType()))
-                    .build()
-
-                val httpResponse = HttpResponse(newResponse, httpClient)
-                if (!httpResponse.isSuccessful) {
-                    if (!mCallProxy!!.isCanceled()) {
-                        mCallProxy?.cancel()
-                    }
-                }
-                return httpResponse
-            } else {
-                throw HttpException("okhttp3.Response's body is null")
-            }
-        } catch (e: IOException) {
-            throw HttpException(e)
-        } finally {
-            IOUtils.closeQuietly(response)
-        }
-
-    }
-
-    /**
-     * 异步执行网络请求
-     */
-    fun enqueue(callback: RequestCallback?) {
-        mCallProxy = HttpCallProxy(getRawCall())
-        mCallProxy!!.enqueue(OkHttpCallback(httpClient, mCallProxy!!, callback))
     }
 
     /**
@@ -309,5 +270,55 @@ open class HttpRequest(val httpClient: HttpClient) {
     }
 
     class TimeoutHolder(val timeOut: Long, val timeUnit: TimeUnit = TimeUnit.SECONDS)
+
+}
+
+class SyncHttpRequest(httpClient: HttpClient) : HttpRequest(httpClient) {
+
+    /**
+     * 同步网络请求
+     */
+    fun executeRequest(): HttpResponse {
+        mCallProxy = HttpCallProxy(getRawCall())
+        var response: okhttp3.Response? = null
+        try {
+            response = mCallProxy!!.execute()
+            val body = response.body
+            if (body != null) {
+                val byteData = body.bytes()
+
+                val newResponse = response.newBuilder()
+                    .body(byteData.toResponseBody(body.contentType()))
+                    .build()
+
+                val httpResponse = HttpResponse(newResponse, httpClient)
+                if (!httpResponse.isSuccessful) {
+                    if (!mCallProxy!!.isCanceled()) {
+                        mCallProxy?.cancel()
+                    }
+                }
+                return httpResponse
+            } else {
+                throw HttpException("okhttp3.Response's body is null")
+            }
+        } catch (e: IOException) {
+            throw HttpException(e)
+        } finally {
+            IOUtils.closeQuietly(response)
+        }
+
+    }
+
+}
+
+class AsyncHttpRequest(httpClient: HttpClient) : HttpRequest(httpClient) {
+
+    /**
+     * 异步执行网络请求
+     */
+    fun enqueueRequest(callback: RequestCallback?) {
+        mCallProxy = HttpCallProxy(getRawCall())
+        mCallProxy!!.enqueue(OkHttpCallback(httpClient, mCallProxy!!, callback))
+    }
 
 }
