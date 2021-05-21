@@ -2,9 +2,8 @@ package com.adazhdw.kthttp.util
 
 import android.os.Handler
 import android.os.Looper
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
-import java.util.concurrent.ThreadPoolExecutor
+import okhttp3.internal.threadFactory
+import java.util.concurrent.*
 
 object ExecutorUtils {
 
@@ -14,6 +13,11 @@ object ExecutorUtils {
 
     val networkIO: ThreadPoolExecutor =
         Executors.newFixedThreadPool(THREAD_COUNT) as ThreadPoolExecutor
+
+    val networkExecutor: ExecutorService = ThreadPoolExecutor(
+        0, Int.MAX_VALUE, 60, TimeUnit.SECONDS,
+        SynchronousQueue(), threadFactory("$ExecutorUtils Dispatcher", false)
+    )
 
     val mainThread = MainThreadExecutor()
 

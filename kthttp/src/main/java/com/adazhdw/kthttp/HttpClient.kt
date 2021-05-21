@@ -5,6 +5,7 @@ import com.adazhdw.kthttp.converter.GsonConverter
 import com.adazhdw.kthttp.internal.HttpBodyType
 import com.adazhdw.kthttp.internal.HttpRequest
 import com.adazhdw.kthttp.util.ExecutorUtils
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.nio.charset.Charset
@@ -27,8 +28,6 @@ class HttpClient private constructor(builder: Builder) {
     internal var mainExecutor: Executor = builder.mainExecutor ?: ExecutorUtils.mainThread
     internal var workExecutor: Executor = builder.workExecutor ?: ExecutorUtils.networkIO
     internal var resultConverter: Converter = builder.resultConverter
-    internal var bodyType: HttpBodyType = builder.bodyType
-    internal var charset: Charset = builder.charset
     internal val commonHeaders: MutableMap<String, String> = builder.commonHeaders
     internal val commonParams: MutableMap<String, String> = builder.commonParams
 
@@ -55,8 +54,6 @@ class HttpClient private constructor(builder: Builder) {
         internal var mainExecutor: Executor? = null
         internal var workExecutor: Executor? = null
         internal var resultConverter: Converter = GsonConverter.create()
-        internal var bodyType: HttpBodyType = HttpBodyType.FORM
-        internal var charset: Charset = Charsets.UTF_8
         internal val commonHeaders: MutableMap<String, String>
         internal val commonParams: MutableMap<String, String>
 
@@ -68,8 +65,6 @@ class HttpClient private constructor(builder: Builder) {
                 this.readTimeout = httpClient.readTimeout
                 this.mainExecutor = httpClient.mainExecutor
                 this.workExecutor = httpClient.workExecutor
-                this.bodyType = httpClient.bodyType
-                this.charset = httpClient.charset
                 this.commonHeaders = httpClient.commonHeaders
                 this.commonParams = httpClient.commonParams
             } else {
@@ -120,16 +115,8 @@ class HttpClient private constructor(builder: Builder) {
             this.workExecutor = workExecutor
         }
 
-        fun bodyType(bodyType: HttpBodyType) = apply {
-            this.bodyType = bodyType
-        }
-
         fun resultConverter(resultConverter: Converter) = apply {
             this.resultConverter = resultConverter
-        }
-
-        fun charset(charset: Charset) = apply {
-            this.charset = charset
         }
 
         fun commonHeaders(headers: Map<String, String>) = apply {

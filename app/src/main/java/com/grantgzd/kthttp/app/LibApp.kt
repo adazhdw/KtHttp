@@ -1,6 +1,8 @@
 package com.grantgzd.kthttp.app
 
+import com.adazhdw.kthttp.http.Net
 import com.adazhdw.ktlib.Application
+import com.grantgzd.kthttp.app.gson.GsonConverterFactory
 
 /**
  * author：daguozhu
@@ -16,4 +18,11 @@ class LibApp : Application() {
     override fun isDebug(): Boolean {
         return BuildConfig.DEBUG
     }
+}
+
+val net: Net by lazy {
+    Net.Builder()
+        .baseUrl("https://wanandroid.com/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 }

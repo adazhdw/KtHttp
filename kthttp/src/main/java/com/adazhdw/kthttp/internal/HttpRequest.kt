@@ -9,7 +9,6 @@ import com.adazhdw.kthttp.util.RequestUrlUtils
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody.Companion.toResponseBody
-import okhttp3.internal.http.HttpMethod
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
@@ -27,7 +26,7 @@ open class HttpRequest(val httpClient: HttpClient) {
      */
 
     private var url: String = ""
-    private var method: Method = Method.GET
+    private var method: HttpMethod = HttpMethod.GET
     private val headers by lazy { mutableMapOf<String, String>() }// 请求任务的头信息
     private val queryParams by lazy { mutableMapOf<String, String>() }// URL参数（查询参数）
     private val bodyParams by lazy { mutableMapOf<String, String>() }// 报文体参数
@@ -49,19 +48,19 @@ open class HttpRequest(val httpClient: HttpClient) {
         this.url = url
     }
 
-    fun method(method: Method): HttpRequest = apply {
+    fun method(method: com.adazhdw.kthttp.internal.HttpMethod): HttpRequest = apply {
         this.method = method
     }
 
     /**
      * Param 设置请求方式的扩展方法
      */
-    fun get(): HttpRequest = apply { method(Method.GET) }
-    fun post(): HttpRequest = apply { method(Method.POST) }
-    fun delete(): HttpRequest = apply { method(Method.DELETE) }
-    fun head(): HttpRequest = apply { method(Method.HEAD) }
-    fun patch(): HttpRequest = apply { method(Method.PATCH) }
-    fun put(): HttpRequest = apply { method(Method.PUT) }
+    fun get(): HttpRequest = apply { method(HttpMethod.GET) }
+    fun post(): HttpRequest = apply { method(HttpMethod.POST) }
+    fun delete(): HttpRequest = apply { method(HttpMethod.DELETE) }
+    fun head(): HttpRequest = apply { method(HttpMethod.HEAD) }
+    fun patch(): HttpRequest = apply { method(HttpMethod.PATCH) }
+    fun put(): HttpRequest = apply { method(HttpMethod.PUT) }
 
     fun bodyType(bodyType: HttpBodyType): HttpRequest = apply {
         this.bodyType = bodyType
@@ -204,8 +203,8 @@ open class HttpRequest(val httpClient: HttpClient) {
      */
     private fun getRequest(): okhttp3.Request {
         val method = this.method.name.toUpperCase(Locale.getDefault())
-        val bodyCanUsed = HttpMethod.permitsRequestBody(method)//okhttp3.RequestBody可以用在请求体中
-        val requireBody = HttpMethod.requiresRequestBody(method)//请求体中必须设置okhttp3.RequestBody
+        val bodyCanUsed = okhttp3.internal.http.HttpMethod.permitsRequestBody(method)//okhttp3.RequestBody可以用在请求体中
+        val requireBody = okhttp3.internal.http.HttpMethod.requiresRequestBody(method)//请求体中必须设置okhttp3.RequestBody
         assertNotConflict(bodyCanUsed)
         if (!requireBody) {
             queryParams.putAll(httpClient.commonParams)
