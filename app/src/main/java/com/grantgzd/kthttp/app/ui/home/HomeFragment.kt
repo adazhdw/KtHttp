@@ -54,7 +54,7 @@ class HomeFragment : BaseFragment() {
     private fun requestText() {
         val textView: TextView = view?.findViewById(R.id.text_home) ?: return
         net.get().urlPath("wxarticle/list/408/1/json").queryParams("k", "Android")
-            .parseCall<NetResponse<DataFeed>>()
+            .parseObject<NetResponse<DataFeed>,Call<NetResponse<DataFeed>>>()
             .enqueue(object : Callback<NetResponse<DataFeed>> {
                 override fun onResponse(call: Call<NetResponse<DataFeed>>, response: Response<NetResponse<DataFeed>>) {
                     val stringBuilder = StringBuilder()

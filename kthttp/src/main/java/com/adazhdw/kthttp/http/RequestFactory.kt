@@ -31,6 +31,10 @@ class RequestFactory(val builder: Builder) {
         return InternalAdapters.parse<T, Call<T>>(object : TypeRef<Call<T>>() {}.type, builder.net, this)
     }
 
+    inline fun <reified T, reified R> parseCall(typeRef: TypeRef<R>): R {
+        return InternalAdapters.parse<T, R>(typeRef.type, builder.net, this)
+    }
+
     @Throws(IOException::class)
     fun create(): okhttp3.Request {
         val headers = headersBuilder.build()
@@ -249,7 +253,7 @@ class RequestFactory(val builder: Builder) {
                 require(!isFormEncoded) { "isFormEncoded can only be specified on HTTP methods with request body" }
             }
             if (urlPath.isNullOrBlank() || !gotUrl) {
-                throw IllegalArgumentException("")
+                throw IllegalArgumentException("urlPath must not be null")
             }
 
             if (!isFormEncoded && !isMultipart && !hasBody && gotBody) {
@@ -268,7 +272,11 @@ class RequestFactory(val builder: Builder) {
         }
 
         inline fun <reified T> parseCall(): Call<T> {
-            return build().parseCall()
+            return build().parseCall<T>()
+        }
+
+        inline fun <reified T, reified R> parseObject(): R {
+            return build().parseCall<T, R>(object : TypeRef<R>() {})
         }
 
     }
