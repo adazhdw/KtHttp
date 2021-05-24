@@ -1,23 +1,15 @@
 package com.grantgzd.kthttp.app.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import com.adazhdw.kthttp.http.Call
-import com.adazhdw.kthttp.http.Callback
-import com.adazhdw.kthttp.http.Response
 import com.adazhdw.ktlib.base.fragment.BaseFragment
 import com.adazhdw.ktlib.base.mvvm.viewModel
-import com.adazhdw.ktlib.ext.parseAsHtml
 import com.grantgzd.kthttp.app.R
-import com.grantgzd.kthttp.app.bean.DataFeed
-import com.grantgzd.kthttp.app.bean.NetResponse
-import com.grantgzd.kthttp.app.net
 
 class HomeFragment : BaseFragment() {
 
@@ -53,21 +45,7 @@ class HomeFragment : BaseFragment() {
 
     private fun requestText() {
         val textView: TextView = view?.findViewById(R.id.text_home) ?: return
-        net.get().urlPath("wxarticle/list/408/1/json").queryParams("k", "Android")
-            .parseObject<NetResponse<DataFeed>,Call<NetResponse<DataFeed>>>()
-            .enqueue(object : Callback<NetResponse<DataFeed>> {
-                override fun onResponse(call: Call<NetResponse<DataFeed>>, response: Response<NetResponse<DataFeed>>) {
-                    val stringBuilder = StringBuilder()
-                    for (item in response.body!!.data.datas) {
-                        stringBuilder.append("标题：${item.title.parseAsHtml()}").append("\n\n")
-                    }
-                    textView.text = stringBuilder.toString()
-                }
 
-                override fun onFailure(call: Call<NetResponse<DataFeed>>, t: Throwable) {
-                    Log.d(TAG, "t:$t,call:$call")
-                }
-            })
     }
 
     override val layoutId: Int
