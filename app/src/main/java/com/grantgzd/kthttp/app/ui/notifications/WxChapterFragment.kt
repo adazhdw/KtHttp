@@ -3,14 +3,14 @@ package com.grantgzd.kthttp.app.ui.notifications
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.adazhdw.kthttp.enqueue
-import com.adazhdw.kthttp.getRequest
 import com.adazhdw.ktlib.list.ListFragment
 import com.adazhdw.ktlib.list.adapter.ViewBindingAdapter
 import com.adazhdw.ktlib.list.holder.BaseVBViewHolder
+import com.adazhdw.net.await
 import com.grantgzd.kthttp.app.bean.ListResponse
 import com.grantgzd.kthttp.app.bean.WxArticleChapter
 import com.grantgzd.kthttp.app.databinding.NetChapterItemBinding
+import com.grantgzd.kthttp.app.net
 
 /**
  * author：daguozhu
@@ -31,20 +31,12 @@ class WxChaptersFragment : ListFragment<WxArticleChapter, ChaptersAdapter>() {
     override fun getDataAdapter(): ChaptersAdapter = ChaptersAdapter()
 
     override fun onLoad(page: Int, callback: LoadDataCallback<WxArticleChapter>) {
-        val url = "https://wanandroid.com/wxarticle/chapters/json"
-        /*launchOnUI {
-            val data = request {//get() 默认为GET
-                url(url)
-            }.toClazz<ListResponse<WxArticleChapter>>().await().data ?: listOf()
-            val hasmore = dataSize < 25
-            callback.onSuccess(data, hasmore)
-        }*/
-        getRequest { url(url) }.enqueue<ListResponse<WxArticleChapter>>(this,
-            success = {
-                val data = it.data ?: listOf()
-                val hasMore = dataSize < 25
-                callback.onSuccess(data, hasMore)
-            })
+        val url = "wxarticle/chapters/json"
+        launchOnUI {
+            val data = net.get(url).tag(this).parseClazz<ListResponse<WxArticleChapter>>().await()
+            val list = data.data ?: listOf()
+            callback.onSuccess(list, false)
+        }
     }
 }
 

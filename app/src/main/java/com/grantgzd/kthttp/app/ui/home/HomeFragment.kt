@@ -36,10 +36,10 @@ class HomeFragment : BaseFragment() {
         val request: Button = view.findViewById(R.id.request)
 
         textView.setOnClickListener {
-            homeViewModel.getText()
+
         }
         request.setOnClickListener {
-            requestText()
+            homeViewModel.getText()
         }
     }
 

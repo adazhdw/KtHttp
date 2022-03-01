@@ -2,13 +2,14 @@ package com.grantgzd.kthttp.app.ui.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.adazhdw.kthttp.coroutines.toClazz
-import com.adazhdw.kthttp.postRequest
 import com.adazhdw.ktlib.base.mvvm.BaseViewModelImpl
 import com.adazhdw.ktlib.ext.logD
 import com.adazhdw.ktlib.ext.parseAsHtml
+import com.adazhdw.net.await
+import com.grantgzd.kthttp.app.GsonUtils
 import com.grantgzd.kthttp.app.bean.DataFeed
 import com.grantgzd.kthttp.app.bean.NetResponse
+import com.grantgzd.kthttp.app.net
 import kotlin.system.measureTimeMillis
 
 class DashboardViewModel : BaseViewModelImpl() {
@@ -21,10 +22,8 @@ class DashboardViewModel : BaseViewModelImpl() {
     fun getText() {
         launch {
             val time = measureTimeMillis {
-                val data = postRequest {
-                    url("https://www.wanandroid.com/article/query/0/json")
-                    bodyParams("k", "ViewModel")
-                }.toClazz<NetResponse<DataFeed>>().await()
+                //"k", "ViewModel"
+                val data = net.post("article/query/0/json").queryParams("k","ViewModel").parseClazz<NetResponse<DataFeed>>().await()
                 val stringBuilder = StringBuilder()
                 for (item in data.data.datas) {
                     stringBuilder.append("标题：${item.title.parseAsHtml()}").append("\n\n")
