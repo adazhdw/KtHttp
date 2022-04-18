@@ -39,13 +39,8 @@ class HomeFragment : BaseFragment() {
             homeViewModel.getText()
         }
         request.setOnClickListener {
-            requestText()
+            homeViewModel.getText()
         }
-    }
-
-    private fun requestText() {
-        val textView: TextView = view?.findViewById(R.id.text_home) ?: return
-
     }
 
     override val layoutId: Int

@@ -52,6 +52,7 @@ dependencies {
     implementation 'com.github.adazhdw:KtLibTest:0.5.0'
 //    implementation 'com.adazhdw:kthttp:0.2.24'
     implementation project(path: ':kthttp')
+    implementation project(path: ':net')
 
     //Gson
     implementation 'com.google.code.gson:gson:2.8.6'

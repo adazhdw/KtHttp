@@ -1,3 +1,4 @@
 include ':kthttp'
 include ':app'
 rootProject.name = "KtHttp"
+include ':net'
