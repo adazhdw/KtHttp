@@ -50,9 +50,10 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     implementation 'com.github.adazhdw:KtLibTest:0.5.0'
-//    implementation 'com.adazhdw:kthttp:0.2.24'
-    implementation project(path: ':kthttp')
-    implementation project(path: ':net')
+    implementation 'com.github.adazhdw.KtHttp:kthttp:0.2.40'
+    implementation 'com.github.adazhdw.KtHttp:net:0.2.40'
+//    implementation project(path: ':kthttp')
+//    implementation project(path: ':net')
 
     //Gson
     implementation 'com.google.code.gson:gson:2.8.6'
