@@ -8,7 +8,7 @@ import okio.*
 import java.io.IOException
 
 class OkHttpCall<T>(
-    private val requestFactory: RequestFactory,
+    private val requestFactory: NetRequestFactory,
     private val callFactory: okhttp3.Call.Factory,
     private val responseConverter: Converter<okhttp3.Response, T>?,
     private val responseBodyConverter: Converter<okhttp3.ResponseBody, T>

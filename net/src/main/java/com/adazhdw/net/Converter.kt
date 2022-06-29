@@ -21,7 +21,7 @@ interface Converter<F, T> {
          * response types such as {@code SimpleResponse} from a {@code Call<SimpleResponse>}
          * declaration.
          */
-        open fun responseBodyConverter(type: Type, net: Net, requestFactory: RequestFactory): Converter<okhttp3.ResponseBody, *>? {
+        open fun responseBodyConverter(type: Type, net: Net, requestFactory: NetRequestFactory): Converter<okhttp3.ResponseBody, *>? {
             return null
         }
 
@@ -31,7 +31,7 @@ interface Converter<F, T> {
          * response types such as {@code SimpleResponse} from a {@code Call<SimpleResponse>}
          * declaration.
          */
-        open fun responseConverter(type: Type, net: Net, requestFactory: RequestFactory): Converter<okhttp3.Response, *>? {
+        open fun responseConverter(type: Type, net: Net, requestFactory: NetRequestFactory): Converter<okhttp3.Response, *>? {
             return null
         }
 

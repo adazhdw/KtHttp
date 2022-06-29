@@ -23,8 +23,8 @@ class Net private constructor(
     val callAdapterFactories: MutableList<CallAdapter.Factory>
 ) {
 
-    fun requestFactory(): RequestFactory.Builder {
-        return RequestFactory.parseBuilder(this)
+    fun requestFactory(): NetRequestFactory.Builder {
+        return NetRequestFactory.parseBuilder(this)
     }
 
     fun get() = requestFactory().method(HttpMethod.GET)
@@ -107,11 +107,11 @@ class Net private constructor(
         throw IllegalArgumentException(builder.toString())
     }
 
-    fun <T> responseBodyConverter(responseType: Type, requestFactory: RequestFactory): Converter<okhttp3.ResponseBody, T> {
+    fun <T> responseBodyConverter(responseType: Type, requestFactory: NetRequestFactory): Converter<okhttp3.ResponseBody, T> {
         return responseBodyConverter(null, responseType, requestFactory)
     }
 
-    fun <T> responseBodyConverter(skipPast: Converter.Factory?, responseType: Type, requestFactory: RequestFactory): Converter<okhttp3.ResponseBody, T> {
+    fun <T> responseBodyConverter(skipPast: Converter.Factory?, responseType: Type, requestFactory: NetRequestFactory): Converter<okhttp3.ResponseBody, T> {
         val start: Int = converterFactories.indexOf(skipPast) + 1
         for (i in start until converterFactories.size) {
             val converter: Converter<okhttp3.ResponseBody, *>? = converterFactories[i].responseBodyConverter(responseType, this, requestFactory)
@@ -135,11 +135,11 @@ class Net private constructor(
         throw IllegalArgumentException(builder.toString())
     }
 
-    fun <T> responseConverter(responseType: Type, requestFactory: RequestFactory): Converter<okhttp3.Response, T>? {
+    fun <T> responseConverter(responseType: Type, requestFactory: NetRequestFactory): Converter<okhttp3.Response, T>? {
         return responseConverter(null, responseType, requestFactory)
     }
 
-    fun <T> responseConverter(skipPast: Converter.Factory?, responseType: Type, requestFactory: RequestFactory): Converter<okhttp3.Response, T>? {
+    fun <T> responseConverter(skipPast: Converter.Factory?, responseType: Type, requestFactory: NetRequestFactory): Converter<okhttp3.Response, T>? {
         val start: Int = converterFactories.indexOf(skipPast) + 1
         for (i in start until converterFactories.size) {
             val converter: Converter<okhttp3.Response, *>? = converterFactories[i].responseConverter(responseType, this, requestFactory)

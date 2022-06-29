@@ -9,7 +9,7 @@ internal class InternalConverters : Converter.Factory() {
      * Not volatile because we don't mind multiple threads discovering this.
      */
     private var checkForKotlinUnit = true
-    override fun responseBodyConverter(type: Type, net: Net, requestFactory: RequestFactory): Converter<okhttp3.ResponseBody, *>? {
+    override fun responseBodyConverter(type: Type, net: Net, requestFactory: NetRequestFactory): Converter<okhttp3.ResponseBody, *>? {
         if (type === okhttp3.ResponseBody::class.java) {
             return if (requestFactory.isStreaming) {
                 StreamingResponseBodyConverter.INSTANCE
@@ -36,7 +36,7 @@ internal class InternalConverters : Converter.Factory() {
         return null
     }
 
-    override fun responseConverter(type: Type, net: Net, requestFactory: RequestFactory): Converter<okhttp3.Response, *>? {
+    override fun responseConverter(type: Type, net: Net, requestFactory: NetRequestFactory): Converter<okhttp3.Response, *>? {
         if (type === okhttp3.Response::class.java) {
             return InternalResponseConverter()
         }

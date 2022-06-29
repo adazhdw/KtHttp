@@ -4,7 +4,7 @@ import java.lang.reflect.Type
 
 
 abstract class InternalAdapter<ResponseT, ReturnT>(
-    private val requestFactory: RequestFactory,
+    private val requestFactory: NetRequestFactory,
     private val callFactory: okhttp3.Call.Factory,
     private val responseConverter: Converter<okhttp3.Response, ResponseT>?,
     private val responseBodyConverter: Converter<okhttp3.ResponseBody, ResponseT>
@@ -18,7 +18,7 @@ abstract class InternalAdapter<ResponseT, ReturnT>(
     abstract fun adapt(call: Call<ResponseT>): ReturnT
 
     class InternalCallAdapter<ResponseT, ReturnT>(
-        requestFactory: RequestFactory,
+        requestFactory: NetRequestFactory,
         callFactory: okhttp3.Call.Factory,
         responseConverter: Converter<okhttp3.Response, ResponseT>?,
         responseBodyConverter: Converter<okhttp3.ResponseBody, ResponseT>,
@@ -31,7 +31,7 @@ abstract class InternalAdapter<ResponseT, ReturnT>(
 
     companion object {
 
-        fun <ResponseT, ReturnT> parse(typeRef: TypeRef<ReturnT>, net: Net, requestFactory: RequestFactory): ReturnT {
+        fun <ResponseT, ReturnT> parse(typeRef: TypeRef<ReturnT>, net: Net, requestFactory: NetRequestFactory): ReturnT {
             val callAdapter = createCallAdapter<ResponseT, ReturnT>(net, typeRef.type)
             val responseType = callAdapter.responseType()
             if (responseType === okhttp3.Response::class.java) {
@@ -56,7 +56,7 @@ abstract class InternalAdapter<ResponseT, ReturnT>(
         private fun <ResponseT> createResponseBodyConverter(
             net: Net,
             responseType: Type,
-            requestFactory: RequestFactory
+            requestFactory: NetRequestFactory
         ): Converter<okhttp3.ResponseBody, ResponseT> {
             try {
                 return net.responseBodyConverter<ResponseT>(responseType, requestFactory)
@@ -69,7 +69,7 @@ abstract class InternalAdapter<ResponseT, ReturnT>(
         private fun <ResponseT> createResponseConverter(
             net: Net,
             responseType: Type,
-            requestFactory: RequestFactory
+            requestFactory: NetRequestFactory
         ): Converter<okhttp3.Response, ResponseT>? {
             try {
                 return net.responseConverter<ResponseT>(responseType, requestFactory)
