@@ -8,6 +8,7 @@ import com.adazhdw.ktlib.base.mvvm.BaseViewModelImpl
 import com.adazhdw.ktlib.ext.logD
 import com.adazhdw.ktlib.ext.parseAsHtml
 import com.adazhdw.net.await
+import com.adazhdw.net.get
 import com.grantgzd.kthttp.app.bean.DataFeed
 import com.grantgzd.kthttp.app.bean.NetResponse
 import com.grantgzd.kthttp.app.net
@@ -28,9 +29,12 @@ class HomeViewModel : BaseViewModelImpl() {
                     url("https://wanandroid.com/wxarticle/list/408/1/json")
                     queryParams("k", "Android")
                 }.toClazz<NetResponse<DataFeed>>().await()*/
-                val data = net.get("wxarticle/list/408/1/json")
+                /*val data = net.get("wxarticle/list/408/1/json")
                     .queryParams("k", "Android")
-                    .parse<NetResponse<DataFeed>>().await()
+                    .parse<NetResponse<DataFeed>>().await()*/
+                val data = net.get<NetResponse<DataFeed>>(urlPath = "wxarticle/list/408/1/json"){
+                    queryParams("k", "Android")
+                }
                 val stringBuilder = StringBuilder()
                 for (item in data.data.datas) {
                     stringBuilder.append("标题：${item.title.parseAsHtml()}").append("\n\n")
