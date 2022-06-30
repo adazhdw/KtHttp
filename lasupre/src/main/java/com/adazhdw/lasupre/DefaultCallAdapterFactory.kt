@@ -1,4 +1,4 @@
-package com.adazhdw.net
+package com.adazhdw.lasupre
 
 import okhttp3.Request
 import okio.Timeout
@@ -9,7 +9,7 @@ import java.util.concurrent.Executor
 
 
 class DefaultCallAdapterFactory(private val mainExecutor: Executor) : CallAdapter.Factory() {
-    override fun get(returnType: Type, net: Net): CallAdapter<*, *>? {
+    override fun get(returnType: Type, lasupre: Lasupre): CallAdapter<*, *>? {
         if (TypeUtils.getRawType(returnType) != Call::class.java) {
             return null
         }

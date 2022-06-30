@@ -2,16 +2,13 @@ package com.grantgzd.kthttp.app.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.adazhdw.kthttp.coroutines.toClazz
-import com.adazhdw.kthttp.getRequest
 import com.adazhdw.ktlib.base.mvvm.BaseViewModelImpl
 import com.adazhdw.ktlib.ext.logD
 import com.adazhdw.ktlib.ext.parseAsHtml
-import com.adazhdw.net.await
-import com.adazhdw.net.get
+import com.adazhdw.lasupre.get
 import com.grantgzd.kthttp.app.bean.DataFeed
 import com.grantgzd.kthttp.app.bean.NetResponse
-import com.grantgzd.kthttp.app.net
+import com.grantgzd.kthttp.app.lasupre
 import kotlin.system.measureTimeMillis
 
 class HomeViewModel : BaseViewModelImpl() {
@@ -32,7 +29,7 @@ class HomeViewModel : BaseViewModelImpl() {
                 /*val data = net.get("wxarticle/list/408/1/json")
                     .queryParams("k", "Android")
                     .parse<NetResponse<DataFeed>>().await()*/
-                val data = net.get<NetResponse<DataFeed>>(urlPath = "wxarticle/list/408/1/json"){
+                val data = lasupre.get<NetResponse<DataFeed>>(urlPath = "wxarticle/list/408/1/json"){
                     queryParams("k", "Android")
                 }
                 val stringBuilder = StringBuilder()

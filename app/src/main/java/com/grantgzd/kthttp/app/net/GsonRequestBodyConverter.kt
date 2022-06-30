@@ -1,6 +1,6 @@
 package com.grantgzd.kthttp.app.net
 
-import com.adazhdw.net.Converter
+import com.adazhdw.lasupre.Converter
 import com.google.gson.Gson
 import com.google.gson.TypeAdapter
 import okhttp3.MediaType

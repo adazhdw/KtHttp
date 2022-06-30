@@ -3,7 +3,7 @@ package com.grantgzd.kthttp.app
 import com.adazhdw.ktlib.Application
 import com.adazhdw.ktlib.BuildConfig
 import com.adazhdw.ktlib.core.delegate.DelegateExt
-import com.adazhdw.net.Net
+import com.adazhdw.lasupre.Lasupre
 import com.grantgzd.kthttp.app.net.CoroutineCallAdapterFactory
 import com.grantgzd.kthttp.app.net.GsonConverterFactory
 import com.grantgzd.kthttp.app.net.OkHttpClientFactory
@@ -30,8 +30,8 @@ class LibApp : Application() {
 
 
 
-val net: Net by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-    Net.Builder()
+val lasupre: Lasupre by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+    Lasupre.Builder()
         .baseUrl("https://wanandroid.com/")
         .client(OkHttpClientFactory(LibApp.instance.applicationContext).create())
         .addConverterFactory(GsonConverterFactory.create())

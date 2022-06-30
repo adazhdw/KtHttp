@@ -1,4 +1,4 @@
-package com.adazhdw.net
+package com.adazhdw.lasupre
 
 import java.lang.reflect.Type
 
@@ -9,7 +9,7 @@ internal class InternalConverters : Converter.Factory() {
      * Not volatile because we don't mind multiple threads discovering this.
      */
     private var checkForKotlinUnit = true
-    override fun responseBodyConverter(type: Type, net: Net, requestFactory: NetRequestFactory): Converter<okhttp3.ResponseBody, *>? {
+    override fun responseBodyConverter(type: Type, lasupre: Lasupre, requestFactory: RequestFactory): Converter<okhttp3.ResponseBody, *>? {
         if (type === okhttp3.ResponseBody::class.java) {
             return if (requestFactory.isStreaming) {
                 StreamingResponseBodyConverter.INSTANCE
@@ -36,7 +36,7 @@ internal class InternalConverters : Converter.Factory() {
         return null
     }
 
-    override fun responseConverter(type: Type, net: Net, requestFactory: NetRequestFactory): Converter<okhttp3.Response, *>? {
+    override fun responseConverter(type: Type, lasupre: Lasupre, requestFactory: RequestFactory): Converter<okhttp3.Response, *>? {
         if (type === okhttp3.Response::class.java) {
             return InternalResponseConverter()
         }
@@ -59,7 +59,7 @@ internal class InternalConverters : Converter.Factory() {
         return null
     }
 
-    override fun requestBodyConverter(type: Type, net: Net): Converter<*, okhttp3.RequestBody>? {
+    override fun requestBodyConverter(type: Type, lasupre: Lasupre): Converter<*, okhttp3.RequestBody>? {
         if (okhttp3.RequestBody::class.java.isAssignableFrom(TypeUtils.getRawType(type))) {
             RequestBodyConverter.INSTANCE
         }

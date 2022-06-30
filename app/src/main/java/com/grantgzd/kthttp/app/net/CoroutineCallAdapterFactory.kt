@@ -1,6 +1,6 @@
 package com.grantgzd.kthttp.app.net
 
-import com.adazhdw.net.*
+import com.adazhdw.lasupre.*
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
 import java.lang.reflect.ParameterizedType
@@ -13,7 +13,7 @@ class CoroutineCallAdapterFactory private constructor() : CallAdapter.Factory() 
         operator fun invoke() = CoroutineCallAdapterFactory()
     }
 
-    override fun get(returnType: Type, net: Net): CallAdapter<*, *>? {
+    override fun get(returnType: Type, lasupre: Lasupre): CallAdapter<*, *>? {
         if (Deferred::class.java != TypeUtils.getRawType(returnType)) {
             return null
         }

@@ -1,4 +1,4 @@
-package com.adazhdw.net
+package com.adazhdw.lasupre
 
 import okhttp3.RequestBody
 import java.io.IOException
@@ -21,7 +21,7 @@ interface Converter<F, T> {
          * response types such as {@code SimpleResponse} from a {@code Call<SimpleResponse>}
          * declaration.
          */
-        open fun responseBodyConverter(type: Type, net: Net, requestFactory: NetRequestFactory): Converter<okhttp3.ResponseBody, *>? {
+        open fun responseBodyConverter(type: Type, lasupre: Lasupre, requestFactory: RequestFactory): Converter<okhttp3.ResponseBody, *>? {
             return null
         }
 
@@ -31,7 +31,7 @@ interface Converter<F, T> {
          * response types such as {@code SimpleResponse} from a {@code Call<SimpleResponse>}
          * declaration.
          */
-        open fun responseConverter(type: Type, net: Net, requestFactory: NetRequestFactory): Converter<okhttp3.Response, *>? {
+        open fun responseConverter(type: Type, lasupre: Lasupre, requestFactory: RequestFactory): Converter<okhttp3.Response, *>? {
             return null
         }
 
@@ -40,7 +40,7 @@ interface Converter<F, T> {
          * {@code type} cannot be handled by this factory. This is used to create converters for types
          * specified by {@link Body @Body}, {@link Part @Part}, and {@link PartMap @PartMap} values.
          */
-        open fun requestBodyConverter(type: Type, net: Net): Converter<*, RequestBody>? {
+        open fun requestBodyConverter(type: Type, lasupre: Lasupre): Converter<*, RequestBody>? {
             return null
         }
 

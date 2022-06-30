@@ -1,14 +1,14 @@
-package com.adazhdw.net
+package com.adazhdw.lasupre
 
 import androidx.annotation.GuardedBy
-import com.adazhdw.net.Utils.Companion.throwIfFatal
+import com.adazhdw.lasupre.Utils.Companion.throwIfFatal
 import okhttp3.MediaType
 import okhttp3.Request
 import okio.*
 import java.io.IOException
 
 class OkHttpCall<T>(
-    private val requestFactory: NetRequestFactory,
+    private val requestFactory: RequestFactory,
     private val callFactory: okhttp3.Call.Factory,
     private val responseConverter: Converter<okhttp3.Response, T>?,
     private val responseBodyConverter: Converter<okhttp3.ResponseBody, T>

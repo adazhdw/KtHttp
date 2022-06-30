@@ -1,6 +1,6 @@
-package com.adazhdw.net
+package com.adazhdw.lasupre
 
-import com.adazhdw.net.CallAdapter.Factory
+import com.adazhdw.lasupre.CallAdapter.Factory
 import java.lang.reflect.Type
 
 /**
@@ -31,7 +31,7 @@ interface CallAdapter<R, T> {
          * Returns a call adapter for interface methods that return `returnType`, or null if it
          * cannot be handled by this factory.
          */
-        abstract fun get(returnType: Type, net: Net): CallAdapter<*, *>?
+        abstract fun get(returnType: Type, lasupre: Lasupre): CallAdapter<*, *>?
 
     }
 }

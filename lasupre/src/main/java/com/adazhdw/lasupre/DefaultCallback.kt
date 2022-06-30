@@ -1,4 +1,4 @@
-package com.adazhdw.net
+package com.adazhdw.lasupre
 
 abstract class DefaultCallback<T> : Callback<T> {
 

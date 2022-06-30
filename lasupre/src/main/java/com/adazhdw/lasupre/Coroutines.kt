@@ -1,4 +1,4 @@
-package com.adazhdw.net
+package com.adazhdw.lasupre
 
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume

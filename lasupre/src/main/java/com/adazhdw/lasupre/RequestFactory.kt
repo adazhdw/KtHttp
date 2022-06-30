@@ -1,4 +1,4 @@
-package com.adazhdw.net
+package com.adazhdw.lasupre
 
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaType
@@ -10,18 +10,18 @@ import java.net.URL
 import java.util.regex.Pattern
 
 
-class NetRequestFactory(builder: Builder) {
+class RequestFactory(builder: Builder) {
 
     companion object {
-        fun parseBuilder(net: Net): Builder {
-            return Builder(net)
+        fun parseBuilder(lasupre: Lasupre): Builder {
+            return Builder(lasupre)
         }
     }
 
-    val net: Net = builder.net
+    val lasupre: Lasupre = builder.lasupre
     internal val method: HttpMethod = builder.method
     private val headers: okhttp3.Headers? = builder.headersBuilder?.build()
-    private val baseUrl: okhttp3.HttpUrl = if (builder.newBaseUrl != null) builder.newBaseUrl!! else net.baseUrl
+    private val baseUrl: okhttp3.HttpUrl = if (builder.newBaseUrl != null) builder.newBaseUrl!! else lasupre.baseUrl
     private val urlPath: String? = builder.urlPath
     private val pathParams: Map<String, String> = builder.pathParams
     private val pathParamNames: Set<String> = builder.pathParamNames
@@ -39,7 +39,7 @@ class NetRequestFactory(builder: Builder) {
     private val needCommonParams: Boolean = builder.needCommonParams
 
     inline fun <reified T : Any> parse(): Call<T> {
-        return InternalAdapter.parse<T, Call<T>>(object : TypeRef<Call<T>>() {}, net, this)
+        return InternalAdapter.parse<T, Call<T>>(object : TypeRef<Call<T>>() {}, lasupre, this)
     }
 
     inline fun <reified T : Any> enqueue(callback: Callback<T>) {
@@ -47,7 +47,7 @@ class NetRequestFactory(builder: Builder) {
     }
 
     inline fun <reified T : Any, reified R : Any> enqueue(): R {
-        return InternalAdapter.parse<T, R>(object : TypeRef<R>() {}, net, this)
+        return InternalAdapter.parse<T, R>(object : TypeRef<R>() {}, lasupre, this)
     }
 
     inline fun <reified T : Any> execute(): Response<T> {
@@ -56,20 +56,20 @@ class NetRequestFactory(builder: Builder) {
 
     fun download(): Call<okhttp3.ResponseBody> {
         val typeRef = object : TypeRef<Call<okhttp3.ResponseBody>>() {}
-        return InternalAdapter.parse<okhttp3.ResponseBody, Call<okhttp3.ResponseBody>>(typeRef, net, this)
+        return InternalAdapter.parse<okhttp3.ResponseBody, Call<okhttp3.ResponseBody>>(typeRef, lasupre, this)
     }
 
     @Throws(IOException::class)
     fun create(): okhttp3.Request {
         val requestBuilder = RequestBuilder(method.name, baseUrl, urlPath, headers, contentType, hasBody, isFormEncoded, isMultipart)
 
-        if (needCommonHeaders && net.commonHeaders.isNotEmpty()) {
-            for ((name, value) in net.commonHeaders) {
+        if (needCommonHeaders && lasupre.commonHeaders.isNotEmpty()) {
+            for ((name, value) in lasupre.commonHeaders) {
                 requestBuilder.addHeader(name, value)
             }
         }
-        if (needCommonParams && net.commonParams.isNotEmpty()) {
-            for (param in net.commonParams) {
+        if (needCommonParams && lasupre.commonParams.isNotEmpty()) {
+            for (param in lasupre.commonParams) {
                 requestBuilder.addQueryParam(param.name, param.value, param.encoded)
             }
         }
@@ -114,7 +114,7 @@ class NetRequestFactory(builder: Builder) {
         return requestBuilder.get().build()
     }
 
-    class Builder(val net: Net) {
+    class Builder(val lasupre: Lasupre) {
         // Upper and lower characters, digits, underscores, and hyphens, starting with a character.
         companion object {
             private const val PARAM = "[a-zA-Z][a-zA-Z0-9_-]*"
@@ -331,7 +331,7 @@ class NetRequestFactory(builder: Builder) {
         }
 
         inline fun <reified T : Any> requestBody(value: T) = apply {
-            val requestBodyConverter = net.requestBodyConverter<T>(object : TypeRef<T>() {}.type)
+            val requestBodyConverter = lasupre.requestBodyConverter<T>(object : TypeRef<T>() {}.type)
             requestBody(requestBodyConverter.convert(value))
         }
 
@@ -372,7 +372,7 @@ class NetRequestFactory(builder: Builder) {
             this.needCommonParams = needCommonParams
         }
 
-        fun build(): NetRequestFactory {
+        fun build(): RequestFactory {
             if (!hasBody) {
                 require(!isMultipart) { "Multipart can only be specified on HTTP methods with request body" }
                 require(!isFormEncoded) { "isFormEncoded can only be specified on HTTP methods with request body" }
@@ -394,7 +394,7 @@ class NetRequestFactory(builder: Builder) {
                 throw IllegalArgumentException("Form-encoded method must contain at least one FieldParam")
             }
 
-            return NetRequestFactory(this)
+            return RequestFactory(this)
         }
 
         inline fun <reified T : Any> parse(): Call<T> {

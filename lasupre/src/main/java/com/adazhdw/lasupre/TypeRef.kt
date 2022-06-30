@@ -1,4 +1,4 @@
-package com.adazhdw.net
+package com.adazhdw.lasupre
 
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type

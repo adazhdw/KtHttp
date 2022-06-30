@@ -1,4 +1,4 @@
-package com.adazhdw.net
+package com.adazhdw.lasupre
 
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.lang.reflect.Type
@@ -12,7 +12,7 @@ import java.util.concurrent.Executor
  * 以及提供了ConverterAdapter将请求后的结果转换成我们需要的形式。
  */
 
-class Net private constructor(
+class Lasupre private constructor(
     val client: okhttp3.OkHttpClient,
     val baseUrl: okhttp3.HttpUrl,
     val callbackExecutor: Executor,
@@ -23,8 +23,8 @@ class Net private constructor(
     val callAdapterFactories: MutableList<CallAdapter.Factory>
 ) {
 
-    fun requestFactory(): NetRequestFactory.Builder {
-        return NetRequestFactory.parseBuilder(this)
+    fun requestFactory(): RequestFactory.Builder {
+        return RequestFactory.parseBuilder(this)
     }
 
     fun get() = requestFactory().method(HttpMethod.GET)
@@ -107,11 +107,11 @@ class Net private constructor(
         throw IllegalArgumentException(builder.toString())
     }
 
-    fun <T> responseBodyConverter(responseType: Type, requestFactory: NetRequestFactory): Converter<okhttp3.ResponseBody, T> {
+    fun <T> responseBodyConverter(responseType: Type, requestFactory: RequestFactory): Converter<okhttp3.ResponseBody, T> {
         return responseBodyConverter(null, responseType, requestFactory)
     }
 
-    fun <T> responseBodyConverter(skipPast: Converter.Factory?, responseType: Type, requestFactory: NetRequestFactory): Converter<okhttp3.ResponseBody, T> {
+    fun <T> responseBodyConverter(skipPast: Converter.Factory?, responseType: Type, requestFactory: RequestFactory): Converter<okhttp3.ResponseBody, T> {
         val start: Int = converterFactories.indexOf(skipPast) + 1
         for (i in start until converterFactories.size) {
             val converter: Converter<okhttp3.ResponseBody, *>? = converterFactories[i].responseBodyConverter(responseType, this, requestFactory)
@@ -135,11 +135,11 @@ class Net private constructor(
         throw IllegalArgumentException(builder.toString())
     }
 
-    fun <T> responseConverter(responseType: Type, requestFactory: NetRequestFactory): Converter<okhttp3.Response, T>? {
+    fun <T> responseConverter(responseType: Type, requestFactory: RequestFactory): Converter<okhttp3.Response, T>? {
         return responseConverter(null, responseType, requestFactory)
     }
 
-    fun <T> responseConverter(skipPast: Converter.Factory?, responseType: Type, requestFactory: NetRequestFactory): Converter<okhttp3.Response, T>? {
+    fun <T> responseConverter(skipPast: Converter.Factory?, responseType: Type, requestFactory: RequestFactory): Converter<okhttp3.Response, T>? {
         val start: Int = converterFactories.indexOf(skipPast) + 1
         for (i in start until converterFactories.size) {
             val converter: Converter<okhttp3.Response, *>? = converterFactories[i].responseConverter(responseType, this, requestFactory)
@@ -162,7 +162,7 @@ class Net private constructor(
         executor.execute(runnable)
     }
 
-    class Builder(net: Net? = null) {
+    class Builder(lasupre: Lasupre? = null) {
         private var client: okhttp3.OkHttpClient? = null
         private var baseUrl: okhttp3.HttpUrl? = null
         private var callbackExecutor: Executor? = null
@@ -174,18 +174,18 @@ class Net private constructor(
         private val platform = Platform.PLATFORM
 
         init {
-            if (net != null) {
-                this.client = net.client
-                this.callbackExecutor = net.callbackExecutor
-                this.workExecutor = net.workExecutor
-                this.commonHeaders = net.commonHeaders
-                this.commonParams = net.commonParams
+            if (lasupre != null) {
+                this.client = lasupre.client
+                this.callbackExecutor = lasupre.callbackExecutor
+                this.workExecutor = lasupre.workExecutor
+                this.commonHeaders = lasupre.commonHeaders
+                this.commonParams = lasupre.commonParams
 
-                for (i in 1 until net.converterFactories.size - platform.defaultConverterFactoriesSize()) {
-                    converterFactories.add(net.converterFactories[i])
+                for (i in 1 until lasupre.converterFactories.size - platform.defaultConverterFactoriesSize()) {
+                    converterFactories.add(lasupre.converterFactories[i])
                 }
-                for (i in 0 until net.callAdapterFactories.size - platform.defaultCallAdapterFactoriesSize()) {
-                    callAdapterFactories.add(net.callAdapterFactories[i])
+                for (i in 0 until lasupre.callAdapterFactories.size - platform.defaultCallAdapterFactoriesSize()) {
+                    callAdapterFactories.add(lasupre.callAdapterFactories[i])
                 }
 
             } else {
@@ -248,7 +248,7 @@ class Net private constructor(
             this.callAdapterFactories.add(factory)
         }
 
-        fun build(): Net {
+        fun build(): Lasupre {
             if (baseUrl == null) {
                 throw IllegalArgumentException("$baseUrl must not be null")
             }
@@ -270,7 +270,7 @@ class Net private constructor(
             converterFactories.addAll(platform.defaultConverterFactories())
 
 
-            return Net(client, baseUrl!!, callbackExecutor, workExecutor, commonHeaders, commonParams, converterFactories, callAdapterFactories)
+            return Lasupre(client, baseUrl!!, callbackExecutor, workExecutor, commonHeaders, commonParams, converterFactories, callAdapterFactories)
         }
     }
 }

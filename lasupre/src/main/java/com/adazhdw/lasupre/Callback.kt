@@ -1,4 +1,4 @@
-package com.adazhdw.net
+package com.adazhdw.lasupre
 
 /**
  * Communicates responses from a server or offline requests. One and only one method will be invoked

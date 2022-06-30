@@ -3,7 +3,7 @@ package com.grantgzd.kthttp.app.net
 import android.content.Context
 import android.util.Log
 import com.adazhdw.kthttp.util.NetworkUtils
-import com.adazhdw.net.HttpHeaders
+import com.adazhdw.lasupre.HttpHeaders
 import okhttp3.Cache
 import okhttp3.CacheControl
 import okhttp3.Interceptor

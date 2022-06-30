@@ -1,10 +1,10 @@
-package com.adazhdw.net
+package com.adazhdw.lasupre
 
 import java.lang.reflect.Type
 
 
 abstract class InternalAdapter<ResponseT, ReturnT>(
-    private val requestFactory: NetRequestFactory,
+    private val requestFactory: RequestFactory,
     private val callFactory: okhttp3.Call.Factory,
     private val responseConverter: Converter<okhttp3.Response, ResponseT>?,
     private val responseBodyConverter: Converter<okhttp3.ResponseBody, ResponseT>
@@ -18,7 +18,7 @@ abstract class InternalAdapter<ResponseT, ReturnT>(
     abstract fun adapt(call: Call<ResponseT>): ReturnT
 
     class InternalCallAdapter<ResponseT, ReturnT>(
-        requestFactory: NetRequestFactory,
+        requestFactory: RequestFactory,
         callFactory: okhttp3.Call.Factory,
         responseConverter: Converter<okhttp3.Response, ResponseT>?,
         responseBodyConverter: Converter<okhttp3.ResponseBody, ResponseT>,
@@ -31,8 +31,8 @@ abstract class InternalAdapter<ResponseT, ReturnT>(
 
     companion object {
 
-        fun <ResponseT, ReturnT> parse(typeRef: TypeRef<ReturnT>, net: Net, requestFactory: NetRequestFactory): ReturnT {
-            val callAdapter = createCallAdapter<ResponseT, ReturnT>(net, typeRef.type)
+        fun <ResponseT, ReturnT> parse(typeRef: TypeRef<ReturnT>, lasupre: Lasupre, requestFactory: RequestFactory): ReturnT {
+            val callAdapter = createCallAdapter<ResponseT, ReturnT>(lasupre, typeRef.type)
             val responseType = callAdapter.responseType()
             if (responseType === okhttp3.Response::class.java) {
                 throw IllegalArgumentException("$responseType is not a valid response body type")
@@ -44,22 +44,22 @@ abstract class InternalAdapter<ResponseT, ReturnT>(
                 throw IllegalArgumentException("HEAD method must use Void as response type.")
             }
 
-            val responseBodyConverter = createResponseBodyConverter<ResponseT>(net, responseType, requestFactory)
-            val responseConverter = createResponseConverter<ResponseT>(net, responseType, requestFactory)
+            val responseBodyConverter = createResponseBodyConverter<ResponseT>(lasupre, responseType, requestFactory)
+            val responseConverter = createResponseConverter<ResponseT>(lasupre, responseType, requestFactory)
 
-            val callFactory = net.client
+            val callFactory = lasupre.client
 
             return InternalCallAdapter<ResponseT, ReturnT>(requestFactory, callFactory, responseConverter, responseBodyConverter, callAdapter).adapt()
         }
 
         @JvmStatic
         private fun <ResponseT> createResponseBodyConverter(
-            net: Net,
+            lasupre: Lasupre,
             responseType: Type,
-            requestFactory: NetRequestFactory
+            requestFactory: RequestFactory
         ): Converter<okhttp3.ResponseBody, ResponseT> {
             try {
-                return net.responseBodyConverter<ResponseT>(responseType, requestFactory)
+                return lasupre.responseBodyConverter<ResponseT>(responseType, requestFactory)
             } catch (e: RuntimeException) {
                 throw IllegalArgumentException("Unable to create converter for responseType:$responseType")
             }
@@ -67,21 +67,21 @@ abstract class InternalAdapter<ResponseT, ReturnT>(
 
         @JvmStatic
         private fun <ResponseT> createResponseConverter(
-            net: Net,
+            lasupre: Lasupre,
             responseType: Type,
-            requestFactory: NetRequestFactory
+            requestFactory: RequestFactory
         ): Converter<okhttp3.Response, ResponseT>? {
             try {
-                return net.responseConverter<ResponseT>(responseType, requestFactory)
+                return lasupre.responseConverter<ResponseT>(responseType, requestFactory)
             } catch (e: RuntimeException) {
                 throw IllegalArgumentException("Unable to create converter for responseType:$responseType")
             }
         }
 
         @JvmStatic
-        fun <ResponseT, ReturnT> createCallAdapter(net: Net, returnType: Type): CallAdapter<ResponseT, ReturnT> {
+        fun <ResponseT, ReturnT> createCallAdapter(lasupre: Lasupre, returnType: Type): CallAdapter<ResponseT, ReturnT> {
             try {
-                return net.callAdapter(returnType) as CallAdapter<ResponseT, ReturnT>
+                return lasupre.callAdapter(returnType) as CallAdapter<ResponseT, ReturnT>
             } catch (e: RuntimeException) {
                 throw IllegalArgumentException("Unable to create call adapter for returnType:$returnType")
             }
