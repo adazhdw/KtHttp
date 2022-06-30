@@ -42,16 +42,12 @@ class NetRequestFactory(builder: Builder) {
         return InternalAdapter.parse<T, Call<T>>(object : TypeRef<Call<T>>() {}, net, this)
     }
 
-    inline fun <reified T : Any, reified R : Any> parse(typeRef: TypeRef<R>): R {
-        return InternalAdapter.parse<T, R>(typeRef, net, this)
-    }
-
     inline fun <reified T : Any> enqueue(callback: Callback<T>) {
         return parse<T>().enqueue(callback)
     }
 
     inline fun <reified T : Any, reified R : Any> enqueue(): R {
-        return parse<T,R>(object : TypeRef<R>() {})
+        return InternalAdapter.parse<T, R>(object : TypeRef<R>() {}, net, this)
     }
 
     inline fun <reified T : Any> execute(): Response<T> {
@@ -403,10 +399,6 @@ class NetRequestFactory(builder: Builder) {
 
         inline fun <reified T : Any> parse(): Call<T> {
             return build().parse<T>()
-        }
-
-        inline fun <reified T : Any, reified R : Any> parseObject(): R {
-            return build().parse<T, R>(object : TypeRef<R>() {})
         }
 
         inline fun <reified T : Any> enqueue(callback: Callback<T>) {
