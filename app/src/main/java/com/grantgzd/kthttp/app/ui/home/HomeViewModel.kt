@@ -30,7 +30,7 @@ class HomeViewModel : BaseViewModelImpl() {
                     .queryParams("k", "Android")
                     .parse<NetResponse<DataFeed>>().await()*/
                 val data = lasupre.get<NetResponse<DataFeed>>(urlPath = "wxarticle/list/408/1/json"){
-                    queryParams("k", "Android")
+                    addQueryParam("k", "Android")
                 }
                 val stringBuilder = StringBuilder()
                 for (item in data.data.datas) {

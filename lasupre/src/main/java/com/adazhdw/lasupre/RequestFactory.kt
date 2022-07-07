@@ -183,7 +183,7 @@ class RequestFactory(builder: Builder) {
             this.pathParamNames.addAll(parsePathParam(urlPath))
         }
 
-        fun headers(name: String, value: String) = apply {
+        fun addHeader(name: String, value: String) = apply {
             if (this.headersBuilder == null) {
                 this.headersBuilder = okhttp3.Headers.Builder()
             }
@@ -198,13 +198,13 @@ class RequestFactory(builder: Builder) {
             }
         }
 
-        fun headers(headerMap: Map<String, String>) = apply {
+        fun addHeaders(headerMap: Map<String, String>) = apply {
             for ((name, value) in headerMap) {
-                headers(name, value)
+                addHeader(name, value)
             }
         }
 
-        fun pathParams(name: String, value: String) = apply {
+        fun addPathParam(name: String, value: String) = apply {
             if (!PARAM_NAME_REGEX.matcher(name).matches()) {
                 throw IllegalArgumentException("Path parameter name must match ${PARAM_URL_REGEX.pattern()}. Found: ${name}")
             }
@@ -214,24 +214,30 @@ class RequestFactory(builder: Builder) {
             }
         }
 
-        fun pathParams(params: Map<String, String>) = apply {
+        fun addPathParams(params: Map<String, String>) = apply {
             for ((name, value) in params) {
-                pathParams(name, value)
+                addPathParam(name, value)
             }
         }
 
-        fun queryParams(name: String, value: String, encoded: Boolean = false) = apply {
-            queryParams(ParamField(name, value, encoded))
+        fun addQueryParam(name: String, value: String, encoded: Boolean = false) = apply {
+            addQueryParam(ParamField(name, value, encoded))
         }
 
-        fun queryParams(paramField: ParamField) = apply {
+        fun addQueryParams(queryParams: Map<String, String>) = apply {
+            for ((name, value) in queryParams) {
+                addQueryParam(name, value)
+            }
+        }
+
+        fun addQueryParam(paramField: ParamField) = apply {
             this.queryParams.add(paramField)
             if (!this.gotQuery) {
                 this.gotQuery = true
             }
         }
 
-        fun isFormEncoded() = apply {
+        fun setFormEncoded() = apply {
             require(!isMultipart) { "isFormEncoded() or isMultipart() only can be called one of them" }
             isFormEncoded = true
         }
@@ -251,7 +257,7 @@ class RequestFactory(builder: Builder) {
             this.formFields.add(paramField)
         }
 
-        fun isMultipart() = apply {
+        fun setMultipart() = apply {
             require(!isFormEncoded) { "isFormEncoded() or isMultipart() only can be called one of them" }
             isMultipart = true
         }
