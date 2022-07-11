@@ -24,7 +24,7 @@ class LibApp : Application() {
     }
 
     override fun isDebug(): Boolean {
-        return BuildConfig.DEBUG
+        return true
     }
 }
 

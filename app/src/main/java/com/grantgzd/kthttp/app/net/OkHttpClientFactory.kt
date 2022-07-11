@@ -26,10 +26,10 @@ class OkHttpClientFactory(private val applicationContext: Context) {
 
         return okhttp3.OkHttpClient.Builder()
             .cache(cache)
-            .addInterceptor(AddCookiesInterceptor())
-            .addInterceptor(GetCookiesInterceptor())
-            .addInterceptor(GetCache())
-            .addNetworkInterceptor(WriteCache())
+//            .addInterceptor(AddCookiesInterceptor())
+//            .addInterceptor(GetCookiesInterceptor())
+//            .addInterceptor(GetCache())
+//            .addNetworkInterceptor(WriteCache())
             .connectTimeout(10, TimeUnit.SECONDS)
             .build()
     }

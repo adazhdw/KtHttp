@@ -50,3 +50,12 @@ suspend inline fun <reified T : Any> Lasupre.options(
     return options(urlPath).apply { block.invoke(this) }.parse<T>().await()
 }
 
+fun Lasupre.download(
+    url: String,
+    path: String,
+    file: String,
+    progressListener: ProgressListener
+) {
+    return download(url, path).enqueue(FileDownloadCallback(this.callbackExecutor, file, progressListener))
+
+}

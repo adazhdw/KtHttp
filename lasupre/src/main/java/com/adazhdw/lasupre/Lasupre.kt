@@ -48,6 +48,8 @@ class Lasupre private constructor(
     fun options() = requestFactory().method(HttpMethod.OPTIONS)
     fun options(urlPath: String) = options().urlPath(urlPath)
 
+    fun download(url: String, path: String) = get().baseUrl(url).urlPath(path).streaming().download()
+
     /**
      * @param returnType is 'Call' of Call<Repo>, value of CallAdapter's responseType() function is Repo
      */
@@ -111,7 +113,11 @@ class Lasupre private constructor(
         return responseBodyConverter(null, responseType, requestFactory)
     }
 
-    fun <T> responseBodyConverter(skipPast: Converter.Factory?, responseType: Type, requestFactory: RequestFactory): Converter<okhttp3.ResponseBody, T> {
+    fun <T> responseBodyConverter(
+        skipPast: Converter.Factory?,
+        responseType: Type,
+        requestFactory: RequestFactory
+    ): Converter<okhttp3.ResponseBody, T> {
         val start: Int = converterFactories.indexOf(skipPast) + 1
         for (i in start until converterFactories.size) {
             val converter: Converter<okhttp3.ResponseBody, *>? = converterFactories[i].responseBodyConverter(responseType, this, requestFactory)

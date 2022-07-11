@@ -384,7 +384,7 @@ class RequestFactory(builder: Builder) {
                 require(!isFormEncoded) { "isFormEncoded can only be specified on HTTP methods with request body" }
             }
 
-            if (urlPath.isNullOrBlank() || !gotUrl) {
+            if ((urlPath.isNullOrBlank() || !gotUrl) && !isStreaming) {
                 throw IllegalArgumentException("urlPath must not be null")
             }
 
@@ -418,5 +418,10 @@ class RequestFactory(builder: Builder) {
         inline fun <reified T : Any> execute(): Response<T> {
             return build().execute<T>()
         }
+
+        fun download(): Call<okhttp3.ResponseBody> {
+            return build().download()
+        }
+
     }
 }

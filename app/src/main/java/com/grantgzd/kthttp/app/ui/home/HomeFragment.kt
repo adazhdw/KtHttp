@@ -34,12 +34,16 @@ class HomeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         val textView: TextView = view.findViewById(R.id.text_home)
         val request: Button = view.findViewById(R.id.request)
+        val download: Button = view.findViewById(R.id.download)
 
         textView.setOnClickListener {
             homeViewModel.getText()
         }
         request.setOnClickListener {
             homeViewModel.getText()
+        }
+        download.setOnClickListener {
+            homeViewModel.download()
         }
     }
 
