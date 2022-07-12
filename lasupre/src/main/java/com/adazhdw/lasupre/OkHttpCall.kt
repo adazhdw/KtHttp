@@ -10,7 +10,6 @@ import java.io.IOException
 class OkHttpCall<T>(
     private val requestFactory: RequestFactory,
     private val callFactory: okhttp3.Call.Factory,
-    private val responseConverter: Converter<okhttp3.Response, T>?,
     private val responseBodyConverter: Converter<okhttp3.ResponseBody, T>
 ) : Call<T> {
 
@@ -27,7 +26,7 @@ class OkHttpCall<T>(
     private var executed = false
 
     override fun copy(): Call<T> {
-        return OkHttpCall<T>(requestFactory, callFactory, responseConverter, responseBodyConverter)
+        return OkHttpCall<T>(requestFactory, callFactory, responseBodyConverter)
     }
 
     @Synchronized
@@ -188,21 +187,12 @@ class OkHttpCall<T>(
                     return Response.success<T>(null, response)
                 }
                 val catchingBody = ExceptionCatchingResponseBody(rawBody)
-                if (responseConverter != null) {
-                    try {
-                        val body: T? = responseConverter.convert(response.newBuilder().body(catchingBody).build())
-                        return Response.success(body, res)
-                    } catch (e: IOException) {
-                        throw e
-                    }
-                } else {
-                    try {
-                        val body: T? = responseBodyConverter.convert(catchingBody)
-                        return Response.success(body, res)
-                    } catch (e: RuntimeException) {
-                        catchingBody.throwIfCaught()
-                        throw e
-                    }
+                try {
+                    val body: T? = responseBodyConverter.convert(catchingBody)
+                    return Response.success(body, res)
+                } catch (e: RuntimeException) {
+                    catchingBody.throwIfCaught()
+                    throw e
                 }
             } else {
                 // Buffer the entire body to avoid future I/O.

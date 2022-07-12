@@ -36,29 +36,6 @@ internal class InternalConverters : Converter.Factory() {
         return null
     }
 
-    override fun responseConverter(type: Type, lasupre: Lasupre, requestFactory: RequestFactory): Converter<okhttp3.Response, *>? {
-        if (type === okhttp3.Response::class.java) {
-            return InternalResponseConverter()
-        }
-        //适配String类型，直接返回Body.string()
-        if (type === String::class.java) {
-            return StringResponseConverter.INSTANCE
-        }
-        if (type === Void::class.java) {
-            return VoidResponseConverter.INSTANCE
-        }
-        if (checkForKotlinUnit) {
-            try {
-                if (type === Unit::class.java) {
-                    return UnitResponseConverter.INSTANCE
-                }
-            } catch (ignored: NoClassDefFoundError) {
-                checkForKotlinUnit = false
-            }
-        }
-        return null
-    }
-
     override fun requestBodyConverter(type: Type, lasupre: Lasupre): Converter<*, okhttp3.RequestBody>? {
         if (okhttp3.RequestBody::class.java.isAssignableFrom(TypeUtils.getRawType(type))) {
             RequestBodyConverter.INSTANCE
@@ -73,16 +50,6 @@ internal class InternalConverters : Converter.Factory() {
 
         override fun convert(value: okhttp3.ResponseBody): String {
             return value.string()
-        }
-    }
-
-    internal class StringResponseConverter : Converter<okhttp3.Response, String> {
-        companion object {
-            val INSTANCE = StringResponseConverter()
-        }
-
-        override fun convert(value: okhttp3.Response): String? {
-            return value.body?.string()
         }
     }
 
@@ -139,33 +106,4 @@ internal class InternalConverters : Converter.Factory() {
             }
         }
     }
-
-    internal class InternalResponseConverter : Converter<okhttp3.Response, okhttp3.Response> {
-        override fun convert(value: okhttp3.Response): okhttp3.Response {
-            return value
-        }
-    }
-
-    internal class VoidResponseConverter : Converter<okhttp3.Response, Void> {
-        companion object {
-            val INSTANCE = VoidResponseConverter()
-        }
-
-        override fun convert(value: okhttp3.Response): Void? {
-            value.close()
-            return null
-        }
-    }
-
-    internal class UnitResponseConverter : Converter<okhttp3.Response, Unit> {
-        companion object {
-            val INSTANCE = UnitResponseConverter()
-        }
-
-        override fun convert(value: okhttp3.Response) {
-            value.close()
-            return
-        }
-    }
-
 }

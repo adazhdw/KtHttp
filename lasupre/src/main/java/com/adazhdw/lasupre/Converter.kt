@@ -26,16 +26,6 @@ interface Converter<F, T> {
         }
 
         /**
-         * Returns a {@link Converter} for converting an HTTP response to {@code type}, or null if
-         * {@code type} cannot be handled by this factory. This is used to create converters for
-         * response types such as {@code SimpleResponse} from a {@code Call<SimpleResponse>}
-         * declaration.
-         */
-        open fun responseConverter(type: Type, lasupre: Lasupre, requestFactory: RequestFactory): Converter<okhttp3.Response, *>? {
-            return null
-        }
-
-        /**
          * Returns a {@link Converter} for converting {@code type} to an HTTP request body, or null if
          * {@code type} cannot be handled by this factory. This is used to create converters for types
          * specified by {@link Body @Body}, {@link Part @Part}, and {@link PartMap @PartMap} values.

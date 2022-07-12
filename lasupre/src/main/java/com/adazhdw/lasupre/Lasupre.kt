@@ -141,21 +141,6 @@ class Lasupre private constructor(
         throw IllegalArgumentException(builder.toString())
     }
 
-    fun <T> responseConverter(responseType: Type, requestFactory: RequestFactory): Converter<okhttp3.Response, T>? {
-        return responseConverter(null, responseType, requestFactory)
-    }
-
-    fun <T> responseConverter(skipPast: Converter.Factory?, responseType: Type, requestFactory: RequestFactory): Converter<okhttp3.Response, T>? {
-        val start: Int = converterFactories.indexOf(skipPast) + 1
-        for (i in start until converterFactories.size) {
-            val converter: Converter<okhttp3.Response, *>? = converterFactories[i].responseConverter(responseType, this, requestFactory)
-            if (converter != null) {
-                return converter as Converter<okhttp3.Response, T>
-            }
-        }
-        return null
-    }
-
     fun newBuilder(): Builder {
         return Builder(this)
     }

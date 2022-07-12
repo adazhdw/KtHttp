@@ -21,11 +21,6 @@ class GsonConverterFactory private constructor(private val gson: Gson) : Convert
         return GsonRequestBodyConverter(gson, adapter)
     }
 
-    override fun responseConverter(type: Type, lasupre: Lasupre, requestFactory: RequestFactory): Converter<Response, *> {
-        val adapter = gson.getAdapter(TypeToken.get(type))
-        return GsonResponseConverter(gson, adapter)
-    }
-
     companion object {
         @JvmOverloads
         fun create(gson: Gson? = Gson()): GsonConverterFactory {

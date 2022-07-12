@@ -6,12 +6,11 @@ import java.lang.reflect.Type
 abstract class InternalAdapter<ResponseT, ReturnT>(
     private val requestFactory: RequestFactory,
     private val callFactory: okhttp3.Call.Factory,
-    private val responseConverter: Converter<okhttp3.Response, ResponseT>?,
-    private val responseBodyConverter: Converter<okhttp3.ResponseBody, ResponseT>
+    private val responseConverter: Converter<okhttp3.ResponseBody, ResponseT>
 ) {
 
     internal fun adapt(): ReturnT {
-        val call: Call<ResponseT> = OkHttpCall<ResponseT>(requestFactory, callFactory, responseConverter, responseBodyConverter)
+        val call: Call<ResponseT> = OkHttpCall<ResponseT>(requestFactory, callFactory, responseConverter)
         return adapt(call)
     }
 
@@ -20,10 +19,9 @@ abstract class InternalAdapter<ResponseT, ReturnT>(
     class InternalCallAdapter<ResponseT, ReturnT>(
         requestFactory: RequestFactory,
         callFactory: okhttp3.Call.Factory,
-        responseConverter: Converter<okhttp3.Response, ResponseT>?,
-        responseBodyConverter: Converter<okhttp3.ResponseBody, ResponseT>,
+        responseConverter: Converter<okhttp3.ResponseBody, ResponseT>,
         private val callAdapter: CallAdapter<ResponseT, ReturnT>
-    ) : InternalAdapter<ResponseT, ReturnT>(requestFactory, callFactory, responseConverter, responseBodyConverter) {
+    ) : InternalAdapter<ResponseT, ReturnT>(requestFactory, callFactory, responseConverter) {
         override fun adapt(call: Call<ResponseT>): ReturnT {
             return callAdapter.adapt(call)
         }
@@ -44,12 +42,10 @@ abstract class InternalAdapter<ResponseT, ReturnT>(
                 throw IllegalArgumentException("HEAD method must use Void as response type.")
             }
 
-            val responseBodyConverter = createResponseBodyConverter<ResponseT>(lasupre, responseType, requestFactory)
-            val responseConverter = createResponseConverter<ResponseT>(lasupre, responseType, requestFactory)
-
+            val responseConverter = createResponseBodyConverter<ResponseT>(lasupre, responseType, requestFactory)
             val callFactory = lasupre.client
 
-            return InternalCallAdapter<ResponseT, ReturnT>(requestFactory, callFactory, responseConverter, responseBodyConverter, callAdapter).adapt()
+            return InternalCallAdapter<ResponseT, ReturnT>(requestFactory, callFactory, responseConverter, callAdapter).adapt()
         }
 
         @JvmStatic
@@ -60,19 +56,6 @@ abstract class InternalAdapter<ResponseT, ReturnT>(
         ): Converter<okhttp3.ResponseBody, ResponseT> {
             try {
                 return lasupre.responseBodyConverter<ResponseT>(responseType, requestFactory)
-            } catch (e: RuntimeException) {
-                throw IllegalArgumentException("Unable to create converter for responseType:$responseType")
-            }
-        }
-
-        @JvmStatic
-        private fun <ResponseT> createResponseConverter(
-            lasupre: Lasupre,
-            responseType: Type,
-            requestFactory: RequestFactory
-        ): Converter<okhttp3.Response, ResponseT>? {
-            try {
-                return lasupre.responseConverter<ResponseT>(responseType, requestFactory)
             } catch (e: RuntimeException) {
                 throw IllegalArgumentException("Unable to create converter for responseType:$responseType")
             }
