@@ -189,6 +189,9 @@ class OkHttpCall<T>(
             val catchingBody = ExceptionCatchingResponseBody(rawBody)
             try {
                 val body: T? = responseBodyConverter.convert(catchingBody)
+                if (!requestFactory.isStreaming) {
+                    catchingBody.close()
+                }
                 return Response.success(body, res)
             } catch (e: RuntimeException) {
                 catchingBody.throwIfCaught()
