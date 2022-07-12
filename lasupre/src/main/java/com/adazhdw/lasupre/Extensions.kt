@@ -56,6 +56,6 @@ fun Lasupre.download(
     file: String,
     progressListener: ProgressListener
 ) {
-    return download(url, path).enqueue(FileDownloadCallback(this.callbackExecutor, file, progressListener))
+    return download(url, path).enqueue(FileDownloadCallback(this.callbackExecutor,this.workExecutor, file, progressListener))
 
 }

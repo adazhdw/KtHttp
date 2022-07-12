@@ -173,30 +173,31 @@ class OkHttpCall<T>(
     }
 
     private fun parseResponse(rawResponse: okhttp3.Response): Response<T> {
-        rawResponse.use { response ->
-            val rawBody = response.body ?: throw IOException("okhttp3.Response'body is null")
+        val rawBody = rawResponse.body ?: throw IOException("okhttp3.Response'body is null")
 
-            // Remove the body's source (the only stateful object) so we can pass the response along.
-            val res = response.newBuilder()
-                .body(NoContentResponseBody(rawBody.contentType(), rawBody.contentLength()))
-                .build()
+        // Remove the body's source (the only stateful object) so we can pass the response along.
+        val res = rawResponse.newBuilder()
+            .body(NoContentResponseBody(rawBody.contentType(), rawBody.contentLength()))
+            .build()
 
-            if (response.isSuccessful) {
-                val code = res.code
-                if (code == 204 || code == 205) {
-                    return Response.success<T>(null, response)
-                }
-                val catchingBody = ExceptionCatchingResponseBody(rawBody)
-                try {
-                    val body: T? = responseBodyConverter.convert(catchingBody)
-                    return Response.success(body, res)
-                } catch (e: RuntimeException) {
-                    catchingBody.throwIfCaught()
-                    throw e
-                }
-            } else {
+        if (rawResponse.isSuccessful) {
+            val code = res.code
+            if (code == 204 || code == 205) {
+                rawBody.close()
+                return Response.success<T>(null, rawResponse)
+            }
+            val catchingBody = ExceptionCatchingResponseBody(rawBody)
+            try {
+                val body: T? = responseBodyConverter.convert(catchingBody)
+                return Response.success(body, res)
+            } catch (e: RuntimeException) {
+                catchingBody.throwIfCaught()
+                throw e
+            }
+        } else {
+            rawBody.use { body ->
                 // Buffer the entire body to avoid future I/O.
-                val bufferedBody = Utils.buffer(rawBody)
+                val bufferedBody = Utils.buffer(body)
                 return Response.error(bufferedBody, res)
             }
         }

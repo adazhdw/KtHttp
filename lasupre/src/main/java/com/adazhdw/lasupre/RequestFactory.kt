@@ -384,7 +384,7 @@ class RequestFactory(builder: Builder) {
                 require(!isFormEncoded) { "isFormEncoded can only be specified on HTTP methods with request body" }
             }
 
-            if ((urlPath.isNullOrBlank() || !gotUrl) && !isStreaming) {
+            if (urlPath.isNullOrBlank() || !gotUrl) {
                 throw IllegalArgumentException("urlPath must not be null")
             }
 
