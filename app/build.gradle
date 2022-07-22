@@ -52,7 +52,7 @@ dependencies {
     implementation 'com.github.adazhdw:KtLibTest:0.5.0'
     implementation project(path: ':kthttp')
     implementation project(path: ':lasupre')
-    implementation project(path: ':lasupre-converter:gson')
+    implementation project(path: ':lasupre-converter:converter-gson')
 
     //Gson
     implementation 'com.google.code.gson:gson:2.9.0'
