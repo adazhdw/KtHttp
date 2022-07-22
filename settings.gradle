@@ -1,5 +1,5 @@
 include ':kthttp'
 include ':lasupre'
 include ':app'
-include ':converters:gson'
+include ':lasupre-converter:gson'
 rootProject.name = "KtHttp"

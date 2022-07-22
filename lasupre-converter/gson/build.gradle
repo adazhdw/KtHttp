@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 32
+        targetSdkVersion 30
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -32,8 +32,9 @@ android {
 dependencies {
 
     implementation project(path: ':lasupre')
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     //Gson
-    api 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.9.0'
 
 }
 
