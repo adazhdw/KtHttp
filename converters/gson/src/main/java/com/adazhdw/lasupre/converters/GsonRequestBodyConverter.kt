@@ -1,4 +1,4 @@
-package com.grantgzd.kthttp.app.net
+package com.adazhdw.lasupre.converters
 
 import com.adazhdw.lasupre.Converter
 import com.google.gson.Gson

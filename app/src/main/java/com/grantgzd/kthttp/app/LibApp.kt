@@ -1,11 +1,10 @@
 package com.grantgzd.kthttp.app
 
 import com.adazhdw.ktlib.Application
-import com.adazhdw.ktlib.BuildConfig
 import com.adazhdw.ktlib.core.delegate.DelegateExt
 import com.adazhdw.lasupre.Lasupre
+import com.adazhdw.lasupre.converters.GsonConverterFactory
 import com.grantgzd.kthttp.app.net.CoroutineCallAdapterFactory
-import com.grantgzd.kthttp.app.net.GsonConverterFactory
 import com.grantgzd.kthttp.app.net.OkHttpClientFactory
 
 /**
@@ -27,7 +26,6 @@ class LibApp : Application() {
         return true
     }
 }
-
 
 
 val lasupre: Lasupre by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {

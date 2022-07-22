@@ -1,4 +1,4 @@
-package com.grantgzd.kthttp.app.net
+package com.adazhdw.lasupre.converters
 
 import com.adazhdw.lasupre.Converter
 import com.adazhdw.lasupre.Lasupre
@@ -6,7 +6,6 @@ import com.adazhdw.lasupre.RequestFactory
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.RequestBody
-import okhttp3.Response
 import okhttp3.ResponseBody
 import java.lang.reflect.Type
 
