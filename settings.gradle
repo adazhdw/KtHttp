@@ -2,4 +2,6 @@ include ':kthttp'
 include ':lasupre'
 include ':app'
 include ':lasupre-converter:converter-gson'
+include ':lasupre-converter:converter-jackson'
+include ':lasupre-adapters:adapter-rxjava3'
 rootProject.name = "KtHttp"

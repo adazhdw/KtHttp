@@ -1,4 +1,4 @@
-package com.adazhdw.lasupre.converters
+package lasupre.converter.gson
 
 import com.adazhdw.lasupre.Converter
 import com.adazhdw.lasupre.Lasupre

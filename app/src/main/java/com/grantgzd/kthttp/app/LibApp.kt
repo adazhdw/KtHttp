@@ -3,9 +3,10 @@ package com.grantgzd.kthttp.app
 import com.adazhdw.ktlib.Application
 import com.adazhdw.ktlib.core.delegate.DelegateExt
 import com.adazhdw.lasupre.Lasupre
-import com.adazhdw.lasupre.converters.GsonConverterFactory
 import com.grantgzd.kthttp.app.net.CoroutineCallAdapterFactory
 import com.grantgzd.kthttp.app.net.OkHttpClientFactory
+import lasupre.adapter.rxjava3.RxJava3CallAdapterFactory
+import lasupre.converter.gson.GsonConverterFactory
 
 /**
  * author：daguozhu
@@ -14,9 +15,10 @@ import com.grantgzd.kthttp.app.net.OkHttpClientFactory
  **/
 class LibApp : Application() {
 
-    companion object{
+    companion object {
         var instance: LibApp by DelegateExt.notNullSingleValue()
     }
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -34,5 +36,6 @@ val lasupre: Lasupre by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
         .client(OkHttpClientFactory(LibApp.instance.applicationContext).create())
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .build()
 }
