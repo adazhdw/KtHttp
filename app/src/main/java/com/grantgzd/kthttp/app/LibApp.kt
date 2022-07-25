@@ -1,5 +1,7 @@
 package com.grantgzd.kthttp.app
 
+import android.content.Context
+import androidx.multidex.MultiDex
 import com.adazhdw.ktlib.Application
 import com.adazhdw.ktlib.core.delegate.DelegateExt
 import com.adazhdw.lasupre.Lasupre
@@ -22,6 +24,11 @@ class LibApp : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+    }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
     }
 
     override fun isDebug(): Boolean {

@@ -6,9 +6,13 @@ import com.adazhdw.ktlib.base.mvvm.BaseViewModelImpl
 import com.adazhdw.ktlib.ext.logD
 import com.adazhdw.ktlib.ext.parseAsHtml
 import com.adazhdw.lasupre.*
+import com.example.utiltest.sdk.net.rxjava3.subscribeAndroid
 import com.grantgzd.kthttp.app.bean.DataFeed
+import com.grantgzd.kthttp.app.bean.ListResponse
 import com.grantgzd.kthttp.app.bean.NetResponse
+import com.grantgzd.kthttp.app.bean.WxArticleChapter
 import com.grantgzd.kthttp.app.lasupre
+import io.reactivex.rxjava3.core.Observable
 import java.io.File
 
 class HomeViewModel : BaseViewModelImpl() {
@@ -51,9 +55,14 @@ class HomeViewModel : BaseViewModelImpl() {
                     for (item in body.data.datas) {
                         stringBuilder.append("标题：${item.title.parseAsHtml()}").append("\n\n")
                     }
-                    stringBuilder.toString().logD(TAG)
                     _text.postValue(stringBuilder.toString())
                 }
+            })
+        lasupre.get("wxarticle/chapters/json")
+            .baseUrl("https://wanandroid.com/")
+            .enqueue<ListResponse<WxArticleChapter>, Observable<ListResponse<WxArticleChapter>>>()
+            .subscribeAndroid(onResult = {
+                it.toString().logD(TAG)
             })
     }
 
