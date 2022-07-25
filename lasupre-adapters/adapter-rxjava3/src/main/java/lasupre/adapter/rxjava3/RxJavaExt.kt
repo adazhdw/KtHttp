@@ -1,4 +1,4 @@
-package com.example.utiltest.sdk.net.rxjava3
+package lasupre.adapter.rxjava3
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable

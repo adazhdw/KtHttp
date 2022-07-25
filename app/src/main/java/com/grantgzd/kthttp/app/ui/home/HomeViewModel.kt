@@ -6,7 +6,7 @@ import com.adazhdw.ktlib.base.mvvm.BaseViewModelImpl
 import com.adazhdw.ktlib.ext.logD
 import com.adazhdw.ktlib.ext.parseAsHtml
 import com.adazhdw.lasupre.*
-import com.example.utiltest.sdk.net.rxjava3.subscribeAndroid
+import lasupre.adapter.rxjava3.subscribeAndroid
 import com.grantgzd.kthttp.app.bean.DataFeed
 import com.grantgzd.kthttp.app.bean.ListResponse
 import com.grantgzd.kthttp.app.bean.NetResponse

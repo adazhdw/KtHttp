@@ -1,4 +1,4 @@
-package com.adazhdw.lasupre.converters
+package lasupre.converter.jackson
 
 import com.adazhdw.lasupre.Converter
 import com.fasterxml.jackson.databind.ObjectWriter
