@@ -42,18 +42,14 @@ abstract class InternalAdapter<ResponseT, ReturnT>(
                 throw IllegalArgumentException("HEAD method must use Void as response type.")
             }
 
-            val responseConverter = createResponseBodyConverter<ResponseT>(lasupre, responseType, requestFactory)
+            val responseConverter = createResponseConverter<ResponseT>(lasupre, responseType, requestFactory)
             val callFactory = lasupre.client
 
             return InternalCallAdapter<ResponseT, ReturnT>(requestFactory, callFactory, responseConverter, callAdapter).adapt()
         }
 
         @JvmStatic
-        private fun <ResponseT> createResponseBodyConverter(
-            lasupre: Lasupre,
-            responseType: Type,
-            requestFactory: RequestFactory
-        ): Converter<okhttp3.ResponseBody, ResponseT> {
+        fun <ResponseT> createResponseConverter(lasupre: Lasupre, responseType: Type, requestFactory: RequestFactory): Converter<okhttp3.ResponseBody, ResponseT> {
             try {
                 return lasupre.responseBodyConverter<ResponseT>(responseType, requestFactory)
             } catch (e: RuntimeException) {
