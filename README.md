@@ -14,13 +14,16 @@ Add it in your root build.gradle at the end of repositories:
   
 Step 2. Add the dependency
 
-dependencies {
-	        implementation 'com.github.adazhdw.KtHttp:0.3.9'
+dependencies {  
+
+	implementation 'com.github.adazhdw.KtHttp:0.3.9'  
+	
 }
 
 or
 
-dependencies {
+dependencies {  
+
 	implementation 'com.github.adazhdw.KtHttp:lasupre:0.3.9'  
 
 	implementation 'com.github.adazhdw.KtHttp:kthttp:0.3.9'  
