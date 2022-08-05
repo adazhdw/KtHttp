@@ -21,9 +21,14 @@ dependencies {
 or
 
 dependencies {
-	        implementation 'com.github.adazhdw.KtHttp:lasupre:0.3.9'
-          implementation 'com.github.adazhdw.KtHttp:kthttp:0.3.9'
-          implementation 'com.github.adazhdw.KtHttp:converter-jackson:0.3.9'
-          implementation 'com.github.adazhdw.KtHttp:converter-gson:0.3.9'
-          implementation 'com.github.adazhdw.KtHttp:adapter-rxjava3:0.3.9'
+	implementation 'com.github.adazhdw.KtHttp:lasupre:0.3.9'  
+
+	implementation 'com.github.adazhdw.KtHttp:kthttp:0.3.9'  
+
+	implementation 'com.github.adazhdw.KtHttp:converter-jackson:0.3.9'  
+
+	implementation 'com.github.adazhdw.KtHttp:converter-gson:0.3.9'  
+
+	implementation 'com.github.adazhdw.KtHttp:adapter-rxjava3:0.3.9'  
+
 }
