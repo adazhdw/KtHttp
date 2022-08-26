@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package lasupre.adapter.rxjava3;
+package com.lasupre.adapter.rxjava3;
 
 import static com.adazhdw.lasupre.TypeUtils.getParameterUpperBound;
 import static com.adazhdw.lasupre.TypeUtils.getRawType;

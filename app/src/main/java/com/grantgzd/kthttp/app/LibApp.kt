@@ -7,7 +7,8 @@ import com.adazhdw.ktlib.core.delegate.DelegateExt
 import com.adazhdw.lasupre.Lasupre
 import com.grantgzd.kthttp.app.net.CoroutineCallAdapterFactory
 import com.grantgzd.kthttp.app.net.OkHttpClientFactory
-import lasupre.adapter.rxjava3.RxJava3CallAdapterFactory
+import com.lasupre.adapter.flow.FlowCallAdapterFactory
+import com.lasupre.adapter.rxjava3.RxJava3CallAdapterFactory
 import lasupre.converter.gson.GsonConverterFactory
 
 /**
@@ -42,6 +43,7 @@ val lasupre: Lasupre by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
         .baseUrl("https://wanandroid.com/")
         .client(OkHttpClientFactory(LibApp.instance.applicationContext).create())
         .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(FlowCallAdapterFactory.create(true))
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .build()

@@ -57,6 +57,7 @@ dependencies {
     implementation project(path: ":lasupre-converter:converter-gson")
     implementation project(path: ":lasupre-converter:converter-jackson")
     implementation project(path: ":lasupre-adapters:adapter-rxjava3")
+    implementation project(path: ":lasupre-adapters:adapter-flow")
 
     //Gson
     implementation "com.google.code.gson:gson:$gson_version"

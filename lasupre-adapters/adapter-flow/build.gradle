@@ -34,9 +34,6 @@ dependencies {
     implementation project(path: ':lasupre')
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
 
-    implementation "io.reactivex.rxjava3:rxjava:$rxjava3_version"
-    implementation "io.reactivex.rxjava3:rxandroid:$rxjava3_version"
-    implementation "io.reactivex.rxjava3:rxkotlin:$rxjava3_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 }
-
-apply from: '../../jitpack.gradle'

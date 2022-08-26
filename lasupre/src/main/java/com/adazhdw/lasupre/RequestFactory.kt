@@ -46,8 +46,8 @@ class RequestFactory(builder: Builder) {
         return parse<T>().enqueue(callback)
     }
 
-    inline fun <reified T : Any, reified R : Any> enqueue(): R {
-        return InternalAdapter.parse<T, R>(object : TypeRef<R>() {}, lasupre, this)
+    inline fun <reified T : Any, reified R : Any> enqueue(typeRef: TypeRef<R>? = null): R {
+        return InternalAdapter.parse<T, R>(typeRef ?: object : TypeRef<R>() {}, lasupre, this)
     }
 
     inline fun <reified T : Any> execute(): Response<T> {
@@ -411,8 +411,8 @@ class RequestFactory(builder: Builder) {
             return build().enqueue<T>(callback)
         }
 
-        inline fun <reified T : Any, reified R : Any> enqueue(): R {
-            return build().enqueue<T, R>()
+        inline fun <reified T : Any, reified R : Any> enqueue(typeRef: TypeRef<R>? = null): R {
+            return build().enqueue<T, R>(typeRef)
         }
 
         inline fun <reified T : Any> execute(): Response<T> {

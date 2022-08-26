@@ -6,13 +6,17 @@ import com.adazhdw.ktlib.base.mvvm.BaseViewModelImpl
 import com.adazhdw.ktlib.ext.logD
 import com.adazhdw.ktlib.ext.parseAsHtml
 import com.adazhdw.lasupre.*
-import lasupre.adapter.rxjava3.subscribeAndroid
 import com.grantgzd.kthttp.app.bean.DataFeed
 import com.grantgzd.kthttp.app.bean.ListResponse
 import com.grantgzd.kthttp.app.bean.NetResponse
 import com.grantgzd.kthttp.app.bean.WxArticleChapter
 import com.grantgzd.kthttp.app.lasupre
+import com.lasupre.adapter.flow.flowGet
+import com.lasupre.adapter.rxjava3.observableGet
+import com.lasupre.adapter.rxjava3.subscribeAndroid
 import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import java.io.File
 
 class HomeViewModel : BaseViewModelImpl() {
@@ -64,11 +68,27 @@ class HomeViewModel : BaseViewModelImpl() {
             .subscribeAndroid(onResult = {
                 it.toString().logD(TAG)
             })
+        launch {
+            lasupre.observableGet<ListResponse<WxArticleChapter>>("wxarticle/chapters/json")
+                .subscribeAndroid(onResult = {
+                    it.toString().logD(TAG)
+                })
+            lasupre.get("wxarticle/chapters/json")
+                .baseUrl("https://wanandroid.com/")
+                .enqueue<ListResponse<WxArticleChapter>, Flow<ListResponse<WxArticleChapter>>>()
+                .collect {
+                    it.toString().logD(TAG)
+                }
+            lasupre.flowGet<ListResponse<WxArticleChapter>>("wxarticle/chapters/json")
+                .collect {
+                    it.toString().logD(TAG)
+                }
+        }
     }
 
     fun download() {
         val url = "https://imtt.dd.qq.com/16891/apk/06AB1F5B0A51BEFD859B2B0D6B9ED9D9.apk"
-        lasupre.download("https://imtt.dd.qq.com/", "16891/apk/06AB1F5B0A51BEFD859B2B0D6B9ED9D9.apk","/KtHttp", object : ProgressListener {
+        lasupre.download("https://imtt.dd.qq.com/", "16891/apk/06AB1F5B0A51BEFD859B2B0D6B9ED9D9.apk", "/KtHttp", object : ProgressListener {
             override fun onProgress(total: Long, current: Long) {
                 "onComplete:---total:$total,current:$current".logD(TAG)
             }

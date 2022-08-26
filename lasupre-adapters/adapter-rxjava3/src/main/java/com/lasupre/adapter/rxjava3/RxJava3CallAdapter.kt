@@ -1,4 +1,4 @@
-package lasupre.adapter.rxjava3
+package com.lasupre.adapter.rxjava3
 
 import com.adazhdw.lasupre.Call
 import com.adazhdw.lasupre.CallAdapter
